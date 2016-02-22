@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+bundle install
+bin/install_git_hooks
+
+# Do any other automated setup that you need to do here

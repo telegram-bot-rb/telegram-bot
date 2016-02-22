@@ -1,0 +1,14 @@
+#!/bin/bash
+
+pattern=$(echo -n '\.rb
+\.gemspec
+\.jbuilder
+\.rake
+config\.ru
+Gemfile
+Rakefile' | tr "\\n" '|')
+
+files=`git diff --cached --name-status | grep -E "^[AM].*($pattern)$" | cut -f2-`
+if [ -n "$files" ]; then
+  bundle exec rubocop $files --force-exclusion
+fi

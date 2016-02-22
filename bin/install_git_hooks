@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+root = File.expand_path('../../', __FILE__)
+hooks_dir = "#{root}/bin/git-hooks"
+
+`ls -1 #{hooks_dir}`.each_line.map(&:strip).each do |file|
+  `ln -sf #{hooks_dir}/#{file} #{root}/.git/hooks/#{file}`
+end
