@@ -11,11 +11,14 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Library for building Telegram Bots with Rails integration'
   spec.homepage      = 'https://github.com/printercu/telegram-bot'
+  spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^spec/}) }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+
+  spec.required_ruby_version = '~> 2.0'
 
   spec.add_dependency 'activesupport', '~> 4.0'
   spec.add_dependency 'actionpack', '~> 4.0'
