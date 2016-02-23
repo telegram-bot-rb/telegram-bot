@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['melentievm@gmail.com']
 
   spec.summary       = 'Library for building Telegram Bots with Rails integration'
-  spec.homepage      = 'https://github.com/printercu/telegram-bot'
+  spec.homepage      = 'https://github.com/telegram-bot-rb/telegram-bot'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^spec/}) }

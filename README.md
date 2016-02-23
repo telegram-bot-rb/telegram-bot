@@ -1,8 +1,8 @@
 # Telegram::Bot
 
 [![Gem Version](https://badge.fury.io/rb/telegram-bot.svg)](http://badge.fury.io/rb/telegram-bot)
-[![Code Climate](https://codeclimate.com/github/printercu/telegram-bot/badges/gpa.svg)](https://codeclimate.com/github/printercu/telegram-bot)
-[![Build Status](https://travis-ci.org/printercu/telegram-bot.svg)](https://travis-ci.org/printercu/telegram-bot)
+[![Code Climate](https://codeclimate.com/github/telegram-bot-rb/telegram-bot/badges/gpa.svg)](https://codeclimate.com/github/telegram-bot-rb/telegram-bot)
+[![Build Status](https://travis-ci.org/telegram-bot-rb/telegram-bot.svg)](https://travis-ci.org/telegram-bot-rb/telegram-bot)
 
 Tools for developing bot for Telegram. Best used with Rails, but can be be used in
 standalone app. Supposed to be used in webhook-mode in production, and poller-mode
@@ -210,4 +210,4 @@ push git commits and tags, and push the `.gem` file to [rubygems.org](https://ru
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/printercu/telegram-bot.
+Bug reports and pull requests are welcome on GitHub at https://github.com/telegram-bot-rb/telegram-bot.
