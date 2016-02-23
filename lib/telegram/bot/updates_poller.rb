@@ -1,5 +1,5 @@
 module Telegram
-  class Bot
+  module Bot
     # Supposed to be used in development environments only.
     class UpdatesPoller
       class << self
@@ -15,7 +15,7 @@ module Telegram
         end
 
         def start(bot_id, controller = nil)
-          bot = bot_id.is_a?(Symbol) ? Telegram.bots[bot_id] : Bot.wrap(bot_id)
+          bot = bot_id.is_a?(Symbol) ? Telegram.bots[bot_id] : Client.wrap(bot_id)
           instance = controller ? new(bot, controller) : instances[bot]
           raise "Poller not found for #{bot_id.inspect}" unless instance
           instance.start

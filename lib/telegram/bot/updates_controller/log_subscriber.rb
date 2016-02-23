@@ -1,7 +1,7 @@
 require 'active_support/log_subscriber'
 
 module Telegram
-  class Bot
+  module Bot
     class UpdatesController
       class LogSubscriber < ActiveSupport::LogSubscriber
         def start_processing(event)

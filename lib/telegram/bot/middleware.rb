@@ -3,7 +3,7 @@ require 'action_dispatch/http/mime_type'
 require 'action_dispatch/middleware/params_parser'
 
 module Telegram
-  class Bot
+  module Bot
     class Middleware
       attr_reader :bot, :controller
 

@@ -14,6 +14,8 @@ GEM_ROOT = Pathname.new File.expand_path('../..', __FILE__)
 
 $LOAD_PATH.unshift GEM_ROOT.join('lib')
 require 'telegram/bot'
+require 'telegram/bot/updates_controller/rspec_helpers'
+require 'telegram/bot/types'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

@@ -1,7 +1,7 @@
 require 'telegram/bot/routes_helper'
 
 module Telegram
-  class Bot
+  module Bot
     class Railtie < Rails::Railtie
       config.telegram_updates_controller = ActiveSupport::OrderedOptions.new
 

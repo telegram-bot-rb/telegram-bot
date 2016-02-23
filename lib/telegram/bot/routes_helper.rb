@@ -1,7 +1,8 @@
 require 'telegram/bot'
+require 'active_support/core_ext/array/wrap'
 
 module Telegram
-  class Bot
+  module Bot
     module RoutesHelper
       class << self
         # Returns route name for given bot. Result depends on `Telegram.bots`.
@@ -42,7 +43,7 @@ module Telegram
           controllers = Hash[bots.map { |x| [x, controllers] }]
         end
         controllers.each do |bot, controller|
-          bot = Bot.wrap(bot)
+          bot = Client.wrap(bot)
           controller, bot_options = controller if controller.is_a?(Array)
           params = {
             to: Middleware.new(bot, controller),

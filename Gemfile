@@ -6,6 +6,8 @@ group :development do
   gem 'pry', '~> 0.10.1'
   gem 'pry-byebug', '~> 3.2.0'
 
+  gem 'telegram-bot-types', '~> 0.2.0'
+
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-its', '~> 1.1.0'
 

@@ -1,5 +1,5 @@
 module Telegram
-  class Bot
+  module Bot
     VERSION = '0.3.0'.freeze
 
     def self.gem_version

@@ -5,13 +5,13 @@
 [![Build Status](https://travis-ci.org/printercu/telegram-bot.svg)](https://travis-ci.org/printercu/telegram-bot)
 
 Tools for developing bot for Telegram. Best used with Rails, but can be be used in
-standalone app. Supposed to be used in webhook-mode in production, and poller mode
+standalone app. Supposed to be used in webhook-mode in production, and poller-mode
 in development, but you can use poller in production if you want.
 
 Package contains:
 
-- Ligthweight client to bot API (with fast and thread-safe
-  [httpclient](https://github.com/nahi/httpclient) is under the hood.)
+- Ligthweight client for bot API (with fast and thread-safe
+  [httpclient](https://github.com/nahi/httpclient) under the hood).
 - Controller with message parser. Allows to write separate methods for each command.
 - Middleware and routes helpers for production env.
 - Poller with automatic source-reloader for development env.
@@ -62,15 +62,31 @@ telegram:
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.
 
-You can create clients manually with `Telegram::Bot.new(token, username)`.
+You can create clients manually with `Telegram::Bot::Client.new(token, username)`.
 Username is optional and used only to parse commands with mentions.
 
-Client has all available methods in underscored style
+There is `request(path_suffix, body)` method to perform any query.
+And there are also shortcuts for available queries in underscored style
 (`answer_inline_query` instead of `answerInlineQuery`).
 All this methods just post given params to specific URL.
 
 ```ruby
+bot.request(:getMe) or bot.get_me
+bot.request(:getupdates, offset: 1) or bot.get_updates(offset: 1)
 bot.send_message chat_id: chat_id, text: 'Test'
+```
+
+By default client will return parsed json responses. You can enable
+response typecasting to virtus models using `telegram-bot-types` gem:
+```ruby
+# Add to your gemfile:
+gem 'telegram-bot-types', '~> x.x.x'
+# Enable typecasting:
+Telegram::Bot::Client.typed_response!
+# or for single instance:
+bot.extend Telegram::Bot::Client::TypedResponse
+
+bot.get_me.class # => Telegram::Bot::Types::User
 ```
 
 ### Controller
@@ -117,6 +133,19 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
     elsif chat
       # locale for chat
     end
+  end
+end
+```
+
+You can enable typecasting of `update` with `telegram-bot-types` by including
+`Telegram::Bot::UpdatesPoller::TypedUpdate`:
+
+```ruby
+class Telegram::WebhookController < Telegram::Bot::UpdatesController
+  include Telegram::Bot::UpdatesPoller::TypedUpdate
+
+  def message(message)
+    message.class # => Telegram::Bot::Types::Message
   end
 end
 ```

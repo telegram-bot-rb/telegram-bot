@@ -1,9 +1,13 @@
 require 'telegram/bot/routes_helper'
 
 RSpec.describe Telegram::Bot::RoutesHelper do
-  let(:bot) { Telegram::Bot.new('bot_token') }
-  let(:other_bot) { Telegram::Bot.new('other_token') }
+  let(:bot) { create_bot('bot_token') }
+  let(:other_bot) { create_bot('other_token') }
   let(:bots) { {default: bot, other: other_bot} }
+
+  def create_bot(*args)
+    Telegram::Bot::Client.new(*args)
+  end
 
   describe '.route_name_for_bot' do
     subject { described_class.route_name_for_bot(input) }
@@ -82,7 +86,7 @@ RSpec.describe Telegram::Bot::RoutesHelper do
       it 'creates routes for every bot and its controller' do
         assert_routes [bot, controller, 'default_telegram_webhook', option: :val],
                       [
-                        Telegram::Bot.new('custom_token'),
+                        create_bot('custom_token'),
                         other_controller,
                         :custom_route,
                         option: :other_val,
@@ -101,12 +105,12 @@ RSpec.describe Telegram::Bot::RoutesHelper do
 
       it 'creates routes for every created bot and controller' do
         assert_routes [
-          Telegram::Bot.new('custom_token'),
+          create_bot('custom_token'),
           controller,
           'telegram_webhook',
           option: :val,
         ], [
-          Telegram::Bot.new(bot.token, 'new_name'),
+          create_bot(bot.token, 'new_name'),
           controller,
           'telegram_webhook',
           option: :val,

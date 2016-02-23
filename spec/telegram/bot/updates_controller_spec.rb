@@ -1,10 +1,5 @@
 RSpec.describe Telegram::Bot::UpdatesController do
-  let(:instance) { described_class.new(bot, update) }
-  let(:update) { {payload_type => payload} }
-  let(:payload_type) { 'some_type' }
-  let(:payload) { double(:payload) }
-  let(:bot) { double(username: bot_name) }
-  let(:bot_name) { 'bot' }
+  include_context 'telegram/bot/updates_controller'
   let(:other_bot_name) { 'other_bot' }
 
   describe '.action_for_command' do
@@ -113,6 +108,24 @@ RSpec.describe Telegram::Bot::UpdatesController do
           let(:mention) { other_bot_name }
           it { should eq [false, 'message', [payload]] }
         end
+      end
+    end
+  end
+
+  context 'when `update` is a virtus model' do
+    subject { instance }
+    let(:update) { Telegram::Bot::Types::Update.new(super()) }
+    %w(
+      message
+      inline_query
+      chosen_inline_result
+    ).each do |type|
+      context "with #{type}" do
+        type_class = Telegram::Bot::Types.const_get(type.camelize)
+        let(:payload_type) { type }
+        let(:payload) { {} }
+        its(:payload_type) { should eq payload_type }
+        its(:payload) { should be_instance_of type_class }
       end
     end
   end

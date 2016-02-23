@@ -1,5 +1,5 @@
 module Telegram
-  class Bot
+  module Bot
     class UpdatesController
       # Most methods are taken from ActionController::Instrumentation,
       # some are slightly modified.

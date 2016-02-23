@@ -2,14 +2,18 @@ require 'abstract_controller'
 require 'active_support/callbacks'
 
 module Telegram
-  class Bot
+  module Bot
     class UpdatesController < AbstractController::Base
+      abstract!
+
       include AbstractController::Callbacks
       include AbstractController::Translation
 
       require 'telegram/bot/updates_controller/log_subscriber'
       require 'telegram/bot/updates_controller/instrumentation'
       prepend Instrumentation
+
+      autoload :TypedUpdate, 'telegram/bot/updates_controller/typed_update'
 
       PAYLOAD_TYPES = %w(
         message
@@ -18,7 +22,6 @@ module Telegram
       ).freeze
       CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
-      abstract!
 
       class << self
         def dispatch(*args)
