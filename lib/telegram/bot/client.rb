@@ -28,6 +28,13 @@ module Telegram
         def typed_response!
           prepend TypedResponse
         end
+
+        # Encodes nested hashes as json.
+        def prepare_body(body)
+          body.each do |k, val|
+            body[k] = val.to_json if val.is_a?(Hash)
+          end
+        end
       end
 
       attr_reader :client, :token, :username, :base_uri
@@ -47,8 +54,8 @@ module Telegram
         client.debug_dev = nil
       end
 
-      def request(action, data = {})
-        res = http_request("#{base_uri}#{action}", data)
+      def request(action, body = {})
+        res = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
         status = res.status
         return JSON.parse(res.body) if 300 > status
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
