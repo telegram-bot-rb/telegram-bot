@@ -1,5 +1,6 @@
 require 'abstract_controller'
 require 'active_support/callbacks'
+require 'active_support/version'
 
 module Telegram
   module Bot
@@ -7,6 +8,16 @@ module Telegram
       abstract!
 
       include AbstractController::Callbacks
+      # Redefine callbacks with default terminator.
+      if ActiveSupport.gem_version >= Gem::Version.new('5')
+        define_callbacks  :process_action,
+                          skip_after_callbacks_if_terminated: true
+      else
+        define_callbacks  :process_action,
+                          terminator: ->(_, result) { result == false },
+                          skip_after_callbacks_if_terminated: true
+      end
+
       include AbstractController::Translation
 
       require 'telegram/bot/updates_controller/log_subscriber'

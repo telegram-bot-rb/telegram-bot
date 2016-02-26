@@ -143,4 +143,45 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq bot.username }
     end
   end
+
+  describe '#process_action' do
+    subject { -> { instance.process_action(:action) } }
+
+    context 'when callbacks are defined' do
+      let(:instance) { controller_class.new }
+      let(:controller_class) do
+        Class.new(described_class) do
+          before_action :hook
+          attr_reader :acted, :hooked
+
+          def action
+            @acted = true
+          end
+
+          private
+
+          def hook
+            @hooked = true
+          end
+        end
+      end
+
+      it { should change(instance, :hooked).to true }
+      it { should change(instance, :acted).to true }
+
+      context 'when callback returns false' do
+        before do
+          controller_class.prepend(Module.new do
+            def hook
+              super
+              false
+            end
+          end)
+        end
+
+        it { should change(instance, :hooked).to true }
+        it { should_not change(instance, :acted).from nil }
+      end
+    end
+  end
 end
