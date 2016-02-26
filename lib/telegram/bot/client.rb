@@ -47,7 +47,17 @@ module Telegram
       end
 
       def debug!(dev = STDOUT)
-        client.debug_dev = dev
+        if block_given?
+          begin
+            old_dev = client.debug_dev
+            client.debug_dev = dev
+            yield
+          ensure
+            client.debug_dev = old_dev
+          end
+        else
+          client.debug_dev = dev
+        end
       end
 
       def debug_off!
