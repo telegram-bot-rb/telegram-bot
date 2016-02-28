@@ -7,6 +7,10 @@ module Telegram
     class UpdatesController < AbstractController::Base
       abstract!
 
+      require 'telegram/bot/updates_controller/session'
+      require 'telegram/bot/updates_controller/log_subscriber'
+      require 'telegram/bot/updates_controller/instrumentation'
+
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
       if ActiveSupport.gem_version >= Gem::Version.new('5')
@@ -19,10 +23,8 @@ module Telegram
       end
 
       include AbstractController::Translation
-
-      require 'telegram/bot/updates_controller/log_subscriber'
-      require 'telegram/bot/updates_controller/instrumentation'
       prepend Instrumentation
+      extend Session::ConfigMethods
 
       autoload :TypedUpdate, 'telegram/bot/updates_controller/typed_update'
 

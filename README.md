@@ -94,7 +94,7 @@ bot.get_me.class # => Telegram::Bot::Types::User
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # use callbacks like in any other controllers
-  around_action :set_locale
+  around_action :with_locale
 
   # Every update can have one of: message, inline_query & chosen_inline_result.
   # Define method with same name to respond to this updates.
@@ -123,7 +123,7 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 
   private
 
-  def set_locale(&block)
+  def with_locale(&block)
     I18n.with_locale(locale_for_update, &block)
   end
 
@@ -146,6 +146,36 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 
   def message(message)
     message.class # => Telegram::Bot::Types::Message
+  end
+end
+```
+
+There is support for sessions using `ActiveSupport::Cache` stores.
+
+```ruby
+# configure store in env files:
+config.telegram_updates_controller.session_store = :redis_store, {expires_in: 1.month}
+
+class Telegram::WebhookController < Telegram::Bot::UpdatesController
+  include Telegram::Bot::UpdatesController::Session
+  # You can override global config
+  self.session_store = :file_store
+
+  def write(text = nil, *)
+    session[:text] = text
+  end
+
+  def read
+    session[:text]
+  end
+
+  private
+  # By default it uses bot's username and user's id as a session key.
+  # Chat's id is used only when `from` field is empty.
+  # Override `session_key` method to change this behavior.
+  def session_key
+    # In this case session will persist for user only in specific chat:
+    "#{bot.username}:#{chat['id']}:#{from['id']}"
   end
 end
 ```
