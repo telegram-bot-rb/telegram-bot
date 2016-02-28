@@ -59,6 +59,18 @@ module Telegram
           end
         end
 
+        class TestSessionHash < SessionHash
+          def initialize
+            @data = {}
+            @loaded = true
+            @exists = true
+          end
+
+          alias_method :destroy, :clear
+          alias_method :load!, :id
+          alias_method :commit, :id
+        end
+
         module ConfigMethods
           delegate :session_store, to: :config
 

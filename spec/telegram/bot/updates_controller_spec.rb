@@ -148,7 +148,6 @@ RSpec.describe Telegram::Bot::UpdatesController do
     subject { -> { instance.process_action(:action) } }
 
     context 'when callbacks are defined' do
-      let(:instance) { controller_class.new }
       let(:controller_class) do
         Class.new(described_class) do
           before_action :hook

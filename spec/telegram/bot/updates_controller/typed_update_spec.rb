@@ -1,6 +1,5 @@
 RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
   include_context 'telegram/bot/updates_controller'
-  let(:instance) { controller_class.new(bot, update) }
   let(:controller_class) do
     described_class = self.described_class
     Class.new(Telegram::Bot::UpdatesController) do
