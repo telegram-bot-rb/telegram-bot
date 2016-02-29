@@ -12,9 +12,10 @@ namespace :telegram do
       routes = Rails.application.routes.url_helpers
       cert_file = ENV['CERT']
       cert = File.open(cert_file) if cert_file
-      Telegram.bots.each_value do |bot|
-        route_name = Telegram::RoutesHelper.route_name_for_bot(bot)
+      Telegram.bots.each do |key, bot|
+        route_name = Telegram::Bot::RoutesHelper.route_name_for_bot(bot)
         url = routes.send("#{route_name}_url")
+        puts "Setting webhook for #{key}..."
         bot.set_webhook(url: url, certificate: cert)
       end
     end

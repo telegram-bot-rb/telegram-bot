@@ -16,6 +16,12 @@ module Telegram
             name && "#{name}_telegram_webhook"
           end || 'telegram_webhook'
         end
+
+        # Replaces colon with underscore so rails don't treat it as
+        # route parameter.
+        def escape_token(token)
+          token.tr(':', '_')
+        end
       end
 
       #   # Create routes for all Telegram.bots to use same controller:
@@ -50,7 +56,7 @@ module Telegram
             as: RoutesHelper.route_name_for_bot(bot),
             format: false,
           }.merge!(options).merge!(bot_options || {})
-          post("telegram/#{bot.token}", params)
+          post("telegram/#{RoutesHelper.escape_token bot.token}", params)
           UpdatesPoller.add(bot, controller) if Telegram.bot_poller_mode?
         end
       end
