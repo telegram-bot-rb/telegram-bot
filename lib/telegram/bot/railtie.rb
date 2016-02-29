@@ -25,7 +25,8 @@ module Telegram
       initializer 'telegram.bot.updates_controller.add_ar_runtime' do
         ActiveSupport.on_load('telegram.bot.updates_controller') do
           if defined?(ActiveRecord::Railties::ControllerRuntime)
-            include ActiveRecord::Railties::ControllerRuntime
+            prepend ActiveRecord::Railties::ControllerRuntime
+            extend ActiveRecord::Railties::ControllerRuntime::ClassMethods
           end
         end
       end
