@@ -15,7 +15,7 @@ module Telegram
       def call(env)
         update = env['action_dispatch.request.request_parameters']
         controller.dispatch(bot, update)
-        [200, {}, '']
+        [200, {}, ['']]
       end
 
       def inspect

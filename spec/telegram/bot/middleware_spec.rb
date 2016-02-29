@@ -13,6 +13,6 @@ RSpec.describe Telegram::Bot::Middleware do
       subject
     end
 
-    it { should eq [200, {}, ''] }
+    it { should eq [200, {}, ['']] }
   end
 end
