@@ -166,7 +166,7 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 
   def read
-    session[:text]
+    reply_with :message, text: session[:text]
   end
 
   private
@@ -215,12 +215,34 @@ call `.dispatch(bot, update)` on controller.
 
 ### Development & Debugging
 
-Use `rake telegram:bot:poller BOT=chat` to run poller. It'll automatically load
-changes without restart in development env. This task will not if you don't use
-`telegram_webhooks`.
+Use `rake telegram:bot:poller` to run poller. It'll automatically load
+changes without restart in development env. Optionally specify bot to run poller for
+with `BOT` envvar (`BOT=chat`).
 
+This task will not work if you don't use `telegram_webhooks`.
 You can run poller manually with
 `Telegram::Bot::UpdatesPoller.start(bot, controller_class)`.
+
+### Testing
+
+There is `Telegram::Bot::ClientStub` class to stub client for tests.
+Instead of performing API requests it stores them in `requests` hash.
+
+To stub all possible clients use `Telegram::Bot::ClientStub.stub_all!` before
+initializing clients. Most likely you'll want something like this:
+
+```ruby
+RSpec.configure do |config|
+  # ...
+  Telegram.reset_bots
+  Telegram::Bot::ClientStub.stub_all!
+  config.after { Telegram.bot.reset }
+  # ...
+end
+```
+
+There are also some helpers for controller tests.
+Check out `telegram/bot/updates_controller/rspec_helpers`.
 
 ### Deploying
 

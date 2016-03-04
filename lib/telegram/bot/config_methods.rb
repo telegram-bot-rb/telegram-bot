@@ -41,6 +41,13 @@ module Telegram
           config[:default] = default if default
         end
       end
+
+      # Resets all cached bots and their configs.
+      def reset_bots
+        @bots = nil
+        @bot = nil
+        @bots_config = nil
+      end
     end
   end
 end
