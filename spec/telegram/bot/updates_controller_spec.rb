@@ -78,7 +78,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
   end
 
   describe '#action_for_payload' do
-    subject { instance.action_for_payload }
+    subject { controller.action_for_payload }
 
     (described_class::PAYLOAD_TYPES - %w(message)).each do |type|
       context "when payload is #{type}" do
@@ -113,7 +113,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
   end
 
   context 'when `update` is a virtus model' do
-    subject { instance }
+    subject { controller }
     let(:update) { Telegram::Bot::Types::Update.new(super()) }
     %w(
       message
@@ -131,7 +131,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
   end
 
   describe '#bot_username' do
-    subject { instance.bot_username }
+    subject { controller.bot_username }
 
     context 'when bot is not set' do
       let(:bot) {}
@@ -145,7 +145,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
   end
 
   describe '#process_action' do
-    subject { -> { instance.process_action(:action) } }
+    subject { -> { controller.process_action(:action) } }
 
     context 'when callbacks are defined' do
       let(:controller_class) do
@@ -165,8 +165,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
         end
       end
 
-      it { should change(instance, :hooked).to true }
-      it { should change(instance, :acted).to true }
+      it { should change(controller, :hooked).to true }
+      it { should change(controller, :acted).to true }
 
       context 'when callback returns false' do
         before do
@@ -178,8 +178,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
           end)
         end
 
-        it { should change(instance, :hooked).to true }
-        it { should_not change(instance, :acted).from nil }
+        it { should change(controller, :hooked).to true }
+        it { should_not change(controller, :acted).from nil }
       end
     end
   end

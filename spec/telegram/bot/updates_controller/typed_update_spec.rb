@@ -8,7 +8,7 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
   end
 
   context 'when `update` is a virtus model' do
-    subject { instance }
+    subject { controller }
     %w(
       message
       inline_query

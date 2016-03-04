@@ -1,23 +1,29 @@
+require 'telegram/bot/updates_controller/testing'
+
 RSpec.shared_context 'telegram/bot/updates_controller' do
   let(:controller_class) { described_class }
-  let(:instance) { controller_class.new(bot, update) }
+  let(:controller) do
+    controller_class.new(bot, update).tap do |x|
+      x.extend Telegram::Bot::UpdatesController::Testing
+    end
+  end
   let(:update) { {payload_type => payload} }
   let(:payload_type) { 'some_type' }
   let(:payload) { double(:payload) }
   let(:bot) { Telegram::Bot::ClientStub.new(bot_name) }
   let(:bot_name) { 'bot' }
-  let(:session) do
-    session = Telegram::Bot::UpdatesController::Session::TestSessionHash.new
-    allow_any_instance_of(controller_class).to receive(:session) { session }
-    session
+  let(:session) { controller.send(:session) }
+
+  def dispatch(bot = self.bot, update = self.update)
+    controller.dispatch_again(bot, update)
   end
 
   def dispatch_message(text, options = {})
-    payload = build_payload :message, options.merge(text: text)
-    controller_class.dispatch bot, payload
+    update = build_update :message, options.merge(text: text)
+    dispatch bot, update
   end
 
-  def build_payload(type, content)
+  def build_update(type, content)
     deep_stringify type => content
   end
 

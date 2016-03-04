@@ -242,7 +242,8 @@ end
 ```
 
 There are also some helpers for controller tests.
-Check out `telegram/bot/updates_controller/rspec_helpers`.
+Check out `telegram/bot/updates_controller/rspec_helpers` and
+`telegram/bot/updates_controller/testing`.
 
 ### Deploying
 
