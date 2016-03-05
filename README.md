@@ -180,6 +180,45 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 end
 ```
 
+It's usual to support chain of messages like BotFather: after receiving command
+it asks you for additional argument. There is `MessageContext` for this:
+
+```ruby
+class Telegram::WebhookController < Telegram::Bot::UpdatesController
+  include Telegram::Bot::UpdatesController::MessageContext
+
+  def rename(*)
+    # set context for the next message
+    save_context :rename
+    reply_with :message, text: 'What name do you like?'
+  end
+
+  # register context handlers to handle this context
+  context_handler :rename do |message|
+    update_name message[:text]
+    reply_with :message, text: 'Renamed!'
+  end
+
+  # You can do it in other way:
+  def rename(name = nil, *)
+    if name
+      update_name message[:text]
+      reply_with :message, text: 'Renamed!'
+    else
+      save_context :rename
+      reply_with :message, text: 'What name do you like?'
+    end
+  end
+
+  # This will call #rename like if it is called with message '/rename %text%'
+  context_handler :rename
+
+  # If you have a lot of such methods you can use
+  context_to_action!
+  # It'll use context value as action name for all contexts which miss handlers.
+end
+```
+
 ### Routes
 
 Use `telegram_webhooks` helper to add routes. It will create routes for bots

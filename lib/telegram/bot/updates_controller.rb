@@ -10,6 +10,7 @@ module Telegram
       require 'telegram/bot/updates_controller/session'
       require 'telegram/bot/updates_controller/log_subscriber'
       require 'telegram/bot/updates_controller/instrumentation'
+      autoload :MessageContext, 'telegram/bot/updates_controller/message_context'
 
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
@@ -59,7 +60,7 @@ module Telegram
           match = text.match CMD_REGEX
           return unless match
           return if match[3] && username != true && match[3] != username
-          [match[1], text.split(' ').drop(1)]
+          [match[1], text.split.drop(1)]
         end
       end
 
