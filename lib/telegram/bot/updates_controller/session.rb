@@ -65,6 +65,10 @@ module Telegram
           def session_store=(store)
             config.session_store = ActiveSupport::Cache.lookup_store(store)
           end
+
+          def use_session!
+            include Session
+          end
         end
       end
     end

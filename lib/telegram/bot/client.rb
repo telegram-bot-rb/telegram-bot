@@ -104,7 +104,7 @@ module Telegram
       end
 
       def inspect
-        "#<Telegram::Bot::Client##{object_id}(#{@username})>"
+        "#<#{self.class.name}##{object_id}(#{@username})>"
       end
     end
   end

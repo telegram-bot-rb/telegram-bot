@@ -158,6 +158,9 @@ config.telegram_updates_controller.session_store = :redis_store, {expires_in: 1.
 
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
   include Telegram::Bot::UpdatesController::Session
+  # or just shortcut:
+  use_session!
+
   # You can override global config
   self.session_store = :file_store
 
@@ -217,6 +220,20 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   context_to_action!
   # It'll use context value as action name for all contexts which miss handlers.
 end
+```
+
+To process update run:
+
+```ruby
+ControllerClass.dispatch(bot, update)
+```
+
+There is also ability to run action without update:
+
+```ruby
+# Most likely you'll want to pass :from and :chat
+controller = ControllerClass.new(bot, from: telegram_user, chat: telegram_chat)
+controller.process(:help, *args)
 ```
 
 ### Routes

@@ -39,7 +39,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
 
   describe '#message' do
     subject { -> { dispatch } }
-    let(:payload_type) { 'message' }
+    let(:payload_type) { :message }
     let(:payload) { {'text' => text} }
     let(:text) { 'asd qwe zxc' }
 

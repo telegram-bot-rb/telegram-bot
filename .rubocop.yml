@@ -8,9 +8,11 @@ Style/AlignParameters:
   # EnforcedStyle:
   # - with_first_parameter
   # - with_fixed_indentation
+Style/AndOr: {EnforcedStyle: conditionals}
 Style/ClosingParenthesisIndentation: {Enabled: false}
 Style/Documentation: {Enabled: false}
 Style/DotPosition: {EnforcedStyle: trailing}
+Style/FirstParameterIndentation: {EnforcedStyle: consistent}
 Style/IfUnlessModifier: {Enabled: false}
 Style/ModuleFunction: {Enabled: false}
 Style/MultilineOperationIndentation: {EnforcedStyle: indented}

@@ -7,8 +7,8 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
       x.extend Telegram::Bot::UpdatesController::Testing
     end
   end
-  let(:update) { {payload_type => payload} }
-  let(:payload_type) { 'some_type' }
+  let(:update) { build_update(payload_type, payload) }
+  let(:payload_type) { :some_type }
   let(:payload) { double(:payload) }
   let(:bot) { Telegram::Bot::ClientStub.new(bot_name) }
   let(:bot_name) { 'bot' }

@@ -144,17 +144,19 @@ RSpec.describe Telegram::Bot::UpdatesController do
     end
   end
 
-  describe '#process_action' do
-    subject { -> { controller.process_action(:action) } }
+  describe '#process' do
+    subject { -> { controller.process(:action, *args) } }
+    let(:args) { [:arg1, :arg2] }
 
     context 'when callbacks are defined' do
       let(:controller_class) do
         Class.new(described_class) do
-          before_action :hook
+          before_action :hook, only: :action
           attr_reader :acted, :hooked
 
-          def action
+          def action(*args)
             @acted = true
+            args
           end
 
           private
@@ -167,6 +169,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
 
       it { should change(controller, :hooked).to true }
       it { should change(controller, :acted).to true }
+      its(:call) { should eq args }
 
       context 'when callback returns false' do
         before do
@@ -180,6 +183,102 @@ RSpec.describe Telegram::Bot::UpdatesController do
 
         it { should change(controller, :hooked).to true }
         it { should_not change(controller, :acted).from nil }
+        its(:call) { should eq false }
+      end
+    end
+
+    context 'when initialized without update' do
+      let(:controller) { controller_class.new(bot, from: from, chat: chat) }
+      let(:from) { {'id' => 'user_id'} }
+      let(:chat) { {'id' => 'chat_id'} }
+      let(:controller_class) do
+        Class.new(described_class) do
+          def action(*args)
+            [from, chat, args]
+          end
+        end
+      end
+
+      its(:call) { should eq [from, chat, args] }
+    end
+  end
+
+  describe '#initialize' do
+    subject { controller }
+    let(:payload_type) { 'message' }
+    let(:payload) { deep_stringify(chat: chat, from: from) }
+    let(:chat) { double(:chat) }
+    let(:from) { double(:from) }
+
+    def self.with_reinitialize(&block)
+      instance_eval(&block)
+      context 'when re-initialized' do
+        let(:controller) do
+          described_class.new(double(:other_bot), build_update(:message,
+            text: 'original message',
+            from: double(:original_from),
+            chat: double(:original_chat),
+          )).tap { |x| x.send(:initialize, bot, update) }
+        end
+        instance_eval(&block)
+      end
+    end
+
+    context 'when update is given' do
+      with_reinitialize do
+        its(:bot) { should eq bot }
+        its(:update) { should eq update }
+        its(:payload) { should eq payload }
+        its(:payload_type) { should eq payload_type }
+        its(:from) { should eq from }
+        its(:chat) { should eq chat }
+      end
+    end
+
+    context 'when options hash is given' do
+      let(:update) { {from: from, chat: chat} }
+      with_reinitialize do
+        its(:bot) { should eq bot }
+        its(:update) { should eq nil }
+        its(:payload) { should eq nil }
+        its(:payload_type) { should eq nil }
+        its(:from) { should eq from }
+        its(:chat) { should eq chat }
+      end
+    end
+  end
+
+  describe '#reply_with' do
+    subject { controller.reply_with type, params }
+    let(:params) { {arg: 1, 'other_arg' => 2} }
+    let(:type) { :photo }
+    let(:result) { double(:result) }
+    let(:payload_type) { :message }
+    let(:payload) { {message_id: double(:message_id)} }
+    let(:chat) { {'id' => double(:chat_id)} }
+
+    it 'sets chat_id & reply_to_message' do
+      expect(controller).to receive(:chat) { chat }
+      expect(bot).to receive("send_#{type}").with(params.merge(
+        chat_id: chat['id'],
+        reply_to_message: payload[:message_id],
+      )) { result }
+      should eq result
+    end
+
+    context 'when chat is missing' do
+      let(:payload_type) { :some_type }
+      it { expect { subject }.to raise_error(/chat/) }
+    end
+
+    context 'when update is not set' do
+      let(:update) { {chat: chat} }
+      it 'sets chat_id & reply_to_message' do
+        expect(bot).to receive("send_#{type}").with(params.merge(
+          chat_id: chat['id'],
+          reply_to_message: nil,
+        )) { result }
+        should eq result
       end
     end
   end

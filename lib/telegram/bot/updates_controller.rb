@@ -4,6 +4,52 @@ require 'active_support/version'
 
 module Telegram
   module Bot
+    # Base class to create update processors. With callbacks, session and helpers.
+    #
+    # Define public methods for each command and they will be called when
+    # update has this command. Message is automatically parsed and
+    # words are passed as method arguments. Be sure to use default values and
+    # splat arguments in every action method to not get errors, when user
+    # sends command without necessary args / with extra args.
+    #
+    #     def start(token = nil, *)
+    #       if token
+    #         # ...
+    #       else
+    #         # ...
+    #       end
+    #     end
+    #
+    #     def help(*)
+    #       reply_with :message, text:
+    #     end
+    #
+    # To process plain text messages (without commands) or other updates just
+    # define public method with name of payload type. They will receive payload
+    # as an argument.
+    #
+    #     def message(message)
+    #       reply_with :message, text: "Echo: #{message['text']}"
+    #     end
+    #
+    #     def inline_query(query)
+    #       answer_inline_query results_for_query(query), is_personal: true
+    #     end
+    #
+    #     # To process conflicting commands (`/message args`) just use `on_` prefix:
+    #     def on_message(*args)
+    #       # ...
+    #     end
+    #
+    # To process update run:
+    #
+    #     ControllerClass.dispatch(bot, update)
+    #
+    # There is also ability to run action without update:
+    #
+    #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
+    #       process(:help, *args)
+    #
     class UpdatesController < AbstractController::Base
       abstract!
 
@@ -38,6 +84,7 @@ module Telegram
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
 
       class << self
+        # Initialize controller and process update.
         def dispatch(*args)
           new(*args).dispatch
         end
@@ -68,18 +115,39 @@ module Telegram
       alias_method :command?, :is_command
       delegate :username, to: :bot, prefix: true, allow_nil: true
 
+      # Second argument can be either update object with hash access & string
+      # keys or Hash with `:from` or `:chat` to override this values and assume
+      # that update is nil.
       def initialize(bot = nil, update = nil)
+        if update.is_a?(Hash) && (update.key?(:from) || update.key?(:chat))
+          options = update
+          update = nil
+        end
         @_update = update
         @_bot = bot
+        @_chat, @_from = options && options.values_at(:chat, :from)
 
+        payload_data = nil
         update && PAYLOAD_TYPES.find do |type|
           item = update[type]
-          next unless item
-          @_payload = item
-          @_payload_type = type
+          payload_data = [item, type] if item
         end
+        @_payload, @_payload_type = payload_data
       end
 
+      # Accessor to `'chat'` field of payload. Can be overriden with `chat` option
+      # for #initialize.
+      def chat
+        @_chat || payload && payload['chat']
+      end
+
+      # Accessor to `'from'` field of payload. Can be overriden with `from` option
+      # for #initialize.
+      def from
+        @_from || payload && payload['from']
+      end
+
+      # Processes current update.
       def dispatch
         @_is_command, action, args = action_for_payload
         process(action, *args)
@@ -103,17 +171,30 @@ module Telegram
       def action_missing(*)
       end
 
-      %w(chat from).each do |field|
-        define_method(field) { payload[field] }
-      end
-
+      # Helper to call bot's `send_#{type}` method with already set `chat_id` and
+      # `reply_to_message_id`:
+      #
+      #     reply_with :message, text: 'Hello!'
+      #     reply_with :message, text: '__Hello!__', parse_mode: :Markdown
+      #     reply_with :photo, photo: File.open(photo_to_send), caption: "It's incredible!"
       def reply_with(type, params)
         method = "send_#{type}"
+        chat = self.chat
+        payload = self.payload
         params = params.merge(
-          chat_id: chat['id'],
-          reply_to_message: payload['message_id'],
+          chat_id: (chat && chat['id'] or raise 'Can not reply_with when chat is not present'),
+          reply_to_message: payload && payload['message_id'],
         )
         bot.public_send(method, params)
+      end
+
+      # Same as reply_with, but for inline queries.
+      def answer_inline_query(results, params = {})
+        params = params.merge(
+          inline_query_id: payload['id'],
+          results: results,
+        )
+        bot.answer_inline_query(params)
       end
 
       ActiveSupport.run_load_hooks('telegram.bot.updates_controller', self)
