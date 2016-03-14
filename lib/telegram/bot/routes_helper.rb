@@ -42,7 +42,9 @@ module Telegram
       #   # You can override this options or specify others:
       #   telegram_webhooks TelegramController, as: :my_webhook
       #   telegram_webhooks bot => [TelegramChatController, as: :chat_webhook],
-      #                     other_bot => [TelegramAuctionController,
+      #                     other_bot => TelegramAuctionController,
+      #                     admin_chat: TelegramAdminChatController
+      #
       def telegram_webhooks(controllers, bots = nil, **options)
         unless controllers.is_a?(Hash)
           bots = bots ? Array.wrap(bots) : Telegram.bots.values

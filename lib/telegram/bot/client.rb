@@ -19,6 +19,9 @@ module Telegram
           when Hash then
             input = input.stringify_keys
             new input['token'], input['username']
+          when Symbol
+            Telegram.bots[input] or
+              raise "Bot #{input} not configured, check Telegram.bots_config."
           else
             new(input)
           end

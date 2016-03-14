@@ -78,6 +78,7 @@ RSpec.describe Telegram::Bot::RoutesHelper do
           {
             bot => controller,
             'custom_token' => [other_controller, as: :custom_route, option: :other_val],
+            other: controller,
           },
           option: :val,
         ]
@@ -90,7 +91,8 @@ RSpec.describe Telegram::Bot::RoutesHelper do
                         other_controller,
                         :custom_route,
                         option: :other_val,
-                      ]
+                      ],
+                      [Telegram.bots[:other], controller, 'other_telegram_webhook', option: :val]
       end
     end
 

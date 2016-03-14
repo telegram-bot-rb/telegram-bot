@@ -33,6 +33,17 @@ RSpec.describe Telegram::Bot::Client do
       end
     end
 
+    context 'when input is a Symbol' do
+      let(:input) { :bot_1 }
+      before { allow(Telegram).to receive(:bots) { {bot_1: instance} } }
+      it { should eq Telegram.bots[:bot_1] }
+
+      context 'and there is no such bot' do
+        let(:input) { :invalid }
+        it { expect { subject }.to raise_error(/not configured/) }
+      end
+    end
+
     context 'when input is an array' do
       let!(:input) { ['other_token', instance, token: token, username: username] }
       let(:result_2) { double(:result_2) }
