@@ -147,17 +147,41 @@ RSpec.describe Telegram::Bot::UpdatesController do
   describe '#process' do
     subject { -> { controller.process(:action, *args) } }
     let(:args) { [:arg1, :arg2] }
+    let(:controller_class) do
+      Class.new(described_class) do
+        attr_reader :acted, :hooked
+
+        def action(*args)
+          @acted = true
+          [from, chat, args]
+        end
+      end
+    end
+
+    context 'when action is protected' do
+      before { controller_class.send :protected, :action }
+      its(:call) { should eq nil }
+
+      context 'when action_missing defined' do
+        before do
+          controller.class_eval do
+            protected
+
+            def action_missing(*args)
+              args
+            end
+          end
+        end
+
+        its(:call) { should eq ['action', *args] }
+      end
+    end
 
     context 'when callbacks are defined' do
-      let(:controller_class) do
-        Class.new(described_class) do
+      before do
+        controller_class.class_eval do
           before_action :hook, only: :action
-          attr_reader :acted, :hooked
-
-          def action(*args)
-            @acted = true
-            args
-          end
+          attr_reader :hooked
 
           private
 
@@ -169,7 +193,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
 
       it { should change(controller, :hooked).to true }
       it { should change(controller, :acted).to true }
-      its(:call) { should eq args }
+      its(:call) { should eq [nil, nil, args] }
 
       context 'when callback returns false' do
         before do
@@ -191,14 +215,6 @@ RSpec.describe Telegram::Bot::UpdatesController do
       let(:controller) { controller_class.new(bot, from: from, chat: chat) }
       let(:from) { {'id' => 'user_id'} }
       let(:chat) { {'id' => 'chat_id'} }
-      let(:controller_class) do
-        Class.new(described_class) do
-          def action(*args)
-            [from, chat, args]
-          end
-        end
-      end
-
       its(:call) { should eq [from, chat, args] }
     end
   end

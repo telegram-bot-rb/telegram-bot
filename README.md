@@ -142,7 +142,7 @@ You can enable typecasting of `update` with `telegram-bot-types` by including
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
-  include Telegram::Bot::UpdatesPoller::TypedUpdate
+  include Telegram::Bot::UpdatesController::TypedUpdate
 
   def message(message)
     message.class # => Telegram::Bot::Types::Message
@@ -205,7 +205,7 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # You can do it in other way:
   def rename(name = nil, *)
     if name
-      update_name message[:text]
+      update_name name
       reply_with :message, text: 'Renamed!'
     else
       save_context :rename
