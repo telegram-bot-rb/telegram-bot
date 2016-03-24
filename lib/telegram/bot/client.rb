@@ -68,14 +68,17 @@ module Telegram
         client.debug_dev = nil
       end
 
-      def request(action, body = {})
+      def request(action, body = {}) # rubocop:disable PerceivedComplexity
         res = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
         status = res.status
         return JSON.parse(res.body) if 300 > status
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
         err_msg = "#{res.reason}: #{result && result['description'] || '-'}"
-        # NotFound is raised only for valid responses from Telegram
-        raise NotFound, err_msg if 404 == status && result
+        if result
+          # NotFound is raised only for valid responses from Telegram
+          raise NotFound, err_msg if 404 == status
+          raise StaleChat, err_msg if StaleChat.match_response?(result)
+        end
         raise Error, err_msg
       end
 
