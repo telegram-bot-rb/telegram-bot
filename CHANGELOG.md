@@ -1,3 +1,8 @@
+# 0.6.0
+
+- StaleChat error.
+- Encode arrays as json in request body.
+
 # 0.5.0
 
 - MessageContext.
