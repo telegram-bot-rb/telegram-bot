@@ -34,8 +34,9 @@ module Telegram
 
         # Encodes nested hashes as json.
         def prepare_body(body)
+          body = body.dup
           body.each do |k, val|
-            body[k] = val.to_json if val.is_a?(Hash)
+            body[k] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
           end
         end
       end
