@@ -24,7 +24,7 @@ module Telegram
           #
           #     # To run other action with all the callbacks:
           #     context_handler :rename do |message|
-          #       process(:rename, *m['text'].split)
+          #       process(:rename, *m['text'].try!(:split)) # Message can be without text
           #     end
           #
           #     # Or just
@@ -32,7 +32,7 @@ module Telegram
           #     context_handler :rename # to call :rename
           #
           #     # For messages without context use this instead of `message` method:
-          #     context_handle do |message|
+          #     context_handler do |message|
           #     end
           #
           def context_handler(context = nil, action = nil, &block)
@@ -56,7 +56,7 @@ module Telegram
           if handler.respond_to?(:call)
             instance_exec(message, &handler)
           else
-            process(handler, *message['text'].split)
+            process(handler, *message['text'].try!(:split))
           end
         end
 

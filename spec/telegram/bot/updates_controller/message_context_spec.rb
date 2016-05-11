@@ -54,6 +54,11 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       its(:call) { should eq [:block_result, payload] }
       it { should_not change(controller, :filter_done) }
       it { should change { session[:context] }.to nil }
+
+      context 'when message has no text' do
+        let(:payload) { {'audio' => {'file_id' => 123}} }
+        its(:call) { should eq [:block_result, payload] }
+      end
     end
 
     context 'when context is handled by short redirect' do
@@ -61,6 +66,13 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       its(:call) { should eq [:method_result, *text.split] }
       it { should change(controller, :filter_done).to true }
       it { should change { session[:context] }.to nil }
+
+      context 'when message has no text' do
+        let(:payload) { {'audio' => {'file_id' => 123}} }
+        its(:call) { should eq [:method_result] }
+        it { should change(controller, :filter_done).to true }
+        it { should change { session[:context] }.to nil }
+      end
     end
 
     context 'when context is handled by custom redirect' do

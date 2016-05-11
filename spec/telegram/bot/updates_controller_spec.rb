@@ -109,6 +109,11 @@ RSpec.describe Telegram::Bot::UpdatesController do
           it { should eq [false, 'message', [payload]] }
         end
       end
+
+      context 'without text' do
+        let(:payload) { {'audio' => {'file_id' => 123}} }
+        it { should eq [false, payload_type, [payload]] }
+      end
     end
   end
 
