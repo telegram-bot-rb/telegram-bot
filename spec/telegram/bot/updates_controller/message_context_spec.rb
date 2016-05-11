@@ -10,7 +10,10 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
         self.filter_done = true
       end
 
-      context_handler do |*args|
+      attr_reader :callbacks_runs
+      before_action { @callbacks_runs = (@callbacks_runs || 0) + 1 }
+
+      def message(*args)
         [:no_context, *args]
       end
 
@@ -51,13 +54,19 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
 
     context 'when context is handled by block' do
       before { session[:context] = :block }
-      its(:call) { should eq [:block_result, payload] }
+      its(:call) { should eq [:block_result, *text.split] }
       it { should_not change(controller, :filter_done) }
       it { should change { session[:context] }.to nil }
 
       context 'when message has no text' do
         let(:payload) { {'audio' => {'file_id' => 123}} }
-        its(:call) { should eq [:block_result, payload] }
+        its(:call) { should eq [:block_result] }
+      end
+
+      context 'when message has new command' do
+        let(:text) { '/action a s d' }
+        its(:call) { should eq [:action_result, *%w(a s d)] }
+        it { should change { session[:context] }.to nil }
       end
     end
 
@@ -66,6 +75,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       its(:call) { should eq [:method_result, *text.split] }
       it { should change(controller, :filter_done).to true }
       it { should change { session[:context] }.to nil }
+      it { should change(controller, :callbacks_runs).to 1 }
 
       context 'when message has no text' do
         let(:payload) { {'audio' => {'file_id' => 123}} }
@@ -84,13 +94,19 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
 
     context 'when context is action`s name but not mapped' do
       before { session[:context] = :action }
-      its(:call) { should eq nil }
+      its(:call) { should eq [:no_context, payload] }
       it { should_not change(controller, :filter_done) }
       it { should change { session[:context] }.to nil }
     end
 
     context 'when context_to_action is true' do
       before { controller_class.context_to_action! }
+
+      context 'when context is not set' do
+        its(:call) { should eq [:no_context, payload] }
+        it { should_not change(controller, :filter_done) }
+        it { should_not change { session[:context] } }
+      end
 
       context 'when context is action`s name but not mapped' do
         before { session[:context] = :action }

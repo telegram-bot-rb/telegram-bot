@@ -159,11 +159,14 @@ module Telegram
       # Returns array `[is_command?, action, args]`.
       def action_for_payload
         case payload_type
-        when 'message'
-          cmd, args = self.class.command_from_text(payload['text'], bot_username)
-          cmd &&= self.class.action_for_command(cmd)
-          [true, cmd, args] if cmd
+        when 'message' then action_for_message
         end || [false, payload_type, [payload]]
+      end
+
+      def action_for_message
+        cmd, args = self.class.command_from_text(payload['text'], bot_username)
+        cmd &&= self.class.action_for_command(cmd)
+        [true, cmd, args] if cmd
       end
 
       # Silently ignore unsupported messages.

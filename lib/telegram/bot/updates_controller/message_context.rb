@@ -10,7 +10,6 @@ module Telegram
         included do
           # As we use before_action context is cleared anyway,
           # no matter we used it or not.
-          before_action :fetch_context
           singleton_class.send :attr_reader, :context_handlers, :context_to_action
           @context_handlers = {}
         end
@@ -18,26 +17,26 @@ module Telegram
         module ClassMethods
           # Registers handler for context.
           #
-          #     context_handler :rename do |message|
-          #       resource.update!(name: message['text'])
+          #     context_handler :rename do |*|
+          #       resource.update!(name: payload['text'])
           #     end
           #
           #     # To run other action with all the callbacks:
-          #     context_handler :rename do |message|
-          #       process(:rename, *m['text'].try!(:split)) # Message can be without text
+          #     context_handler :rename do |*words|
+          #       process(:rename, *words)
           #     end
           #
           #     # Or just
           #     context_handler :rename, :your_action_to_call
           #     context_handler :rename # to call :rename
           #
-          #     # For messages without context use this instead of `message` method:
-          #     context_handler do |message|
-          #     end
-          #
           def context_handler(context = nil, action = nil, &block)
             context &&= context.to_sym
-            context_handlers[context] = block || action || context
+            if block
+              action = "_context_handler_#{context}"
+              define_method(action, &block)
+            end
+            context_handlers[context] = action || context
           end
 
           # Use it to use context value as action name for all contexts
@@ -49,20 +48,9 @@ module Telegram
           end
         end
 
-        # Finds handler for current context and processes message with it.
-        def message(message)
-          handler = handler_for_context
-          return unless handler
-          if handler.respond_to?(:call)
-            instance_exec(message, &handler)
-          else
-            process(handler, *message['text'].try!(:split))
-          end
-        end
-
         # Action to clear context.
         def cancel
-          # Context is already cleared in before_action
+          # Context is already cleared in action_for_message
         end
 
         private
@@ -71,11 +59,15 @@ module Telegram
         # according to previous request.
         attr_reader :context
 
-        # Fetches and removes context from session.
-        def fetch_context
+        # Fetches context and finds handler for it. If message has new command,
+        # it has higher priority than contextual action.
+        def action_for_message
           val = session.delete(:context)
           @context = val && val.to_sym
-          true # TODO: remove in Rails 5.0
+          super || context && begin
+            handler = handler_for_context
+            [true, handler, payload['text'].try!(:split) || []] if handler
+          end
         end
 
         # Save context for the next request.

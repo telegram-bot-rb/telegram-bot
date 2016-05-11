@@ -200,8 +200,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 
   # register context handlers to handle this context
-  context_handler :rename do |message|
-    update_name message[:text]
+  context_handler :rename do |*words|
+    update_name words[0]
     reply_with :message, text: 'Renamed!'
   end
 
