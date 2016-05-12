@@ -15,7 +15,8 @@ module Telegram
       end
 
       class << self
-        # Makes all
+        # Any call to Client.new will return ClientStub instance when `enabled` is true.
+        # Can be used with a block.
         def stub_all!(enabled = true)
           Client.extend(StubbedConstructor) unless Client < StubbedConstructor
           return @_stub_all = enabled unless block_given?

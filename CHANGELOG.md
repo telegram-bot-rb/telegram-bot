@@ -5,6 +5,8 @@
 - Changed action methods signature
   - `#inline_query(payload) -> #inline_query(query, offset)`
   - `#chosen_inline_result(payload)` -> `#chosen_inline_result(result_id, query)`
+- MessageContext doesn't use second #process call to run contextual action.
+- Botan.io metrics.
 
 # 0.6.0
 

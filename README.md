@@ -17,7 +17,8 @@ Package contains:
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
 
-Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app).
+Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app)
+with session, keyboards and inline queries.
 Run it on your local machine in 1 minute!
 
 ## Installation
@@ -151,6 +152,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 end
 ```
 
+#### Optional typecasting
+
 You can enable typecasting of `update` with `telegram-bot-types` by including
 `Telegram::Bot::UpdatesPoller::TypedUpdate`:
 
@@ -163,6 +166,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 end
 ```
+
+#### Session
 
 There is support for sessions using `ActiveSupport::Cache` stores.
 
@@ -196,6 +201,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 end
 ```
+
+#### Message context
 
 It's usual to support chain of messages like BotFather: after receiving command
 it asks you for additional argument. There is `MessageContext` for this:
@@ -242,6 +249,8 @@ data. If data has a prefix with colon like this `my_ctx:smth...` it'll call
 `my_ctx_callback_query('smth...')` when there is such action method. Otherwise
 it'll call `callback_query('my_ctx:smth...')` as usual.
 
+#### Processesing updates
+
 To process update run:
 
 ```ruby
@@ -283,7 +292,8 @@ telegram_webhooks bot => TelegramChatController,
 # You can override this options or specify others:
 telegram_webhooks TelegramController, as: :my_webhook
 telegram_webhooks bot => [TelegramChatController, as: :chat_webhook],
-                  other_bot => [TelegramAuctionController,
+                  other_bot => TelegramAuctionController,
+                  admin_chat: TelegramAdminChatController
 ```
 
 For Rack applications you can also use `Telegram::Bot::Middleware` or just
@@ -328,7 +338,7 @@ Certificate can be specified with `CERT=path/to/cert`.
 
 ### Botan.io metrics
 
-Initialize with `bot = Bot.new(token, botan: 'botan token')`
+Initialize with `bot = Telegram::Bot::Client.new(token, botan: 'botan token')`
 or just add `botan` key in `secrets.yml`:
 
 ```yml
