@@ -2,13 +2,15 @@ require 'json'
 require 'httpclient'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/hash/keys'
+require 'telegram/bot/debug_client'
 
 module Telegram
   module Bot
     class Client
-      autoload :TypedResponse, 'telegram/bot/client/typed_response'
-
       URL_TEMPLATE = 'https://api.telegram.org/bot%s/'.freeze
+
+      autoload :TypedResponse, 'telegram/bot/client/typed_response'
+      include DebugClient
 
       class << self
         # Accepts different options to initialize bot.
@@ -18,7 +20,7 @@ module Telegram
           when Array then input.map(&method(__callee__))
           when Hash then
             input = input.stringify_keys
-            new input['token'], input['username']
+            new input['token'], input['username'], botan: input['botan']
           when Symbol
             Telegram.bots[input] or
               raise "Bot #{input} not configured, check Telegram.bots_config."
@@ -41,31 +43,14 @@ module Telegram
         end
       end
 
-      attr_reader :client, :token, :username, :base_uri
+      attr_reader :client, :token, :username, :base_uri, :botan
 
-      def initialize(token, username = nil)
+      def initialize(token, username = nil, botan: nil)
         @client = HTTPClient.new
         @token = token
         @username = username
         @base_uri = format URL_TEMPLATE, token
-      end
-
-      def debug!(dev = STDOUT)
-        if block_given?
-          begin
-            old_dev = client.debug_dev
-            client.debug_dev = dev
-            yield
-          ensure
-            client.debug_dev = old_dev
-          end
-        else
-          client.debug_dev = dev
-        end
-      end
-
-      def debug_off!
-        client.debug_dev = nil
+        @botan = Botan.new(botan) if botan
       end
 
       def request(action, body = {}) # rubocop:disable PerceivedComplexity

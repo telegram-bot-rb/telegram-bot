@@ -1,10 +1,12 @@
 RSpec.describe Telegram::Bot::Client do
+  let(:instance) { described_class.new 'token' }
+  let(:token) { 'token' }
+  let(:botan_token) { double(:botan_token) }
+
   describe '.wrap' do
     subject { described_class.wrap(input) }
     let(:result) { double(:result) }
-    let(:token) { 'token' }
     let(:username) { 'username' }
-    let(:instance) { described_class.new 'token' }
 
     context 'when input is a string' do
       let(:input) { token }
@@ -19,8 +21,19 @@ RSpec.describe Telegram::Bot::Client do
       let(:input) { {token: token, username: username, ignore: :ignore} }
 
       it 'extracts token & username' do
-        expect(described_class).to receive(:new).with(token, username) { result }
+        expect(described_class).to receive(:new).
+          with(token, username, botan: nil) { result }
         should eq result
+      end
+
+      context 'when `botan` is given' do
+        let(:input) { super().merge(botan: botan_token) }
+
+        it 'passes it to initializer' do
+          expect(described_class).to receive(:new).
+            with(token, username, botan: botan_token) { result }
+          should eq result
+        end
       end
     end
 
@@ -50,7 +63,7 @@ RSpec.describe Telegram::Bot::Client do
 
       it 'calls wrap for every element' do
         expect(described_class).to receive(:new).with('other_token') { result }
-        expect(described_class).to receive(:new).with(token, username) { result_2 }
+        expect(described_class).to receive(:new).with(token, username, botan: nil) { result_2 }
         should eq [result, instance, result_2]
       end
     end
@@ -72,6 +85,17 @@ RSpec.describe Telegram::Bot::Client do
         %i(c d e).each { |x| expected[x] = expected[x].to_json }
         should eq expected
       end
+    end
+  end
+
+  describe '#botan' do
+    subject { instance.botan }
+    it { should eq nil }
+
+    context 'when botan token is set' do
+      let(:instance) { described_class.new token, botan: botan_token }
+      it { should be_instance_of Telegram::Bot::Botan }
+      its(:token) { should eq botan_token }
     end
   end
 end

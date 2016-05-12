@@ -57,6 +57,7 @@ module Telegram
       require 'telegram/bot/updates_controller/log_subscriber'
       require 'telegram/bot/updates_controller/instrumentation'
       autoload :MessageContext, 'telegram/bot/updates_controller/message_context'
+      autoload :Botan, 'telegram/bot/updates_controller/botan'
 
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
