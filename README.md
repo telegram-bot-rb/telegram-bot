@@ -17,6 +17,9 @@ Package contains:
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
 
+Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app). 
+Run it on your local machine in 1 minute!
+
 ## Installation
 
 Add this line to your application's Gemfile:
