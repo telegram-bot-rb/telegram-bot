@@ -39,6 +39,12 @@ module Telegram
           Instrumentation.instrument(:reply_with, type: type) { super }
         end
 
+        %i(answer_callback_query answer_inline_query).each do |type|
+          define_method(type) do |*args|
+            Instrumentation.instrument(:reply_with, type: type) { super(*args) }
+          end
+        end
+
         private
 
         # A hook invoked every time a before callback is halted.

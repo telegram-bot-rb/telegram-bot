@@ -68,22 +68,27 @@ module Telegram
       end
 
       %w(
+        answerCallbackQuery
         answerInlineQuery
         forwardMessage
         getFile
         getMe
         getUpdates
         getUserProfilePhotos
+        kickChatMember
         sendAudio
         sendChatAction
+        sendContact
         sendDocument
         sendLocation
         sendMessage
         sendPhoto
         sendSticker
+        sendVenue
         sendVideo
         sendVoice
         setWebhook
+        unbanChatMember
       ).each do |method|
         define_method(method.underscore) { |*args| request(method, *args) }
       end

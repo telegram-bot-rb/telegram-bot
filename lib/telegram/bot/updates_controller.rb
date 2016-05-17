@@ -56,6 +56,7 @@ module Telegram
       require 'telegram/bot/updates_controller/session'
       require 'telegram/bot/updates_controller/log_subscriber'
       require 'telegram/bot/updates_controller/instrumentation'
+      require 'telegram/bot/updates_controller/reply_helpers'
       autoload :MessageContext, 'telegram/bot/updates_controller/message_context'
       autoload :Botan, 'telegram/bot/updates_controller/botan'
 
@@ -71,6 +72,7 @@ module Telegram
       end
 
       include AbstractController::Translation
+      include ReplyHelpers
       prepend Instrumentation
       extend Session::ConfigMethods
 
@@ -80,6 +82,7 @@ module Telegram
         message
         inline_query
         chosen_inline_result
+        callback_query
       ).freeze
       CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
@@ -161,44 +164,25 @@ module Telegram
       def action_for_payload
         case payload_type
         when 'message' then action_for_message
+        when 'callback_query' then action_for_callback_query
         end || [false, payload_type, [payload]]
       end
 
+      # Separate method, so it can be easily overriden (ex. MessageContext).
       def action_for_message
         cmd, args = self.class.command_from_text(payload['text'], bot_username)
         cmd &&= self.class.action_for_command(cmd)
         [true, cmd, args] if cmd
       end
 
+      # Same purpose as #action_for_message.
+      def action_for_callback_query
+        [false, payload_type, [payload]]
+      end
+
       # Silently ignore unsupported messages.
       # Params are `action, *args`.
       def action_missing(*)
-      end
-
-      # Helper to call bot's `send_#{type}` method with already set `chat_id` and
-      # `reply_to_message_id`:
-      #
-      #     reply_with :message, text: 'Hello!'
-      #     reply_with :message, text: '__Hello!__', parse_mode: :Markdown
-      #     reply_with :photo, photo: File.open(photo_to_send), caption: "It's incredible!"
-      def reply_with(type, params)
-        method = "send_#{type}"
-        chat = self.chat
-        payload = self.payload
-        params = params.merge(
-          chat_id: (chat && chat['id'] or raise 'Can not reply_with when chat is not present'),
-          reply_to_message: payload && payload['message_id'],
-        )
-        bot.public_send(method, params)
-      end
-
-      # Same as reply_with, but for inline queries.
-      def answer_inline_query(results, params = {})
-        params = params.merge(
-          inline_query_id: payload['id'],
-          results: results,
-        )
-        bot.answer_inline_query(params)
       end
 
       ActiveSupport.run_load_hooks('telegram.bot.updates_controller', self)

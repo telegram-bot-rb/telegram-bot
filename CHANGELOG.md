@@ -1,3 +1,8 @@
+# 0.7.0 Unreleased
+
+- New Bot API methods.
+- Helpers for inline keyboards.
+
 # 0.6.0
 
 - StaleChat error.
