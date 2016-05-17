@@ -236,6 +236,12 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 end
 ```
 
+You can use `CallbackQueyContext` in the similar way to split `#callback_query` into
+several specific methods. It doesn't require session support, and takes context from
+data. If data has a prefix with colon like this `my_ctx:smth...` it'll call
+`my_ctx_callback_query('smth...')` when there is such action method. Otherwise
+it'll call `callback_query('my_ctx:smth...')` as usual.
+
 To process update run:
 
 ```ruby

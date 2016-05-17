@@ -1,7 +1,7 @@
 # 0.7.0 Unreleased
 
 - New Bot API methods.
-- Helpers for inline keyboards.
+- Helpers for inline keyboards, support for callback_query (with contextual actions).
 - Changed action methods signature
   - `#inline_query(payload) -> #inline_query(query, offset)`
   - `#chosen_inline_result(payload)` -> `#chosen_inline_result(result_id, query)`
