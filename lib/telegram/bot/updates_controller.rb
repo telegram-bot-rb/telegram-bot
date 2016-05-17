@@ -158,16 +158,16 @@ module Telegram
       end
 
       # Calculates action name and args for payload.
-      # If payload is a message with command, then returned action is an
-      # action for this command. Otherwise it's the same as payload type.
+      # Uses `action_for_#{payload_type}` methods.
+      # If this method doesn't return anything
+      # it uses fallback with action same as payload type.
       # Returns array `[is_command?, action, args]`.
       def action_for_payload
-        case payload_type
-        when 'message' then action_for_message
-        when 'callback_query' then action_for_callback_query
-        end || [false, payload_type, [payload]]
+        send("action_for_#{payload_type}") || [false, payload_type, [payload]]
       end
 
+      # If payload is a message with command, then returned action is an
+      # action for this command.
       # Separate method, so it can be easily overriden (ex. MessageContext).
       def action_for_message
         cmd, args = self.class.command_from_text(payload['text'], bot_username)
@@ -175,9 +175,16 @@ module Telegram
         [true, cmd, args] if cmd
       end
 
-      # Same purpose as #action_for_message.
+      def action_for_inline_query
+        [false, payload_type, [payload['query'], payload['offset']]]
+      end
+
+      def action_for_chosen_inline_result
+        [false, payload_type, [payload['result_id'], payload['query']]]
+      end
+
       def action_for_callback_query
-        [false, payload_type, [payload]]
+        [false, payload_type, [payload['data']]]
       end
 
       # Silently ignore unsupported messages.

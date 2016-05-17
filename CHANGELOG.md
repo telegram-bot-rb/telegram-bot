@@ -2,6 +2,9 @@
 
 - New Bot API methods.
 - Helpers for inline keyboards.
+- Changed action methods signature
+  - `#inline_query(payload) -> #inline_query(query, offset)`
+  - `#chosen_inline_result(payload)` -> `#chosen_inline_result(result_id, query)`
 
 # 0.6.0
 

@@ -80,11 +80,26 @@ RSpec.describe Telegram::Bot::UpdatesController do
   describe '#action_for_payload' do
     subject { controller.action_for_payload }
 
-    (described_class::PAYLOAD_TYPES - %w(message)).each do |type|
-      context "when payload is #{type}" do
-        let(:payload_type) { type }
-        it { should eq [false, type, [payload]] }
-      end
+    def stub_payload(*fields)
+      Hash[fields.map { |x| [x, double(x)] }]
+    end
+
+    context 'when payload is inline_query' do
+      let(:payload_type) { 'inline_query' }
+      let(:payload) { stub_payload(:id, :from, :location, :query, :offset) }
+      it { should eq [false, payload_type, payload.values_at(:query, :offset)] }
+    end
+
+    context 'when payload is chosen_inline_result' do
+      let(:payload_type) { 'chosen_inline_result' }
+      let(:payload) { stub_payload(:result_id, :from, :location, :inline_message_id, :query) }
+      it { should eq [false, payload_type, payload.values_at(:result_id, :query)] }
+    end
+
+    context 'when payload is callback_query' do
+      let(:payload_type) { 'callback_query' }
+      let(:payload) { stub_payload(:id, :from, :message, :inline_message_id, :data) }
+      it { should eq [false, payload_type, payload.values_at(:data)] }
     end
 
     context 'when payload is message' do

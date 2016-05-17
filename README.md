@@ -17,7 +17,7 @@ Package contains:
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
 
-Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app). 
+Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app).
 Run it on your local machine in 1 minute!
 
 ## Installation
@@ -102,13 +102,21 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # use callbacks like in any other controllers
   around_action :with_locale
 
-  # Every update can have one of: message, inline_query & chosen_inline_result.
+  # Every update can have one of: message, inline_query, chosen_inline_result,
+  # callback_query.
   # Define method with same name to respond to this updates.
   def message(message)
     # message can be also accessed via instance method
     message == self.payload # true
     # store_message(message['text'])
   end
+
+  # This basic methods receives commonly used params:
+  #
+  #   message(payload)
+  #   inline_query(query, offset)
+  #   chosen_inline_result(result_id, query)
+  #   callback_query(data)
 
   # Define public methods to respond to commands.
   # Command arguments will be parsed and passed to the method.
