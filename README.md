@@ -353,11 +353,11 @@ or just add `botan` key in `secrets.yml`:
 Access to Botan client with `bot.botan`.
 Use `bot.botan.track(event, uid, payload)` to track events.
 
-There are some helpers for controllers in `Telegram::Bot::UpdatesController::Botan`:
+There are some helpers for controllers in `Telegram::Bot::Botan::ControllerHelpers`:
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
-  include Telegram::Bot::UpdatesController::Botan
+  include Telegram::Bot::Botan::ControllerHelpers
 
   # This will track with event: action_name & data: payload
   before_action :botan_track_action

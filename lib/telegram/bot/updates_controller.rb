@@ -59,7 +59,6 @@ module Telegram
       require 'telegram/bot/updates_controller/reply_helpers'
       autoload :CallbackQueyContext, 'telegram/bot/updates_controller/callback_query_context'
       autoload :MessageContext, 'telegram/bot/updates_controller/message_context'
-      autoload :Botan, 'telegram/bot/updates_controller/botan'
 
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.

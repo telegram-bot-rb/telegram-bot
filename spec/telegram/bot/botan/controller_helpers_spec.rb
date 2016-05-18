@@ -1,4 +1,4 @@
-RSpec.describe Telegram::Bot::UpdatesController::Botan do
+RSpec.describe Telegram::Bot::Botan::ControllerHelpers do
   include_context 'telegram/bot/updates_controller'
   let(:controller_class) do
     described_class = self.described_class
