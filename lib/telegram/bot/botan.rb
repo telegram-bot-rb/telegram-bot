@@ -6,13 +6,20 @@ module Telegram
       autoload :ControllerHelpers, 'telegram/bot/botan/controller_helpers'
       class Error < Bot::Error; end
 
+      extend Initializers
       include DebugClient
+
+      class << self
+        def by_id(id)
+          Telegram.botans[id]
+        end
+      end
 
       attr_reader :client, :token
 
-      def initialize(token)
+      def initialize(token = nil, **options)
         @client = HTTPClient.new
-        @token = token
+        @token = token || options[:token]
       end
 
       def track(event, uid, payload = {})

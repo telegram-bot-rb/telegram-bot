@@ -9,7 +9,7 @@ module Telegram
           if self == ClientStub || !ClientStub.stub_all?
             super
           else
-            ClientStub.new(args[1])
+            ClientStub.new(*args)
           end
         end
       end
@@ -34,8 +34,8 @@ module Telegram
         end
       end
 
-      def initialize(username = nil)
-        @username = username
+      def initialize(token = nil, username = nil, **options)
+        @username = username || options[:username] || token
         reset
       end
 

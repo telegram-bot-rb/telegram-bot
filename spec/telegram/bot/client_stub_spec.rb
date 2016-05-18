@@ -1,7 +1,7 @@
 RSpec.describe Telegram::Bot::ClientStub do
   describe '#stub_all!' do
     let(:client) { Telegram::Bot::Client.new('token', 'bot_name') }
-    let(:clients) { Telegram::Bot::Client.wrap(['token', token: 'token2']) }
+    let(:clients) { ['token', token: 'token2'].map(&Telegram::Bot::Client.method(:wrap)) }
 
     shared_examples 'constructors' do |expected_class|
       it 'makes Client.new return ClientStub' do
@@ -9,7 +9,7 @@ RSpec.describe Telegram::Bot::ClientStub do
         expect(client.username).to eq 'bot_name'
       end
 
-      it 'makes Client.wrap raturn ClientStub' do
+      it 'makes Client.wrap return ClientStub' do
         expect(clients).to contain_exactly instance_of(expected_class),
           instance_of(expected_class)
       end
@@ -33,6 +33,21 @@ RSpec.describe Telegram::Bot::ClientStub do
         end
       end
       include_examples 'constructors', Telegram::Bot::Client
+    end
+  end
+
+  describe '#new' do
+    subject { described_class.new(*args) }
+
+    context 'when only username is given' do
+      let(:args) { 'superbot' }
+      its(:username) { should eq args }
+    end
+
+    context 'when username and token are given' do
+      let(:args) { %w(token superbot) }
+      its(:token) { should eq nil }
+      its(:username) { should eq args[1] }
     end
   end
 end

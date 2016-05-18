@@ -3,71 +3,7 @@ RSpec.describe Telegram::Bot::Client do
   let(:token) { 'token' }
   let(:botan_token) { double(:botan_token) }
 
-  describe '.wrap' do
-    subject { described_class.wrap(input) }
-    let(:result) { double(:result) }
-    let(:username) { 'username' }
-
-    context 'when input is a string' do
-      let(:input) { token }
-
-      it 'treats string as token' do
-        expect(described_class).to receive(:new).with(token) { result }
-        should eq result
-      end
-    end
-
-    context 'when input is a hash' do
-      let(:input) { {token: token, username: username, ignore: :ignore} }
-
-      it 'extracts token & username' do
-        expect(described_class).to receive(:new).
-          with(token, username, botan: nil) { result }
-        should eq result
-      end
-
-      context 'when `botan` is given' do
-        let(:input) { super().merge(botan: botan_token) }
-
-        it 'passes it to initializer' do
-          expect(described_class).to receive(:new).
-            with(token, username, botan: botan_token) { result }
-          should eq result
-        end
-      end
-    end
-
-    context 'when input is an instance of described_class' do
-      let!(:input) { instance }
-
-      it 'returns input' do
-        expect(described_class).to_not receive(:new)
-        should eq input
-      end
-    end
-
-    context 'when input is a Symbol' do
-      let(:input) { :bot_1 }
-      before { allow(Telegram).to receive(:bots) { {bot_1: instance} } }
-      it { should eq Telegram.bots[:bot_1] }
-
-      context 'and there is no such bot' do
-        let(:input) { :invalid }
-        it { expect { subject }.to raise_error(/not configured/) }
-      end
-    end
-
-    context 'when input is an array' do
-      let!(:input) { ['other_token', instance, token: token, username: username] }
-      let(:result_2) { double(:result_2) }
-
-      it 'calls wrap for every element' do
-        expect(described_class).to receive(:new).with('other_token') { result }
-        expect(described_class).to receive(:new).with(token, username, botan: nil) { result_2 }
-        should eq [result, instance, result_2]
-      end
-    end
-  end
+  include_examples 'initializers'
 
   describe '.prepare_body' do
     subject { described_class.prepare_body(input) }
@@ -85,6 +21,24 @@ RSpec.describe Telegram::Bot::Client do
         %i(c d e).each { |x| expected[x] = expected[x].to_json }
         should eq expected
       end
+    end
+  end
+
+  describe '.new' do
+    subject { described_class.new(*args) }
+
+    context 'when multiple args are given' do
+      let(:args) { %w(secret superbot) }
+      its(:token) { should eq args[0] }
+      its(:username) { should eq args[1] }
+      its(:base_uri) { should include args[0] }
+    end
+
+    context 'when hash is given' do
+      let(:args) { [token: 'secret', username: 'superbot'] }
+      its(:token) { should eq args[0][:token] }
+      its(:username) { should eq args[0][:username] }
+      its(:base_uri) { should include args[0][:token] }
     end
   end
 
