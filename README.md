@@ -17,6 +17,7 @@ Package contains:
 - Middleware and routes helpers for production env.
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
+- Async requests for Telegram and/or Botan API. Let the queue adapter handle errors!
 
 Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app)
 with session, keyboards and inline queries.
@@ -373,6 +374,20 @@ end
 ```
 
 There is no stubbing for botan clients, so don't set botan token in tests.
+
+### Async mode
+
+There is built in support for async requests using ActiveJob. Without Rails
+you can implement your own worker class to handle such requests. This allows:
+
+- Process updates very fast, without waiting for telegram and botan responses.
+- Handle and retry network and other errors with queue adapter.
+- ???
+
+To enable this mode add `async: true` to bot's and botan's config.
+For more information and custom configuration check out
+[docs](http://www.rubydoc.info/github/telegram-bot-rb/telegram-bot/master/Telegram/Bot/Async) or
+[source](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/async.rb).
 
 ## Development
 

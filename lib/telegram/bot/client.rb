@@ -10,6 +10,7 @@ module Telegram
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
       extend Initializers
+      prepend Async
       prepend Botan::ClientHelpers
       include DebugClient
 
@@ -29,6 +30,10 @@ module Telegram
           body.each do |k, val|
             body[k] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
           end
+        end
+
+        def prepare_async_args(action, body = {})
+          [action.to_s, Async.prepare_hash(prepare_body(body))]
         end
       end
 

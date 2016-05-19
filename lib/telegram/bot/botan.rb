@@ -8,11 +8,16 @@ module Telegram
       class Error < Bot::Error; end
 
       extend Initializers
+      prepend Async
       include DebugClient
 
       class << self
         def by_id(id)
           Telegram.botans[id]
+        end
+
+        def prepare_async_args(method, uri, query = {}, body = nil)
+          [method.to_s, uri.to_s, Async.prepare_hash(query), body]
         end
       end
 
@@ -24,12 +29,11 @@ module Telegram
       end
 
       def track(event, uid, payload = {})
-        res = http_request(
-          :post,
-          TRACK_URI,
-          {token: token, name: event, uid: uid},
-          payload.to_json,
-        )
+        request(:post, TRACK_URI, {name: event, uid: uid}, payload.to_json)
+      end
+
+      def request(method, uri, query = {}, body = nil)
+        res = http_request(method, uri, query.merge(token: token), body)
         status = res.status
         return JSON.parse(res.body) if 300 > status
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
@@ -39,6 +43,10 @@ module Telegram
 
       def http_request(method, uri, query, body)
         client.request(method, uri, query, body)
+      end
+
+      def inspect
+        "#<#{self.class.name}##{object_id}(#{@id})>"
       end
     end
   end

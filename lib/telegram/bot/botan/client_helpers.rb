@@ -7,7 +7,7 @@ module Telegram
 
         def initialize(*, botan: nil, **)
           super
-          @botan = Botan.wrap(botan) if botan
+          @botan = Botan.wrap(botan, id: id) if botan
         end
       end
     end

@@ -4,6 +4,7 @@ RSpec.describe Telegram::Bot::Client do
   let(:botan_token) { double(:botan_token) }
 
   include_examples 'initializers'
+  include_examples 'async', request_args: -> { [double(:action), {body: :content}] }
 
   describe '.prepare_body' do
     subject { described_class.prepare_body(input) }
@@ -22,6 +23,12 @@ RSpec.describe Telegram::Bot::Client do
         should eq expected
       end
     end
+  end
+
+  describe '.prepare_async_args' do
+    subject { described_class.prepare_async_args(*input) }
+    let(:input) { [:action, a: 1, b: :sym, c: [:other], 'd' => 'str'] }
+    it { should eq ['action', a: 1, b: 'sym', c: '["other"]', 'd' => 'str'] }
   end
 
   describe '.new' do
