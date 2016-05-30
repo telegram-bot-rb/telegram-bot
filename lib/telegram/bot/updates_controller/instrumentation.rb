@@ -6,7 +6,7 @@ module Telegram
       module Instrumentation
         class << self
           def prepended(base)
-            base.config_accessor :logger
+            base.send :config_accessor, :logger
             base.extend ClassMethods
           end
 
