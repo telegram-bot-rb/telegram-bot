@@ -1,4 +1,10 @@
-# 0.7.0 Unreleased
+# 0.7.1
+
+- Bot API 2.1
+- Fixed possible crashes when payload type is not supported.
+  Provides empty session when neither `from` nor `chat` is defined.
+
+# 0.7.0
 
 - New Bot API methods.
 - Helpers for inline keyboards, support for callback_query (with contextual actions).
