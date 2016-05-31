@@ -77,11 +77,25 @@ module Telegram
 
       def reload!
         return yield unless reload
-        ActionDispatch::Reloader.prepare!
-        if controller.is_a?(Class) && controller.name
-          @controller = Object.const_get(controller.name)
+        reloading_code do
+          if controller.is_a?(Class) && controller.name
+            @controller = Object.const_get(controller.name)
+          end
+          yield
         end
-        yield.tap { ActionDispatch::Reloader.cleanup! }
+      end
+
+      if defined?(Rails) && Rails.application.respond_to?(:reloader)
+        def reloading_code
+          Rails.application.reloader.wrap do
+            yield
+          end
+        end
+      else
+        def reloading_code
+          ActionDispatch::Reloader.prepare!
+          yield.tap { ActionDispatch::Reloader.cleanup! }
+        end
       end
     end
   end
