@@ -1,3 +1,7 @@
+# 0.7.4
+
+- Rails 5 support by @dreyks (#4).
+
 # 0.7.3
 
 -  Fixed issues with poller in production (#3)
