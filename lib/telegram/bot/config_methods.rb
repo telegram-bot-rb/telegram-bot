@@ -14,9 +14,14 @@ module Telegram
       # It just tells routes helpers whether to add routed bots to
       # Bot::UpdatesPoller, so their config will be available by bot key in
       # Bot::UpdatesPoller.start.
+      #
+      # It's enabled by default in Rails dev environment and `rake telegram:bot:poller`
+      # task. Use `BOT_POLLER_MODE=true` envvar to set it manually.
       def bot_poller_mode?
         return @bot_poller_mode if defined?(@bot_poller_mode)
-        Rails.env.development? if defined?(Rails)
+        @bot_poller_mode = ENV.fetch('BOT_POLLER_MODE') do
+          Rails.env.development? if defined?(Rails)
+        end
       end
 
       # Hash of bots made with bots_config.
