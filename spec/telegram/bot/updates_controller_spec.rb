@@ -102,6 +102,11 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq [false, payload_type, payload.values_at(:data)] }
     end
 
+    context 'when payload is edited_message' do
+      let(:payload_type) { 'edited_message' }
+      it { should eq [false, payload_type, [payload]] }
+    end
+
     context 'when payload is not supported' do
       let(:payload_type) { '_unsupported_' }
       it { should eq [false, :unsupported_payload_type, []] }

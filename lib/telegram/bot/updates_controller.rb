@@ -50,7 +50,7 @@ module Telegram
     #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
     #       process(:help, *args)
     #
-    class UpdatesController < AbstractController::Base
+    class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
       abstract!
 
       require 'telegram/bot/updates_controller/session'
@@ -84,6 +84,7 @@ module Telegram
         inline_query
         chosen_inline_result
         callback_query
+        edited_message
       ).freeze
       CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
@@ -178,6 +179,11 @@ module Telegram
         cmd, args = self.class.command_from_text(payload['text'], bot_username)
         cmd &&= self.class.action_for_command(cmd)
         [true, cmd, args] if cmd
+      end
+
+      # It doesn't extract commands from edited messages. Just process
+      # them as usual ones.
+      def action_for_edited_message
       end
 
       def action_for_inline_query

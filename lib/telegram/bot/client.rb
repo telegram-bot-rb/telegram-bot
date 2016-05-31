@@ -71,11 +71,16 @@ module Telegram
         answerCallbackQuery
         answerInlineQuery
         forwardMessage
+        getChat
+        getChatAdministrators
+        getChatMember
+        getChatMembersCount
         getFile
         getMe
         getUpdates
         getUserProfilePhotos
         kickChatMember
+        leaveChat
         sendAudio
         sendChatAction
         sendContact
