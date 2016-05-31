@@ -1,3 +1,7 @@
+# 0.7.3
+
+-  Fixed issues with poller in production (#3)
+
 # 0.7.2
 
 - Bot API 2.1
