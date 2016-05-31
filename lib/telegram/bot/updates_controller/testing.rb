@@ -27,19 +27,7 @@ module Telegram
 
         # Stubs session.
         def session
-          @_session ||= Testing::SessionHash.new
-        end
-
-        class SessionHash < Session::SessionHash
-          def initialize
-            @data = {}
-            @loaded = true
-            @exists = true
-          end
-
-          alias_method :destroy, :clear
-          alias_method :load!, :id
-          alias_method :commit, :id
+          @_session ||= Session::NullSessionHash.new
         end
       end
     end

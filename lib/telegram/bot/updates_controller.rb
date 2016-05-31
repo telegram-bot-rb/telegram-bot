@@ -143,13 +143,13 @@ module Telegram
       # Accessor to `'chat'` field of payload. Can be overriden with `chat` option
       # for #initialize.
       def chat
-        @_chat || payload && payload['chat']
+        @_chat ||= payload && payload['chat']
       end
 
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
       # for #initialize.
       def from
-        @_from || payload && payload['from']
+        @_from ||= payload && payload['from']
       end
 
       # Processes current update.
@@ -164,7 +164,11 @@ module Telegram
       # it uses fallback with action same as payload type.
       # Returns array `[is_command?, action, args]`.
       def action_for_payload
-        send("action_for_#{payload_type}") || [false, payload_type, [payload]]
+        if payload_type
+          send("action_for_#{payload_type}") || [false, payload_type, [payload]]
+        else
+          [false, :unsupported_payload_type, []]
+        end
       end
 
       # If payload is a message with command, then returned action is an

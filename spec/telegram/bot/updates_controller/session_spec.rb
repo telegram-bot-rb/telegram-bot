@@ -26,6 +26,12 @@ RSpec.describe Telegram::Bot::UpdatesController::Session do
         def read
           session[:text]
         end
+
+        def action_missing(*)
+          [:action_missing, session[:text]].tap do
+            session[:text] = 'test'
+          end
+        end
       end
     end
 
@@ -38,6 +44,14 @@ RSpec.describe Telegram::Bot::UpdatesController::Session do
       expect(subject.call(bot, build_message('/read', id: 1))).to eq 'test'
       expect(subject.call(bot, build_message('/read', id: 2))).to eq nil
       expect(subject.call(other_bot, build_message('/read', id: 1))).to eq nil
+    end
+
+    context 'payload is not supported' do
+      let(:payload_type) { '_unsupported_' }
+      it 'provides empty session' do
+        2.times { expect(subject.call(bot)).to eq [:action_missing, nil] }
+        expect(subject.call(other_bot)).to eq [:action_missing, nil]
+      end
     end
   end
 end

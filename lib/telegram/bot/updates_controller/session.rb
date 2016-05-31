@@ -17,11 +17,15 @@ module Telegram
         protected
 
         def session
-          @_session ||= SessionHash.new(self.class.session_store, session_key)
+          @_session ||= begin
+            key = session_key
+            key ? SessionHash.new(self.class.session_store, key) : NullSessionHash.new
+          end
         end
 
         def session_key
-          "#{bot.username}:#{from ? "from:#{from['id']}" : "chat:#{chat['id']}"}"
+          subject = from || chat
+          "#{bot.username}:#{subject['id']}" if subject
         end
 
         # Rack::Session::Abstract::SessionHash is taken to provide lazy loading.
@@ -57,6 +61,18 @@ module Telegram
             data = to_hash.delete_if { |_, v| v.nil? }
             @store.write(id, data)
           end
+        end
+
+        class NullSessionHash < Session::SessionHash
+          def initialize
+            @data = {}
+            @loaded = true
+            @exists = true
+          end
+
+          alias_method :destroy, :clear
+          alias_method :load!, :id
+          alias_method :commit, :id
         end
 
         module ConfigMethods
