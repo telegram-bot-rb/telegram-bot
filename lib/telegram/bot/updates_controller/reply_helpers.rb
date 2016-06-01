@@ -14,7 +14,7 @@ module Telegram
           payload = self.payload
           params = params.merge(
             chat_id: (chat && chat['id'] or raise 'Can not reply_with when chat is not present'),
-            reply_to_message: payload && payload['message_id'],
+            reply_to_message_id: payload && payload['message_id'],
           )
           bot.public_send(method, params)
         end
