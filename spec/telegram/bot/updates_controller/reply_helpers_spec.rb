@@ -14,7 +14,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       expect(controller).to receive(:chat) { chat }
       expect(bot).to receive("send_#{type}").with(params.merge(
         chat_id: chat['id'],
-        reply_to_message: payload[:message_id],
+        reply_to_message_id: payload[:message_id],
       )) { result }
       should eq result
     end
@@ -29,7 +29,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it 'sets chat_id & reply_to_message' do
         expect(bot).to receive("send_#{type}").with(params.merge(
           chat_id: chat['id'],
-          reply_to_message: nil,
+          reply_to_message_id: nil,
         )) { result }
         should eq result
       end
