@@ -1,3 +1,14 @@
+# 0.8.0
+
+- Fixed `#reply_with`, now it sets `reply_to_message_id` as it's supposed to.
+  Added `#respond_with` which works the same way, but doesn't set `reply_to_message_id`.
+  Please, replace all occurrences of `reply_with` to `respond_with` to
+  keep it working the old way.
+- Fixes for Rails 5:
+  - Controller callbacks
+  - Middleware
+  - Setup travis builds
+
 # 0.7.4
 
 - Rails 5 support by @dreyks (#4).

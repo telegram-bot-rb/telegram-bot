@@ -384,6 +384,16 @@ To release a new version, update the version number in `version.rb`,
 and then run `bundle exec rake release`, which will create a git tag for the version,
 push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+### Different Rails versions
+
+To setup development for specific major Rails version use:
+
+```
+RAILS=5 bundle install
+# or
+RAILS=5 bundle update
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/telegram-bot-rb/telegram-bot.
