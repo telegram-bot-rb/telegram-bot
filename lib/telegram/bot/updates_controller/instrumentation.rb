@@ -35,10 +35,8 @@ module Telegram
           end
         end
 
-        %i(respond_with reply_with).each do |method|
-          define_method(method) do |type, *args|
-            Instrumentation.instrument(:respond_with, type: type) { super(type, *args) }
-          end
+        def respond_with(type, *)
+          Instrumentation.instrument(:respond_with, type: type) { super }
         end
 
         %i(answer_callback_query answer_inline_query).each do |type|
