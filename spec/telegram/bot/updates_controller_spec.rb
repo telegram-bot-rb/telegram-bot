@@ -225,12 +225,12 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should change(controller, :acted).to true }
       its(:call) { should eq [nil, nil, args] }
 
-      context 'when callback returns false' do
+      context 'when callback halts chain' do
         before do
           controller_class.prepend(Module.new do
             def hook
               super
-              false
+              ActiveSupport::VERSION::MAJOR >= 5 ? throw(:abort) : false
             end
           end)
         end

@@ -63,7 +63,7 @@ module Telegram
 
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
-      if ActiveSupport.gem_version >= Gem::Version.new('5')
+      if ActiveSupport::VERSION::MAJOR >= 5
         define_callbacks  :process_action,
                           skip_after_callbacks_if_terminated: true
       else
