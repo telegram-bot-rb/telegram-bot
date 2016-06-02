@@ -1,6 +1,8 @@
 require 'active_support/concern'
+require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/json'
 require 'action_dispatch/http/mime_type'
-require 'action_dispatch/middleware/params_parser'
+require 'action_dispatch/http/request'
 
 module Telegram
   module Bot
@@ -13,7 +15,8 @@ module Telegram
       end
 
       def call(env)
-        update = env['action_dispatch.request.request_parameters']
+        request = ActionDispatch::Request.new(env)
+        update = request.request_parameters
         controller.dispatch(bot, update)
         [200, {}, ['']]
       end

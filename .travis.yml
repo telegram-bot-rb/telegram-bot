@@ -2,5 +2,8 @@ language: ruby
 cache: bundler
 rvm:
   - 2.2.3
+env:
+  - RAILS=4
+  - RAILS=5
 notifications:
   email: false

@@ -1,3 +1,5 @@
+require 'rack/mock'
+
 RSpec.describe Telegram::Bot::Middleware do
   let(:instance) { described_class.new bot, controller }
   let(:bot) { double(:bot) }
@@ -6,10 +8,25 @@ RSpec.describe Telegram::Bot::Middleware do
   describe '#call' do
     subject { instance.call(env) }
     let(:env) { {'action_dispatch.request.request_parameters' => json_body} }
-    let(:json_body) { double(:json_body) }
+    let(:update) { {'message' => {'id' => 1}} }
+    let(:env) do
+      Rack::MockRequest.env_for('/',
+        method: :post,
+        input:  JSON.dump(update),
+        'CONTENT_TYPE' => 'application/json',
+      )
+    end
+
+    require 'action_pack/version'
+    if ActionPack::VERSION::MAJOR < 5
+      # Before Rails 5, params are parsed in middleware.
+      # In Rails 5, they are parsed in Request#request_parameters.
+      require 'action_dispatch/middleware/params_parser'
+      let(:instance) { ActionDispatch::ParamsParser.new(super()) }
+    end
 
     it 'calls dispatch on controller' do
-      expect(controller).to receive(:dispatch).with(bot, json_body)
+      expect(controller).to receive(:dispatch).with(bot, update)
       subject
     end
 
