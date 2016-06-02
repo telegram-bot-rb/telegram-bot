@@ -131,9 +131,10 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 
     # There are `chat` & `from` shortcut methods.
     response = from ? "Hello #{from['username']}!" : 'Hi there!'
-    # There is `reply_with` helper to set basic fields
-    # like `reply_to_message` & `chat_id`.
-    reply_with :message, text: response
+    # There is `respond_with` helper to set `chat_id` from received message:
+    respond_with :message, text: response
+    # `reply_with` also sets `reply_to_message_id`:
+    reply_with :photo, photo: File.open('party.jpg')
   end
 
   private
@@ -188,7 +189,7 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 
   def read
-    reply_with :message, text: session[:text]
+    respond_with :message, text: session[:text]
   end
 
   private
@@ -214,23 +215,23 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   def rename(*)
     # set context for the next message
     save_context :rename
-    reply_with :message, text: 'What name do you like?'
+    respond_with :message, text: 'What name do you like?'
   end
 
   # register context handlers to handle this context
   context_handler :rename do |*words|
     update_name words[0]
-    reply_with :message, text: 'Renamed!'
+    respond_with :message, text: 'Renamed!'
   end
 
   # You can do it in other way:
   def rename(name = nil, *)
     if name
       update_name name
-      reply_with :message, text: 'Renamed!'
+      respond_with :message, text: 'Renamed!'
     else
       save_context :rename
-      reply_with :message, text: 'What name do you like?'
+      respond_with :message, text: 'What name do you like?'
     end
   end
 

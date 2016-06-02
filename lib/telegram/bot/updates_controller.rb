@@ -21,7 +21,7 @@ module Telegram
     #     end
     #
     #     def help(*)
-    #       reply_with :message, text:
+    #       respond_with :message, text:
     #     end
     #
     # To process plain text messages (without commands) or other updates just
@@ -29,7 +29,7 @@ module Telegram
     # as an argument.
     #
     #     def message(message)
-    #       reply_with :message, text: "Echo: #{message['text']}"
+    #       respond_with :message, text: "Echo: #{message['text']}"
     #     end
     #
     #     def inline_query(query)

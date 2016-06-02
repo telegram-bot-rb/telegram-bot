@@ -22,8 +22,8 @@ module Telegram
           end
         end
 
-        def reply_with(event)
-          info { "Replied with #{event.payload[:type]}" }
+        def respond_with(event)
+          info { "Responded with #{event.payload[:type]}" }
         end
 
         def halted_callback(event)
