@@ -20,6 +20,7 @@ module Telegram
         # Replaces colon with underscore so rails don't treat it as
         # route parameter.
         def escape_token(token)
+          token ||= ""
           token.tr(':', '_')
         end
       end
