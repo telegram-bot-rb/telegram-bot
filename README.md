@@ -5,7 +5,8 @@
 [![Build Status](https://travis-ci.org/telegram-bot-rb/telegram-bot.svg)](https://travis-ci.org/telegram-bot-rb/telegram-bot)
 
 Tools for developing bot for Telegram. Best used with Rails, but can be be used in
-standalone app. Supposed to be used in webhook-mode in production, and poller-mode
+[standalone app](https://github.com/telegram-bot-rb/telegram-bot/wiki/Non-rails-application).
+Supposed to be used in webhook-mode in production, and poller-mode
 in development, but you can use poller in production if you want.
 
 Package contains:
