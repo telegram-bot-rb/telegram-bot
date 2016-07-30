@@ -50,8 +50,9 @@ RSpec.describe Telegram::Bot::RoutesHelper do
 
     def assert_routes(*expected) # rubocop:disable AbcSize
       expected.each do |(bot, controller, route_name, options)|
+        expected_path = options.delete(:path) || "telegram/#{bot.token}"
         expect(mapper).to receive(:post) do |path, params|
-          expect(path).to eq "telegram/#{bot.token}"
+          expect(path).to eq expected_path
           middleware = params[:to]
           expect(middleware.controller).to eq(controller)
           expect(middleware.bot.token).to eq(bot.token)
@@ -69,6 +70,27 @@ RSpec.describe Telegram::Bot::RoutesHelper do
       it 'creates routes for every bot and this controller' do
         assert_routes [bot, controller, 'default_telegram_webhook', option: :val],
                       [other_bot, controller, 'other_telegram_webhook', option: :val]
+      end
+
+      context 'and bot does not have configured token' do
+        let(:bot) { create_bot(nil) }
+        it 'creates routes for every bot and this controller' do
+          assert_routes [bot, controller, 'default_telegram_webhook', option: :val],
+                        [other_bot, controller, 'other_telegram_webhook', option: :val]
+        end
+      end
+
+      context 'and bot has colon in token' do
+        let(:bot) { create_bot('some:token') }
+        it 'replaces colon with underscore' do
+          assert_routes [
+            bot,
+            controller,
+            'default_telegram_webhook',
+            option: :val,
+            path: 'telegram/some_token',
+          ], [other_bot, controller, 'other_telegram_webhook', option: :val]
+        end
       end
     end
 
