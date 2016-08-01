@@ -1,3 +1,7 @@
+# Unreleased
+
+- One more description for StaleChat error.
+
 # 0.8.0
 
 - Fixed `#reply_with`, now it sets `reply_to_message_id` as it's supposed to.

@@ -13,6 +13,7 @@ module Telegram
     # check response.
     class StaleChat < Error
       DESCRIPTIONS = [
+        'Bot was blocked',
         'bot was kicked',
         "can't write to",
         'group chat is deactivated',

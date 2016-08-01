@@ -17,6 +17,9 @@ RSpec.describe Telegram::Bot do
         expect(subject.call(
           'description' => 'Bad request: group chat is deactivated'
         )).to eq true
+        expect(subject.call(
+          'description' => 'Forbidden: Bot was blocked by the user'
+        )).to eq true
       end
     end
   end
