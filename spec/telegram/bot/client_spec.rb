@@ -41,15 +41,4 @@ RSpec.describe Telegram::Bot::Client do
       its(:base_uri) { should include args[0][:token] }
     end
   end
-
-  describe '#botan' do
-    subject { instance.botan }
-    it { should eq nil }
-
-    context 'when botan token is set' do
-      let(:instance) { described_class.new token, botan: botan_token }
-      it { should be_instance_of Telegram::Bot::Botan }
-      its(:token) { should eq botan_token }
-    end
-  end
 end

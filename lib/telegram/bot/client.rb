@@ -10,6 +10,7 @@ module Telegram
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
       extend Initializers
+      prepend Botan::ClientHelpers
       include DebugClient
 
       class << self
@@ -31,9 +32,9 @@ module Telegram
         end
       end
 
-      attr_reader :client, :token, :username, :base_uri, :botan
+      attr_reader :client, :token, :username, :base_uri
 
-      def initialize(token = nil, username = nil, botan: nil, **options)
+      def initialize(token = nil, username = nil, **options)
         @client = HTTPClient.new
         @token = token || options[:token]
         @username = username || options[:username]

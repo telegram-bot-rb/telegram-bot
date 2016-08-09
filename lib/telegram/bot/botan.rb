@@ -3,6 +3,7 @@ module Telegram
     class Botan
       TRACK_URI = 'https://api.botan.io/track'.freeze
 
+      autoload :ClientHelpers, 'telegram/bot/botan/client_helpers'
       autoload :ControllerHelpers, 'telegram/bot/botan/controller_helpers'
       class Error < Bot::Error; end
 
