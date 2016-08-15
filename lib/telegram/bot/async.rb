@@ -30,12 +30,18 @@ module Telegram
     #   client.send_message(message)
     #   client.async(false) { client.send_message(other_one) }
     #
+    # `#async=` sets global value for all threads,
+    # while `#async(val, &block)` is thread-safe.
+    #
     # It can be set with custom job class or classname. By default it defines
     # job classes for every client class, inherited from ApplicationRecord, which
     # can be accessed via `.default_async_job`. You can integrate it with any
     # other job provider by defining a class with `.perform_later(bot_id, *args)`
     # method. See Async::Job for implemetation.
     module Async
+      # Used to track missing key in a hash in local variable.
+      MISSING_VALUE = Object.new.freeze
+
       module Job
         class << self
           def included(base)
@@ -78,6 +84,16 @@ module Telegram
         def prepare_async_args(*args)
           args
         end
+
+        # Returns default_async_job if `true` is given,
+        # treats String as a constant name, or bypasses any other values.
+        def prepare_async_val(val)
+          case val
+          when true then default_async_job
+          when String then Object.const_get(val)
+          else val
+          end
+        end
       end
 
       class << self
@@ -91,38 +107,46 @@ module Telegram
           hash = hash.dup
           hash.each { |key, val| hash[key] = val.to_s if val.is_a?(Symbol) }
         end
+
+        # Thread-local hash to store async config for every client.
+        def thread_store
+          Thread.current[:telegram_bot_async] ||= {}
+        end
       end
 
       attr_reader :id
 
-      def initialize(*, id: nil, async: nil, **options)
+      def initialize(*, id: nil, async: nil, **)
         @id = id
         self.async = async
         super
       end
 
-      # Sets `@async` to `self.class.default_async_job` if `true` is given
-      # or uses given value.
-      # Pass custom job class to perform async calls with.
+      # Sets default async value for all threads.
+      # Uses `self.class.prepare_async_val` to prepare value.
       def async=(val)
-        @async =
-          case val
-          when true then self.class.default_async_job
-          when String then const_get(val)
-          else val
-          end
+        @async = self.class.prepare_async_val(val)
       end
 
-      # Returns value of `@async` if no block is given. Otherwise sets this value
-      # for a block.
+      # Sets async value in a thread-safe way for the block.
+      # Uses `self.class.prepare_async_val` to prepare value.
+      #
+      # If no block is given returns previously set value or the global one,
+      # set by #async=.
       def async(val = true)
-        return @async unless block_given?
+        thread_key = object_id
+        thread_store = Async.thread_store
+        return thread_store.fetch(thread_key) { @async } unless block_given?
         begin
-          old_val = @async
-          self.async = val
+          old_val = thread_store.fetch(thread_key) { MISSING_VALUE }
+          thread_store[thread_key] = self.class.prepare_async_val(val)
           yield
         ensure
-          @async = old_val
+          if MISSING_VALUE == old_val
+            thread_store.delete(thread_key)
+          else
+            thread_store[thread_key] = old_val
+          end
         end
       end
 
