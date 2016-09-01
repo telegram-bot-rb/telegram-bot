@@ -9,7 +9,7 @@ module Telegram
         #     respond_with :photo, photo: File.open(photo_to_send), caption: "It's incredible!"
         def respond_with(type, params)
           chat = self.chat
-          chat_id = chat && chat['id'] or raise 'Can not respond_with when chat is not present'
+          chat_id = chat && (update.nil?? chat : chat['id']) or raise 'Can not respond_with when chat is not present'
           bot.public_send("send_#{type}", params.merge(chat_id: chat_id))
         end
 
