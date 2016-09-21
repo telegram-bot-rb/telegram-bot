@@ -1,6 +1,7 @@
 # Unreleased
 
 - One more description for StaleChat error.
+- edit_message_* methods.
 
 # 0.8.0
 

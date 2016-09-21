@@ -70,6 +70,9 @@ module Telegram
       %w(
         answerCallbackQuery
         answerInlineQuery
+        editMessageCaption
+        editMessageReplyMarkup
+        editMessageText
         forwardMessage
         getChat
         getChatAdministrators
