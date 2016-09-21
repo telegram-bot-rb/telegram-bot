@@ -3,7 +3,7 @@ module Telegram
     class UpdatesController
       # Use separate actions for different callback queries.
       # It doesn't require session support. Simply add `%{context}:` prefix to data.
-      module CallbackQueyContext
+      module CallbackQueryContext
         protected
 
         # Uses #context_from_callback_query as context name.

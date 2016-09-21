@@ -1,4 +1,4 @@
-RSpec.describe Telegram::Bot::UpdatesController::CallbackQueyContext do
+RSpec.describe Telegram::Bot::UpdatesController::CallbackQueryContext do
   include_context 'telegram/bot/updates_controller'
   let(:controller_class) do
     described_class = self.described_class
