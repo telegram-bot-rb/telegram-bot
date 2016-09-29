@@ -144,7 +144,7 @@ module Telegram
       # Accessor to `'chat'` field of payload. Can be overriden with `chat` option
       # for #initialize.
       def chat
-        @_chat ||= payload && payload['chat']
+        @_chat ||= payload && ( payload['chat'] || payload['message']['chat'] )
       end
 
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
