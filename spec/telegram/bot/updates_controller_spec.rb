@@ -293,4 +293,49 @@ RSpec.describe Telegram::Bot::UpdatesController do
       end
     end
   end
+
+  describe '#chat' do
+    subject { controller.chat }
+    let(:payload_type) { :message }
+    let(:payload) { {chat: 'test_value'} }
+    it { should eq payload[:chat] }
+
+    context 'when payload is not set' do
+      let(:payload) {}
+      it { should eq nil }
+    end
+
+    context 'when payload has no such field' do
+      let(:payload) { {smth: 'other'} }
+      it { should eq nil }
+
+      context 'but has `message`' do
+        let(:payload) { {message: message} }
+        let(:message) { {text: 'Hello bot!'} }
+        it { should eq nil }
+
+        context 'with `chat` set' do
+          let(:message) { super().merge(chat: 'test value') }
+          it { should eq message[:chat] }
+        end
+      end
+    end
+  end
+
+  describe '#from' do
+    subject { controller.from }
+    let(:payload_type) { :message }
+    let(:payload) { {from: 'test_value'} }
+    it { should eq payload[:from] }
+
+    context 'when payload is not set' do
+      let(:payload) {}
+      it { should eq nil }
+    end
+
+    context 'when payload has no such field' do
+      let(:payload) { {smth: 'other'} }
+      it { should eq nil }
+    end
+  end
 end

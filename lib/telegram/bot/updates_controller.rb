@@ -141,10 +141,12 @@ module Telegram
         @_payload, @_payload_type = payload_data
       end
 
-      # Accessor to `'chat'` field of payload. Can be overriden with `chat` option
-      # for #initialize.
+      # Accessor to `'chat'` field of payload. Also tries `'chat'` in `'message'`
+      # when there is no such field in payload.
+      #
+      # Can be overriden with `chat` option for #initialize.
       def chat
-        @_chat ||= payload && payload['chat']
+        @_chat ||= payload.try! { |x| x['chat'] || x['message'] && x['message']['chat'] }
       end
 
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
