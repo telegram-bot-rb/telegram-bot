@@ -79,15 +79,18 @@ module Telegram
         getChatMember
         getChatMembersCount
         getFile
+        getGameHighScores
         getMe
         getUpdates
         getUserProfilePhotos
+        getWebhookInfo
         kickChatMember
         leaveChat
         sendAudio
         sendChatAction
         sendContact
         sendDocument
+        sendGame
         sendLocation
         sendMessage
         sendPhoto
@@ -95,6 +98,7 @@ module Telegram
         sendVenue
         sendVideo
         sendVoice
+        setGameScore
         setWebhook
         unbanChatMember
       ).each do |method|
