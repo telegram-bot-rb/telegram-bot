@@ -1,5 +1,6 @@
 # Unreleased
 
+- Async API requests.
 - One more description for StaleChat error.
 
 # 0.8.0
