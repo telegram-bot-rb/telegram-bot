@@ -1,5 +1,6 @@
 # Unreleased
 
+- Async API requests.
 - One more description for StaleChat error.
 - edit_message_* methods.
 - API methods from 2016-10-03 update

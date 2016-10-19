@@ -27,9 +27,12 @@ module Telegram
       end
     end
 
+    autoload :Async,              'telegram/bot/async'
     autoload :Botan,              'telegram/bot/botan'
     autoload :Client,             'telegram/bot/client'
     autoload :ClientStub,         'telegram/bot/client_stub'
+    autoload :DebugClient,        'telegram/bot/debug_client'
+    autoload :Initializers,       'telegram/bot/initializers'
     autoload :Middleware,         'telegram/bot/middleware'
     autoload :UpdatesController,  'telegram/bot/updates_controller'
     autoload :UpdatesPoller,      'telegram/bot/updates_poller'

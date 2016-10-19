@@ -17,6 +17,8 @@ require 'telegram/bot'
 require 'telegram/bot/updates_controller/rspec_helpers'
 require 'telegram/bot/types'
 
+Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # This option will default to `true` in RSpec 4. It makes the `description`

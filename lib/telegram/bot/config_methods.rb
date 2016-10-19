@@ -26,7 +26,9 @@ module Telegram
 
       # Hash of bots made with bots_config.
       def bots
-        @bots ||= bots_config.transform_values(&Client.method(:wrap))
+        @bots ||= bots_config.each_with_object({}) do |(id, config), h|
+          h[id] = Client.wrap(config, id: id)
+        end
       end
 
       # Default bot.
@@ -34,17 +36,26 @@ module Telegram
         @bot ||= bots[:default]
       end
 
+      # Hash of botan clients made from #bots.
+      def botans
+        @botans ||= bots.transform_values(&:botan)
+      end
+
       # Returns config for .bots method. By default uses `telegram['bots']` section
       # from `secrets.yml` merging `telegram['bot']` at `:default` key.
       #
       # Can be overwritten with .bots_config=
       def bots_config
-        return @bots_config if @bots_config
-        telegram_config = Rails.application.secrets[:telegram]
-        (telegram_config['bots'] || {}).symbolize_keys.tap do |config|
-          default = telegram_config['bot']
-          config[:default] = default if default
-        end
+        @bots_config ||=
+          if defined?(Rails)
+            telegram_config = Rails.application.secrets[:telegram] || {}
+            (telegram_config['bots'] || {}).symbolize_keys.tap do |config|
+              default = telegram_config['bot']
+              config[:default] = default if default
+            end
+          else
+            {}
+          end
       end
 
       # Resets all cached bots and their configs.
@@ -52,6 +63,7 @@ module Telegram
         @bots = nil
         @bot = nil
         @bots_config = nil
+        @botans = nil
       end
     end
   end

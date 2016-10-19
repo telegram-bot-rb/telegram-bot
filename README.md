@@ -17,6 +17,8 @@ Package contains:
 - Middleware and routes helpers for production env.
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
+- __[Async mode](#async-mode)__ for Telegram and/or Botan API.
+  Let the queue adapter handle network errors!
 
 Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app)
 with session, keyboards and inline queries.
@@ -354,11 +356,11 @@ or just add `botan` key in `secrets.yml`:
 Access to Botan client with `bot.botan`.
 Use `bot.botan.track(event, uid, payload)` to track events.
 
-There are some helpers for controllers in `Telegram::Bot::UpdatesController::Botan`:
+There are some helpers for controllers in `Telegram::Bot::Botan::ControllerHelpers`:
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
-  include Telegram::Bot::UpdatesController::Botan
+  include Telegram::Bot::Botan::ControllerHelpers
 
   # This will track with event: action_name & data: payload
   before_action :botan_track_action
@@ -374,6 +376,33 @@ end
 ```
 
 There is no stubbing for botan clients, so don't set botan token in tests.
+
+### Async mode
+
+There is built in support for async requests using ActiveJob. Without Rails
+you can implement your own worker class to handle such requests. This allows:
+
+- Process updates very fast, without waiting for telegram and botan responses.
+- Handle and retry network and other errors with queue adapter.
+- ???
+
+Instead of performing request instantly client serializes it, pushes to queue,
+and immediately return control back. The job is then fetched with a worker
+and real API request is performed. And this all is absolutely transparent for the app.
+
+To enable this mode add `async: true` to bot's and botan's config.
+For more information and custom configuration check out
+[docs](http://www.rubydoc.info/github/telegram-bot-rb/telegram-bot/master/Telegram/Bot/Async) or
+[source](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/async.rb).
+
+Be aware of some limitations:
+
+- Client will not return API response.
+- Sending files is not available in async mode [now],
+  because them can not be serialized.
+
+To disable async mode for the block of code use `bot.async(false) { bot.send_photo }`.
+Yes, it's threadsafe too.
 
 ## Development
 

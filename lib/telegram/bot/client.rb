@@ -2,7 +2,6 @@ require 'json'
 require 'httpclient'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/hash/keys'
-require 'telegram/bot/debug_client'
 
 module Telegram
   module Bot
@@ -10,23 +9,14 @@ module Telegram
       URL_TEMPLATE = 'https://api.telegram.org/bot%s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
+      extend Initializers
+      prepend Async
+      prepend Botan::ClientHelpers
       include DebugClient
 
       class << self
-        # Accepts different options to initialize bot.
-        def wrap(input)
-          case input
-          when self then input
-          when Array then input.map(&method(__callee__))
-          when Hash then
-            input = input.stringify_keys
-            new input['token'], input['username'], botan: input['botan']
-          when Symbol
-            Telegram.bots[input] or
-              raise "Bot #{input} not configured, check Telegram.bots_config."
-          else
-            new(input)
-          end
+        def by_id(id)
+          Telegram.bots[id]
         end
 
         # Prepend TypedResponse module.
@@ -41,16 +31,19 @@ module Telegram
             body[k] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
           end
         end
+
+        def prepare_async_args(action, body = {})
+          [action.to_s, Async.prepare_hash(prepare_body(body))]
+        end
       end
 
-      attr_reader :client, :token, :username, :base_uri, :botan
+      attr_reader :client, :token, :username, :base_uri
 
-      def initialize(token, username = nil, botan: nil)
+      def initialize(token = nil, username = nil, **options)
         @client = HTTPClient.new
-        @token = token
-        @username = username
-        @base_uri = format URL_TEMPLATE, token
-        @botan = Botan.new(botan) if botan
+        @token = token || options[:token]
+        @username = username || options[:username]
+        @base_uri = format URL_TEMPLATE, self.token
       end
 
       def request(action, body = {}) # rubocop:disable PerceivedComplexity

@@ -1,8 +1,8 @@
 module Telegram
   module Bot
-    class UpdatesController
+    class Botan
       # Helpers for botan.io metrics.
-      module Botan
+      module ControllerHelpers
         class MissingFrom < Error; end
 
         protected
