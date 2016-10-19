@@ -395,6 +395,10 @@ For more information and custom configuration check out
 [docs](http://www.rubydoc.info/github/telegram-bot-rb/telegram-bot/master/Telegram/Bot/Async) or
 [source](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/async.rb).
 
+If you want async mode, but don't want to setup queue, know that Rails 5 are shipped
+with Async adapter by default, and there is
+[Sucker Punch](https://github.com/brandonhilkert/sucker_punch) for Rails 4.
+
 Be aware of some limitations:
 
 - Client will not return API response.
