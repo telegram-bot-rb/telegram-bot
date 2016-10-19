@@ -2,7 +2,9 @@
 
 - One more description for StaleChat error.
 - edit_message_* methods.
+- API methods from 2016-10-03 update
 - Fix typo in module name: CallbackQueyContext -> CallbackQueryContext.
+- Take `chat` from `message` for callback queries
 
 # 0.8.0
 
