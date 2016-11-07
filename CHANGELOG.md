@@ -6,6 +6,7 @@
 - API methods from 2016-10-03 update
 - Fix typo in module name: CallbackQueyContext -> CallbackQueryContext.
 - Take `chat` from `message` for callback queries
+- RSpec matchers.
 
 # 0.8.0
 

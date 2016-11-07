@@ -50,7 +50,7 @@ module Telegram
     #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
     #       process(:help, *args)
     #
-    class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
+    class UpdatesController < AbstractController::Base
       abstract!
 
       require 'telegram/bot/updates_controller/session'

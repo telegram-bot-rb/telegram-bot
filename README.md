@@ -336,6 +336,23 @@ There are also some helpers for controller tests.
 Check out `telegram/bot/updates_controller/rspec_helpers` and
 `telegram/bot/updates_controller/testing`.
 
+Built-in RSpec matchers will help you to write tests fast:
+
+```ruby
+include Telegram::Bot::RSpec::ClientMatchers # no need if you already use controller herlpers
+
+expect(&process_update).to send_telegram_message(bot, /msg regexp/, some: :option)
+expect(&process_update).
+  to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
+
+# controller specs are even simplier:
+describe '#start' do
+  subject { -> { dispatch_message '/start' } }
+  it { should respond_with_message(/Hello/) }
+end
+# See sample app for more examples.
+```
+
 ### Deploying
 
 Use `rake telegram:bot:set_webhook` to update webhook url for all configured bots.

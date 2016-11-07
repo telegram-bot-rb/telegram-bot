@@ -34,6 +34,7 @@ module Telegram
     autoload :DebugClient,        'telegram/bot/debug_client'
     autoload :Initializers,       'telegram/bot/initializers'
     autoload :Middleware,         'telegram/bot/middleware'
+    autoload :RSpec,              'telegram/bot/rspec'
     autoload :UpdatesController,  'telegram/bot/updates_controller'
     autoload :UpdatesPoller,      'telegram/bot/updates_poller'
   end

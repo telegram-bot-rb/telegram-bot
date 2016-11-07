@@ -43,7 +43,7 @@ module Telegram
         @requests = Hash.new { |h, k| h[k] = [] }
       end
 
-      def request(action, body)
+      def request(action, body = {})
         requests[action.to_sym] << body
       end
     end
