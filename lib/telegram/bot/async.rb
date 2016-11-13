@@ -116,7 +116,7 @@ module Telegram
 
       attr_reader :id
 
-      def initialize(*, id: nil, async: nil, **)
+      def initialize(*, id: nil, async: nil, **options)
         @id = id
         self.async = async
         super
