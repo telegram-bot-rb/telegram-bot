@@ -5,7 +5,7 @@ module Telegram
       module ClientHelpers
         attr_reader :botan
 
-        def initialize(*, botan: nil, **)
+        def initialize(*, botan: nil, **options)
           super
           @botan = Botan.wrap(botan, id: id) if botan
         end
