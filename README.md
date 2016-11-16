@@ -323,35 +323,51 @@ To stub all possible clients use `Telegram::Bot::ClientStub.stub_all!` before
 initializing clients. Most likely you'll want something like this:
 
 ```ruby
+# environments/test.rb
+# Make sure to run it before defining routes or storing bot to some place in app!
+Telegram.reset_bots
+Telegram::Bot::ClientStub.stub_all!
+
+# rails_helper.rb
 RSpec.configure do |config|
   # ...
-  Telegram.reset_bots
-  Telegram::Bot::ClientStub.stub_all!
   config.after { Telegram.bot.reset }
   # ...
 end
 ```
 
-There are also some helpers for controller tests.
-Check out `telegram/bot/updates_controller/rspec_helpers` and
-`telegram/bot/updates_controller/testing`.
-
-Built-in RSpec matchers will help you to write tests fast:
+There are integration and controller contexts for RSpec and some built-in matchers:
 
 ```ruby
-include Telegram::Bot::RSpec::ClientMatchers # no need if you already use controller herlpers
+# spec/requests/telegram_webhooks_spec.rb
+require 'telegram/bot/rspec/integration'
+
+RSpec.describe TelegramWebhooksController, :telegram_bot do
+  # for old rspec add:
+  # include_context 'telegram/bot/integration'
+
+  describe '#start' do
+    subject { -> { dispatch_command :start } }
+    it { should respond_with_message 'Hi there!' }
+  end
+end
+
+# For controller specs use
+require 'telegram/bot/updates_controller/rspec_helpers'
+RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
+  # for old rspec add:
+  # include_context 'telegram/bot/updates_controller'
+end
+
+# Matchers are available for custom specs:
+include Telegram::Bot::RSpec::ClientMatchers
 
 expect(&process_update).to send_telegram_message(bot, /msg regexp/, some: :option)
 expect(&process_update).
   to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
-
-# controller specs are even simplier:
-describe '#start' do
-  subject { -> { dispatch_message '/start' } }
-  it { should respond_with_message(/Hello/) }
-end
-# See sample app for more examples.
 ```
+
+See sample app for more examples.
 
 ### Deploying
 

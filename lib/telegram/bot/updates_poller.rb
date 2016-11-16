@@ -27,12 +27,12 @@ module Telegram
       attr_reader :bot, :controller, :timeout, :offset, :logger, :running, :reload
 
       def initialize(bot, controller, **options)
-        @logger = options.fetch(:logger) { defined?(Rails) && Rails.logger }
+        @logger = options.fetch(:logger) { defined?(Rails.logger) && Rails.logger }
         @bot = bot
         @controller = controller
         @timeout = options.fetch(:timeout) { DEFAULT_TIMEOUT }
         @offset = options[:offset]
-        @reload = options.fetch(:reload) { defined?(Rails) && Rails.env.development? }
+        @reload = options.fetch(:reload) { defined?(Rails.env) && Rails.env.development? }
       end
 
       def log(&block)
@@ -85,7 +85,7 @@ module Telegram
         end
       end
 
-      if defined?(Rails) && Rails.application.respond_to?(:reloader)
+      if defined?(Rails.application) && Rails.application.respond_to?(:reloader)
         def reloading_code
           Rails.application.reloader.wrap do
             yield

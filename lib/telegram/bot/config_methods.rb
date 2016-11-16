@@ -20,7 +20,7 @@ module Telegram
       def bot_poller_mode?
         return @bot_poller_mode if defined?(@bot_poller_mode)
         @bot_poller_mode = ENV.fetch('BOT_POLLER_MODE') do
-          Rails.env.development? if defined?(Rails)
+          Rails.env.development? if defined?(Rails.env)
         end
       end
 
@@ -47,7 +47,7 @@ module Telegram
       # Can be overwritten with .bots_config=
       def bots_config
         @bots_config ||=
-          if defined?(Rails)
+          if defined?(Rails.application)
             telegram_config = Rails.application.secrets[:telegram] || {}
             (telegram_config['bots'] || {}).symbolize_keys.tap do |config|
               default = telegram_config['bot']

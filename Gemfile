@@ -15,7 +15,7 @@ group :development do
 
   gem 'telegram-bot-types', '~> 0.2.0'
 
-  gem 'rspec', '~> 3.3.0'
+  gem 'rspec', '~> 3.5.0'
   gem 'rspec-its', '~> 1.1.0'
 
   gem 'rubocop', '~> 0.37.0'

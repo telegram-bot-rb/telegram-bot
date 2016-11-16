@@ -13,6 +13,9 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
   let(:bot) { Telegram::Bot::ClientStub.new(bot_name) }
   let(:bot_name) { 'bot' }
   let(:session) { controller.send(:session) }
+  let(:from_id) { 123 }
+  let(:chat_id) { 456 }
+  let(:default_message_options) { {from: {id: from_id}, chat: {id: chat_id}} }
 
   include Telegram::Bot::RSpec::ClientMatchers
 
@@ -20,9 +23,8 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
     controller.dispatch_again(bot, update)
   end
 
-  def dispatch_message(text, options = nil)
-    options ||= respond_to?(:default_message_options) ? default_message_options : {}
-    update = build_update :message, options.merge(text: text)
+  def dispatch_message(text, options = {})
+    update = build_update :message, default_message_options.merge(options).merge(text: text)
     dispatch bot, update
   end
 
@@ -41,5 +43,11 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
   # Matcher to check response. Make sure to define `let(:chat_id)`.
   def respond_with_message(expected)
     send_telegram_message(bot, expected, chat_id: chat_id)
+  end
+end
+
+RSpec.configure do |config|
+  if config.respond_to?(:include_context)
+    config.include_context 'telegram/bot/updates_controller', type: :telegram_bot_controller
   end
 end
