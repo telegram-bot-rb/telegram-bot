@@ -5,8 +5,17 @@ require 'action_dispatch/testing/integration'
 
 RSpec.describe 'Integrations helper', :telegram_bot do
   include ActionDispatch::Integration::Runner
+  def reset_template_assertion; end
 
-  let(:app) { Telegram::Bot::Middleware.new(bot, controller) }
+  let(:app) do
+    app = Telegram::Bot::Middleware.new(bot, controller)
+    if ActionPack::VERSION::MAJOR >= 5
+      app
+    else
+      require 'action_dispatch/middleware/params_parser'
+      ActionDispatch::ParamsParser.new(app)
+    end
+  end
   let(:bot) { Telegram::Bot::ClientStub.new('token') }
   let(:controller_path) { '/' }
   let(:controller) do
