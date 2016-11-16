@@ -1,3 +1,8 @@
+# 0.10.0
+
+- Integration helpers for RSpec.
+- Fix for ruby 2.2.0 bug by @bob-frost.
+
 # 0.9.0
 
 - Async API requests.
