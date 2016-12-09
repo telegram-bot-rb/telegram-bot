@@ -17,7 +17,8 @@ module Telegram
         'bot was kicked',
         "can't write to",
         'group chat is deactivated',
-      ].freeze
+
+      ]
 
       class << self
         def match_response?(response)
