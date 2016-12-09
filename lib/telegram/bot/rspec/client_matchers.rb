@@ -139,9 +139,9 @@ module Telegram
         # Helper for asserting message is sent. Note that options are checked
         # with `hash_including`. For strict checks use #make_telegram_request.
         def send_telegram_message(bot, text = nil, options = {})
+          description = "send telegram message #{text.inspect}"
           text = a_string_matching(text) if text.is_a?(Regexp)
           options = options.merge(text: text) if text
-          description = "send telegram message #{text.inspect}"
           MakeTelegramRequest.new(bot, :sendMessage, description: description).
             with(hash_including(options))
         end

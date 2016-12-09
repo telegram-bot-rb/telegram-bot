@@ -1,3 +1,8 @@
+# 0.10.1
+
+- Support `(edited_)channel_post` updates.
+- New methods from 2.3, 2.3.1 API updates.
+
 # 0.10.0
 
 - Integration helpers for RSpec.

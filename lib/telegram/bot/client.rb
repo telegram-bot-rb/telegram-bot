@@ -60,30 +60,28 @@ module Telegram
         raise Error, err_msg
       end
 
+      # Splited to the sections similar to API docs.
       %w(
+        deleteWebhook
+        getUpdates
+        getWebhookInfo
+        setWebhook
+
         answerCallbackQuery
-        answerInlineQuery
-        editMessageCaption
-        editMessageReplyMarkup
-        editMessageText
         forwardMessage
         getChat
         getChatAdministrators
         getChatMember
         getChatMembersCount
         getFile
-        getGameHighScores
         getMe
-        getUpdates
         getUserProfilePhotos
-        getWebhookInfo
         kickChatMember
         leaveChat
         sendAudio
         sendChatAction
         sendContact
         sendDocument
-        sendGame
         sendLocation
         sendMessage
         sendPhoto
@@ -91,9 +89,17 @@ module Telegram
         sendVenue
         sendVideo
         sendVoice
-        setGameScore
-        setWebhook
         unbanChatMember
+
+        editMessageCaption
+        editMessageReplyMarkup
+        editMessageText
+
+        answerInlineQuery
+
+        getGameHighScores
+        sendGame
+        setGameScore
       ).each do |method|
         define_method(method.underscore) { |*args| request(method, *args) }
       end
