@@ -1,4 +1,4 @@
-# 0.10.1
+# 0.10.2
 
 - Support `(edited_)channel_post` updates.
 - New methods from 2.3, 2.3.1 API updates.

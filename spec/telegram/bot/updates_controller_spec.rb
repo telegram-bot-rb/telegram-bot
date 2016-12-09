@@ -102,42 +102,44 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq [false, payload_type, payload.values_at(:data)] }
     end
 
-    context 'when payload is edited_message' do
-      let(:payload_type) { 'edited_message' }
-      it { should eq [false, payload_type, [payload]] }
-    end
-
     context 'when payload is not supported' do
       let(:payload_type) { '_unsupported_' }
       it { should eq [false, :unsupported_payload_type, []] }
     end
 
-    context 'when payload is message' do
-      let(:payload_type) { 'message' }
-      let(:payload) { {'text' => text} }
-      let(:text) { 'test' }
-
-      it { should eq [false, payload_type, [payload]] }
-
-      context 'with command' do
-        let(:text) { "/test#{"@#{mention}" if mention} arg 1 2" }
-        let(:mention) {}
-        it { should eq [true, 'test', %w(arg 1 2)] }
-
-        context 'with mention' do
-          let(:mention) { bot.username }
-          it { should eq [true, 'test', %w(arg 1 2)] }
-        end
-
-        context 'with mention for other bot' do
-          let(:mention) { other_bot_name }
-          it { should eq [false, 'message', [payload]] }
-        end
+    %w(message channel_post).each do |type|
+      context 'when payload is edited_message' do
+        let(:payload_type) { "edited_#{type}" }
+        it { should eq [false, payload_type, [payload]] }
       end
 
-      context 'without text' do
-        let(:payload) { {'audio' => {'file_id' => 123}} }
+      context 'when payload is message' do
+        let(:payload_type) { type }
+        let(:payload) { {'text' => text} }
+        let(:text) { 'test' }
+
         it { should eq [false, payload_type, [payload]] }
+
+        context 'with command' do
+          let(:text) { "/test#{"@#{mention}" if mention} arg 1 2" }
+          let(:mention) {}
+          it { should eq [true, 'test', %w(arg 1 2)] }
+
+          context 'with mention' do
+            let(:mention) { bot.username }
+            it { should eq [true, 'test', %w(arg 1 2)] }
+          end
+
+          context 'with mention for other bot' do
+            let(:mention) { other_bot_name }
+            it { should eq [false, payload_type, [payload]] }
+          end
+        end
+
+        context 'without text' do
+          let(:payload) { {'audio' => {'file_id' => 123}} }
+          it { should eq [false, payload_type, [payload]] }
+        end
       end
     end
   end

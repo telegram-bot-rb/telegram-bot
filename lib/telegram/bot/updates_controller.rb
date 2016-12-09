@@ -50,7 +50,7 @@ module Telegram
     #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
     #       process(:help, *args)
     #
-    class UpdatesController < AbstractController::Base
+    class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
       abstract!
 
       require 'telegram/bot/updates_controller/session'
@@ -183,11 +183,13 @@ module Telegram
         cmd &&= self.class.action_for_command(cmd)
         [true, cmd, args] if cmd
       end
+      alias_method :action_for_channel_post, :action_for_message
 
       # It doesn't extract commands from edited messages. Just process
       # them as usual ones.
       def action_for_edited_message
       end
+      alias_method :action_for_edited_channel_post, :action_for_edited_message
 
       def action_for_inline_query
         [false, payload_type, [payload['query'], payload['offset']]]
