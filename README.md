@@ -100,7 +100,7 @@ bot.get_me.class # => Telegram::Bot::Types::User
 ```
 
 Any API request error will raise `Telegram::Bot::Error` with description in its message.
-Special `Telegram::Bot::StaleChat` is raised when bot can't post messages to the chat anymore.
+Special `Telegram::Bot::Forbidden` is raised when bot can't post messages to the chat anymore.
 
 ### Controller
 

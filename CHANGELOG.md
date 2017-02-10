@@ -1,3 +1,9 @@
+# Unreleased
+
+- Remove Bot::StaleChat in favor of Bot::Forbidden, as Telegram adds more
+  and more new descriptions.
+  Please open an issue if you face a problem.
+
 # 0.10.2
 
 - Support `(edited_)channel_post` updates.

@@ -3,7 +3,7 @@ RSpec.describe Telegram::Bot::Botan do
   let(:token) { 'token' }
 
   include_examples 'initializers', :botans
-  include_examples 'async', request_args: -> { [double(:method), double(:url)] }
+  it_behaves_like 'async', request_args: -> { [double(:method), double(:url)] }
 
   describe '.new' do
     subject { described_class.new(*args) }

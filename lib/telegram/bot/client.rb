@@ -46,18 +46,20 @@ module Telegram
         @base_uri = format URL_TEMPLATE, self.token
       end
 
-      def request(action, body = {}) # rubocop:disable PerceivedComplexity
+      def request(action, body = {})
         res = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
         status = res.status
         return JSON.parse(res.body) if 300 > status
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
-        err_msg = "#{res.reason}: #{result && result['description'] || '-'}"
+        err_msg = result && result['description'] || '-'
         if result
-          # NotFound is raised only for valid responses from Telegram
-          raise NotFound, err_msg if 404 == status
-          raise StaleChat, err_msg if StaleChat.match_response?(result)
+          # This errors are raised only for valid responses from Telegram
+          case status
+          when 403 then raise Forbidden, err_msg
+          when 404 then raise NotFound, err_msg
+          end
         end
-        raise Error, err_msg
+        raise Error, "#{res.reason}: #{err_msg}"
       end
 
       # Splited to the sections similar to API docs.
