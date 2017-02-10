@@ -1,4 +1,4 @@
-# Unreleased
+# 0.11.0
 
 - Remove Bot::StaleChat in favor of Bot::Forbidden, as Telegram adds more
   and more new descriptions.
