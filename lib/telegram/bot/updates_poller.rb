@@ -65,14 +65,16 @@ module Telegram
 
       def fetch_updates
         response = bot.async(false) { bot.get_updates(offset: offset, timeout: timeout) }
-        return unless response['ok'] && response['result'].any?
+        updates = response.is_a?(Array) ? response : response['result']
+        return unless updates && updates.any?
         reload! do
-          response['result'].each do |update|
+          updates.each do |update|
             @offset = update['update_id'] + 1
             yield update
           end
         end
-      rescue Timeout::Error # rubocop:disable HandleExceptions
+      rescue Timeout::Error
+        log { 'Fetch timeout' }
       end
 
       def reload!

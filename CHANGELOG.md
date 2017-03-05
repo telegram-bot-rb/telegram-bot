@@ -1,3 +1,7 @@
+# 0.11.1
+
+# Fixed poller for typed response.
+
 # 0.11.0
 
 - Remove Bot::StaleChat in favor of Bot::Forbidden, as Telegram adds more
