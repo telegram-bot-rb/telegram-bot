@@ -86,6 +86,8 @@ bot.request(:getupdates, offset: 1) or bot.get_updates(offset: 1)
 bot.send_message chat_id: chat_id, text: 'Test'
 ```
 
+*Note:* If you are not using _Rails_ you will need to add the require line: `require 'telegram/bot'`
+
 By default client will return parsed json responses. You can enable
 response typecasting to virtus models using `telegram-bot-types` gem:
 ```ruby
