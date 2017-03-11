@@ -43,6 +43,12 @@ Or install it yourself as:
 
     $ gem install telegram-bot
 
+Require if necessary:
+
+```ruby
+require 'telegram/bot'
+```
+
 ## Usage
 
 ### Configuration
