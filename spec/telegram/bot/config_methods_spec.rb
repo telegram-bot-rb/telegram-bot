@@ -87,6 +87,12 @@ RSpec.describe Telegram::Bot::ConfigMethods do
           end
           it { should include default: config[:bot] }
           it { should include config[:bots] }
+
+          context 'on rails >5.1 (deep symbolized keys)' do
+            let(:secrets) { {telegram: config.deep_symbolize_keys} }
+            it { should include default: config[:bot] }
+            it { should include config[:bots] }
+          end
         end
       end
     end

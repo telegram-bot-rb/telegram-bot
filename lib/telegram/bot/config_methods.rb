@@ -1,5 +1,6 @@
 require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/hash/transform_values'
+require 'active_support/core_ext/hash/indifferent_access'
 
 module Telegram
   module Bot
@@ -48,9 +49,10 @@ module Telegram
       def bots_config
         @bots_config ||=
           if defined?(Rails.application)
-            telegram_config = Rails.application.secrets[:telegram] || {}
-            (telegram_config['bots'] || {}).symbolize_keys.tap do |config|
-              default = telegram_config['bot']
+            secrets = Rails.application.secrets.
+              fetch(:telegram, {}).with_indifferent_access
+            secrets.fetch(:bots, {}).symbolize_keys.tap do |config|
+              default = secrets[:bot]
               config[:default] = default if default
             end
           else

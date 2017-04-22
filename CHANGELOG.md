@@ -1,6 +1,10 @@
+# 0.11.2
+
+- Rails 5.1 deep symbolized secrets support.
+
 # 0.11.1
 
-# Fixed poller for typed response.
+- Fixed poller for typed response.
 
 # 0.11.0
 

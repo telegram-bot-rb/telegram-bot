@@ -15,6 +15,7 @@ Style/DotPosition: {EnforcedStyle: trailing}
 Style/FirstParameterIndentation: {EnforcedStyle: consistent}
 Style/IfUnlessModifier: {Enabled: false}
 Style/ModuleFunction: {Enabled: false}
+Style/MultilineMethodCallIndentation: {EnforcedStyle: indented}
 Style/MultilineOperationIndentation: {EnforcedStyle: indented}
 Style/NestedParenthesizedCalls: {Enabled: false}
 Style/PredicateName: {Enabled: false}
