@@ -2,8 +2,9 @@ language: ruby
 cache: bundler
 rvm:
   - 2.2.3
-env:
-  - RAILS=4
-  - RAILS=5
+  - 2.3.1
+gemfile:
+  - gemfiles/rails_4.gemfile
+  - gemfiles/rails_5.gemfile
 notifications:
   email: false
