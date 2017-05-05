@@ -2,8 +2,10 @@ source 'https://rubygems.org'
 gemspec
 
 case ENV['RAILS']
+when '5_1'
+  gem 'actionpack', '5.1.0'
 when '5'
-  gem 'actionpack', '5.0.0.rc1'
+  gem 'actionpack', '5.0.2'
 when '4'
   gem 'actionpack', '~> 4.2'
 end
