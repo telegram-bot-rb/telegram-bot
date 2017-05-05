@@ -1,3 +1,7 @@
+# 0.11.3
+
+- Release dependencies for Rails 5.1.
+
 # 0.11.2
 
 - Rails 5.1 deep symbolized secrets support.
