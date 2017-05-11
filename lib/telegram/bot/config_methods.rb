@@ -34,7 +34,11 @@ module Telegram
 
       # Default bot.
       def bot
-        @bot ||= bots[:default]
+        @bot ||= bots.fetch(:default) do
+          raise 'Default bot is not configured.' \
+            ' Add :default to bots_config' \
+            ' or use telegram.bot/telegram.bots.default section in secrets.yml.'
+        end
       end
 
       # Hash of botan clients made from #bots.

@@ -22,8 +22,13 @@ RSpec.describe Telegram::Bot::ConfigMethods do
   end
 
   describe '#bot' do
-    subject { registry.bot }
-    it { should eq registry.bots[:default] }
+    subject { -> { registry.bot } }
+    its(:call) { should eq registry.bots[:default] }
+
+    context 'when bot is not configured' do
+      let(:config) { super().except(:default) }
+      it { should raise_error(/bot is not configured/) }
+    end
   end
 
   describe '#bots' do
