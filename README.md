@@ -27,6 +27,8 @@ Run it on your local machine in 1 minute!
 And here is [app teamplate](https://github.com/telegram-bot-rb/rails_template)
 to generate clean app in seconds.
 
+Examples and cookbook in [wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki).
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -341,6 +343,8 @@ Telegram::Bot::ClientStub.stub_all!
 RSpec.configure do |config|
   # ...
   config.after { Telegram.bot.reset }
+  # or for multiple bots:
+  config.after { Telegram.bots.each_value(&:reset) }
   # ...
 end
 ```
@@ -375,6 +379,10 @@ expect(&process_update).to send_telegram_message(bot, /msg regexp/, some: :optio
 expect(&process_update).
   to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
 ```
+
+Place integration tests inside `spec/requests`
+when using RSpec's `infer_spec_type_from_file_location!`,
+or just add `type: :request` to `describe`.
 
 See sample app for more examples.
 
