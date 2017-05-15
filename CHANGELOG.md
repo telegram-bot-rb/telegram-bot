@@ -1,3 +1,7 @@
+# Unreleased
+
+- ClientStub saves and returns token. Fixes testing multiple bots.
+
 # 0.11.3
 
 - Release dependencies for Rails 5.1.
