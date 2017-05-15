@@ -14,7 +14,7 @@ RSpec.shared_context 'telegram/bot/integration' do
     }
   end
   let(:clear_session?) { described_class.respond_to?(:session_store) }
-  before { described_class.session_store.clear if clear_session? }
+  before { described_class.session_store.try!(:clear) if clear_session? }
 
   include Telegram::Bot::RSpec::ClientMatchers
 

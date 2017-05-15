@@ -72,6 +72,7 @@ RSpec.describe Telegram::Bot::ConfigMethods do
 
     context 'when not configured' do
       let(:registry) { Object.new.tap { |x| x.extend described_class } }
+      before { hide_const('Rails') }
       it { should eq({}) }
 
       context 'in rails environment' do

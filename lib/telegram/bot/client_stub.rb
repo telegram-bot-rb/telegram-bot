@@ -35,6 +35,7 @@ module Telegram
       end
 
       def initialize(token = nil, username = nil, **options)
+        @token = token
         @username = username || options[:username] || token
         reset
       end
