@@ -18,22 +18,20 @@ class TestApplication < Rails::Application
     bot: 'default_token',
     bots: {
       other: {token: 'other_token'},
+      named: {token: 'named_token', username: 'TestBot'},
     },
   }
 end
 Rails.application.initialize!
 
 # # Controllers
-class DefaultBotController < Telegram::Bot::UpdatesController
-  def start(*)
-    respond_with :message, text: 'from default'
+%w(default other named).each do |bot_name|
+  controller = Class.new(Telegram::Bot::UpdatesController) do
+    define_method :start do |*|
+      respond_with :message, text: "from #{bot_name}"
+    end
   end
-end
-
-class OtherBotController < Telegram::Bot::UpdatesController
-  def start(*)
-    respond_with :message, text: 'from other'
-  end
+  Object.const_set("#{bot_name}_bot_controller".camelize, controller)
 end
 
 RSpec.configure do |config|
@@ -57,7 +55,8 @@ RSpec.configure do |config|
       extend Telegram::Bot::RoutesHelper
 
       telegram_webhooks default: DefaultBotController,
-                        other: OtherBotController
+                        other: OtherBotController,
+                        named: NamedBotController
     end
   end
 end
