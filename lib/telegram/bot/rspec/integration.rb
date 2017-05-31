@@ -2,7 +2,8 @@ RSpec.shared_context 'telegram/bot/integration' do
   let(:bot) { Telegram.bot }
   let(:from_id) { 123 }
   let(:chat_id) { 456 }
-  let(:default_message_options) { {from: {id: from_id}, chat: {id: chat_id}} }
+  let(:chat_hash) { {id: chat_id} }
+  let(:default_message_options) { {from: {id: from_id}, chat: chat_hash} }
   let(:controller_path) do
     route_name = Telegram::Bot::RoutesHelper.route_name_for_bot(bot)
     Rails.application.routes.url_helpers.public_send("#{route_name}_path")
