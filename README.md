@@ -377,6 +377,13 @@ RSpec.describe TelegramWebhooksController, :telegram_bot do
     subject { -> { dispatch_command :start } }
     it { should respond_with_message 'Hi there!' }
   end
+
+  # There is context for callback queries with related matchers.
+  describe '#hey_callback_query', :callback_query do
+    let(:data) { "hey:#{name}" }
+    let(:name) { 'Joe' }
+    it { should answer_callback_query('Hey Joe') }
+    it { should edit_current_message :text, text: 'Done' }
 end
 
 # For controller specs use
