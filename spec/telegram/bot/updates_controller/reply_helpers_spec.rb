@@ -48,4 +48,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
       end
     end
   end
+
+  describe '#edit_message' do
+    skip 'TODO'
+  end
 end

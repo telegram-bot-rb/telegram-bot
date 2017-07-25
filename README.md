@@ -168,6 +168,20 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 end
 ```
 
+#### Reply helpers
+
+There are helpers to respond for basic actions. They just set chat/message/query
+identifiers from update. See `ReplyHelpers` method for more information.
+Here are this methods signatures:
+
+```ruby
+def respond_with(type, params); end
+def reply_with(type, params); end
+def answer_inline_query(results, params = {}); end
+def answer_callback_query(text, params = {}); end
+def edit_message(type, params = {}); end
+```
+
 #### Optional typecasting
 
 You can enable typecasting of `update` with `telegram-bot-types` by including
