@@ -1,6 +1,13 @@
 # Unreleased
 
+# 0.12.0
+
+- New API methods and payload types (up to Bot API 3.2).
+- Fix rails 5.1.x support.
+- RSpec context for callback_query updates.
+- `edit_message` helper.
 - ClientStub saves and returns token. Fixes testing multiple bots.
+- Raise descriptive error when accessing not-configured bot.
 
 # 0.11.3
 
