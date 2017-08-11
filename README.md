@@ -24,7 +24,7 @@ Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bo
 with session, keyboards and inline queries.
 Run it on your local machine in 1 minute!
 
-And here is [app teamplate](https://github.com/telegram-bot-rb/rails_template)
+And here is [app template](https://github.com/telegram-bot-rb/rails_template)
 to generate clean app in seconds.
 
 Examples and cookbook in [wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki).
