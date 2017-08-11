@@ -42,8 +42,8 @@ module Telegram
         # Edit message from callback query.
         def edit_message(type, params = {})
           params =
-            if query_id = payload['inline_message_id'] # rubocop:disable AssignmentInCondition
-              params.merge(inline_query_id: query_id)
+            if message_id = payload['inline_message_id'] # rubocop:disable AssignmentInCondition
+              params.merge(inline_message_id: message_id)
             elsif message = payload['message'] # rubocop:disable AssignmentInCondition
               params.merge(chat_id: message['chat']['id'], message_id: message['message_id'])
             else

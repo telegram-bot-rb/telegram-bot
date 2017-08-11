@@ -50,6 +50,30 @@ RSpec.describe Telegram::Bot::UpdatesController do
   end
 
   describe '#edit_message' do
-    skip 'TODO'
+    subject { controller.edit_message(type, params) }
+    let(:type) { :reply_markup }
+
+    it { expect { subject }.to raise_error(/Can not edit message without/) }
+
+    context 'when inline_message_id is present' do
+      let(:payload) { {inline_message_id: double(:message_id)} }
+      it 'sets inline_message_id' do
+        expect(bot).to receive("edit_message_#{type}").with(params.merge(
+          inline_message_id: payload[:inline_message_id],
+        )) { result }
+        should eq result
+      end
+    end
+
+    context 'when message is present' do
+      let(:payload) { {message: super().merge(chat: chat)} }
+      it 'sets chat_id & message_id' do
+        expect(bot).to receive("edit_message_#{type}").with(params.merge(
+          message_id: payload[:message][:message_id],
+          chat_id: payload[:message][:chat]['id'],
+        )) { result }
+        should eq result
+      end
+    end
   end
 end
