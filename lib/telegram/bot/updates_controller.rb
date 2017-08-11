@@ -86,6 +86,8 @@ module Telegram
         inline_query
         chosen_inline_result
         callback_query
+        shipping_query
+        pre_checkout_query
       ).freeze
       CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
@@ -169,27 +171,27 @@ module Telegram
       # Returns array `[is_command?, action, args]`.
       def action_for_payload
         if payload_type
-          send("action_for_#{payload_type}") || [false, payload_type, [payload]]
+          send("action_for_#{payload_type}") || action_for_default_payload
         else
           [false, :unsupported_payload_type, []]
         end
       end
 
+      def action_for_default_payload
+        [false, payload_type, [payload]]
+      end
+
       # If payload is a message with command, then returned action is an
       # action for this command.
       # Separate method, so it can be easily overriden (ex. MessageContext).
+      #
+      # This is not used for edited messages/posts. It process them as basic updates.
       def action_for_message
         cmd, args = self.class.command_from_text(payload['text'], bot_username)
         cmd &&= self.class.action_for_command(cmd)
         [true, cmd, args] if cmd
       end
       alias_method :action_for_channel_post, :action_for_message
-
-      # It doesn't extract commands from edited messages. Just process
-      # them as usual ones.
-      def action_for_edited_message
-      end
-      alias_method :action_for_edited_channel_post, :action_for_edited_message
 
       def action_for_inline_query
         [false, payload_type, [payload['query'], payload['offset']]]
@@ -206,6 +208,11 @@ module Telegram
       # Silently ignore unsupported messages.
       # Params are `action, *args`.
       def action_missing(*)
+      end
+
+      PAYLOAD_TYPES.each do |type|
+        method = :"action_for_#{type}"
+        alias_method method, :action_for_default_payload unless instance_methods.include?(method)
       end
 
       ActiveSupport.run_load_hooks('telegram.bot.updates_controller', self)

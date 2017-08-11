@@ -15,7 +15,6 @@ module Telegram
         # because `data` param is controlled by client.
         def action_for_callback_query
           context, new_data = context_from_callback_query
-          # binding.pry
           if context
             action_name = "#{context}_callback_query"
             [false, action_name, [new_data]] if action_method?(action_name)

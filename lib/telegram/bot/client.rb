@@ -5,7 +5,7 @@ require 'active_support/core_ext/hash/keys'
 
 module Telegram
   module Bot
-    class Client
+    class Client # rubocop:disable ClassLength
       URL_TEMPLATE = 'https://api.telegram.org/bot%s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
@@ -70,6 +70,8 @@ module Telegram
         setWebhook
 
         answerCallbackQuery
+        deleteChatPhoto
+        exportChatInviteLink
         forwardMessage
         getChat
         getChatAdministrators
@@ -80,6 +82,9 @@ module Telegram
         getUserProfilePhotos
         kickChatMember
         leaveChat
+        pinChatMessage
+        promoteChatMember
+        restrictChatMember
         sendAudio
         sendChatAction
         sendContact
@@ -87,17 +92,34 @@ module Telegram
         sendLocation
         sendMessage
         sendPhoto
-        sendSticker
         sendVenue
         sendVideo
+        sendVideoNote
         sendVoice
+        setChatDescription
+        setChatPhoto
+        setChatTitle
         unbanChatMember
+        unpinChatMessage
 
+        deleteMessage
         editMessageCaption
         editMessageReplyMarkup
         editMessageText
 
+        sendSticker
+        getStickerSet
+        uploadStickerFile
+        createNewStickerSet
+        addStickerToSet
+        setStickerPositionInSet
+        deleteStickerFromSet
+
         answerInlineQuery
+
+        sendInvoice
+        answerShippingQuery
+        answerPreCheckoutQuery
 
         getGameHighScores
         sendGame

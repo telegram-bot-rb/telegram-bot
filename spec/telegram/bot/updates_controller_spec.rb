@@ -108,7 +108,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
     end
 
     %w(message channel_post).each do |type|
-      context 'when payload is edited_message' do
+      context "when payload is edited_#{type}" do
         let(:payload_type) { "edited_#{type}" }
         it { should eq [false, payload_type, [payload]] }
       end
@@ -140,6 +140,22 @@ RSpec.describe Telegram::Bot::UpdatesController do
           let(:payload) { {'audio' => {'file_id' => 123}} }
           it { should eq [false, payload_type, [payload]] }
         end
+      end
+    end
+
+    custom_payload_types = %w(
+      message
+      edited_message
+      channel_post
+      edited_channel_post
+      inline_query
+      chosen_inline_result
+      callback_query
+    )
+    (described_class::PAYLOAD_TYPES - custom_payload_types).each do |type|
+      context "when payload is #{type}" do
+        let(:payload_type) { type }
+        it { should eq [false, payload_type, [payload]] }
       end
     end
   end
