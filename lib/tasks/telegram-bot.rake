@@ -21,7 +21,7 @@ namespace :telegram do
         route_name = Telegram::Bot::RoutesHelper.route_name_for_bot(bot)
         url = routes.send("#{route_name}_url")
         puts "Setting webhook for #{key}..."
-        bot.set_webhook(url: url, certificate: cert)
+        bot.async(false) { bot.set_webhook(url: url, certificate: cert) }
       end
     end
   end
