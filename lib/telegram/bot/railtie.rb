@@ -18,7 +18,7 @@ module Telegram
 
         ActiveSupport.on_load('telegram.bot.updates_controller') do
           self.logger = options.logger || Rails.logger
-          self.session_store = options.session_store || Rails.cache
+          self.session_store = options.session_store if options.session_store
         end
       end
 

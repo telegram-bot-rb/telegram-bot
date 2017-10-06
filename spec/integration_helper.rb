@@ -4,6 +4,7 @@ require 'action_dispatch'
 require 'action_dispatch/testing/integration'
 
 require 'rails'
+require 'telegram/bot/railtie'
 require 'rspec/rails/adapters'
 require 'rspec/rails/fixture_support'
 require 'rspec/rails/example/rails_example_group'
@@ -13,6 +14,7 @@ ENV['RAILS_ENV'] = 'test'
 class TestApplication < Rails::Application
   config.eager_load = false
   config.log_level = :debug
+  config.action_dispatch.show_exceptions = false
   secrets[:secret_key_base] = 'test'
   secrets[:telegram] = {
     bot: 'default_token',
@@ -33,6 +35,18 @@ Rails.application.initialize!
   end
   Object.const_set("#{bot_name}_bot_controller".camelize, controller)
 end
+
+[DefaultBotController, OtherBotController].each do |klass|
+  klass.class_eval do
+    use_session!
+
+    define_method :load_session do |*|
+      session[:test]
+    end
+  end
+end
+
+DefaultBotController.session_store = :memory_store
 
 RSpec.configure do |config|
   config.include RSpec::Rails::RequestExampleGroup, type: :request
