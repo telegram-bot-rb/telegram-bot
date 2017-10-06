@@ -7,14 +7,11 @@ module Telegram
 
         include Session
 
-        included do
-          # As we use before_action context is cleared anyway,
-          # no matter we used it or not.
-          singleton_class.send :attr_reader, :context_handlers, :context_to_action
-          @context_handlers = {}
-        end
-
         module ClassMethods
+          def context_handlers
+            @_context_handlers ||= {}
+          end
+
           # Registers handler for context.
           #
           #     context_handler :rename do |*|
@@ -39,6 +36,8 @@ module Telegram
             context_handlers[context] = action || context
           end
 
+          attr_reader :context_to_action
+
           # Use it to use context value as action name for all contexts
           # which miss handlers.
           # For security reasons it supports only action methods and will
@@ -59,10 +58,16 @@ module Telegram
         # according to previous request.
         attr_reader :context
 
+        # Controller may have multiple sessions, let it be possible
+        # to select session for message context.
+        def message_context_session
+          session
+        end
+
         # Fetches context and finds handler for it. If message has new command,
         # it has higher priority than contextual action.
         def action_for_message
-          val = session.delete(:context)
+          val = message_context_session.delete(:context)
           @context = val && val.to_sym
           super || context && begin
             handler = handler_for_context
@@ -72,7 +77,7 @@ module Telegram
 
         # Save context for the next request.
         def save_context(context)
-          session[:context] = context
+          message_context_session[:context] = context
         end
 
         def handler_for_context

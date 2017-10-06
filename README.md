@@ -199,12 +199,33 @@ end
 
 #### Session
 
-There is support for sessions using `ActiveSupport::Cache` stores.
+This API is very close to ActiveController's session API, but works different
+under the hood. Cookies can not be used to store session id or
+whole session (like CookieStore does). So it uses key-value store and `session_key`
+method to build identifier from update.
+
+Store can be one of numerous `ActiveSupport::Cache` stores.
+While `:file_store` is suitable for development and single-server deployments
+without heavy load, it doesn't scale well. Key-value databases with persistance
+like Redis are more appropriate for production use.
 
 ```ruby
-# configure store in env files:
+# In rails app store can be configured in env files:
 config.telegram_updates_controller.session_store = :redis_store, {expires_in: 1.month}
 
+# In other app it can be done for all controllers with:
+Telegram::Bot::UpdatesController.session_store = :redis_store, {expires_in: 1.month}
+# or for specific one:
+OneOfUpdatesController.session_store = :redis_store, {expires_in: 1.month}
+```
+
+Default session id is made from bot's username and `(from || chat)['id']`.
+It means that session will be the same for updates from user in every chat,
+and different for every user in the same group chat.
+To change this behavior you can override `session_key` method, or even
+define multiple sessions in single controller. For details see `Session` module.
+
+```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
   include Telegram::Bot::UpdatesController::Session
   # or just shortcut:
@@ -222,12 +243,16 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 
   private
-  # By default it uses bot's username and user's id as a session key.
-  # Chat's id is used only when `from` field is empty.
-  # Override `session_key` method to change this behavior.
+
+  # In this case session will persist for user only in specific chat.
+  # Same user in other chat will have different session.
   def session_key
-    # In this case session will persist for user only in specific chat:
-    "#{bot.username}:#{chat['id']}:#{from['id']}"
+    "#{bot.username}:#{chat['id']}:#{from['id']}" if chat && from
+  end
+
+  # This session will be the same for all updates in chat.
+  def chat_session
+    @_chat_session ||= self.class.build_session(chat && "#{bot.username}:#{chat['id']}")
   end
 end
 ```
