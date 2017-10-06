@@ -1,5 +1,12 @@
 # Unreleased
 
+# 0.12.1
+
+- Fix `set_webhook` rake task for async bots with self-issued certificates.
+- Make `#session` raise error when store is not configured,
+  don't use Rails.cache as fallback for session_store.
+- Allow use different sessions for MessageContext.
+
 # 0.12.0
 
 - New API methods and payload types (up to Bot API 3.2).
