@@ -19,7 +19,7 @@ RSpec.describe Telegram::Bot::Client do
 
       it 'encodes nested hashes to json' do
         expected = input.dup
-        %i(c d e).each { |x| expected[x] = expected[x].to_json }
+        %i[c d e].each { |x| expected[x] = expected[x].to_json }
         should eq expected
       end
     end
@@ -35,7 +35,7 @@ RSpec.describe Telegram::Bot::Client do
     subject { described_class.new(*args) }
 
     context 'when multiple args are given' do
-      let(:args) { %w(secret superbot) }
+      let(:args) { %w[secret superbot] }
       its(:token) { should eq args[0] }
       its(:username) { should eq args[1] }
       its(:base_uri) { should include args[0] }

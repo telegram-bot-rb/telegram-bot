@@ -5,7 +5,8 @@ require 'action_dispatch/testing/integration'
 
 RSpec.describe 'Integrations helper', :telegram_bot do
   include ActionDispatch::Integration::Runner
-  def reset_template_assertion; end
+  def reset_template_assertion
+  end
 
   let(:app) do
     app = Telegram::Bot::Middleware.new(bot, controller)
@@ -38,7 +39,7 @@ RSpec.describe 'Integrations helper', :telegram_bot do
 
   describe '#dispatch_message' do
     subject { -> { dispatch_message "/start #{args.join ' '}", options } }
-    let(:args) { %w(asd qwe) }
+    let(:args) { %w[asd qwe] }
     let(:options) { {} }
     it { should respond_with_message "Start: #{args.inspect}, option: " }
 
@@ -59,7 +60,7 @@ RSpec.describe 'Integrations helper', :telegram_bot do
     it { should respond_with_message "Start: #{args.inspect}, option: " }
 
     context 'with args' do
-      let(:args) { %w(asd qwe) }
+      let(:args) { %w[asd qwe] }
       it { should respond_with_message "Start: #{args.inspect}, option: " }
     end
 

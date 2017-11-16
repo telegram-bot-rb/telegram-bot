@@ -107,7 +107,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq [false, :unsupported_payload_type, []] }
     end
 
-    %w(message channel_post).each do |type|
+    %w[message channel_post].each do |type|
       context "when payload is edited_#{type}" do
         let(:payload_type) { "edited_#{type}" }
         it { should eq [false, payload_type, [payload]] }
@@ -123,11 +123,11 @@ RSpec.describe Telegram::Bot::UpdatesController do
         context 'with command' do
           let(:text) { "/test#{"@#{mention}" if mention} arg 1 2" }
           let(:mention) {}
-          it { should eq [true, 'test', %w(arg 1 2)] }
+          it { should eq [true, 'test', %w[arg 1 2]] }
 
           context 'with mention' do
             let(:mention) { bot.username }
-            it { should eq [true, 'test', %w(arg 1 2)] }
+            it { should eq [true, 'test', %w[arg 1 2]] }
           end
 
           context 'with mention for other bot' do
@@ -143,7 +143,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       end
     end
 
-    custom_payload_types = %w(
+    custom_payload_types = %w[
       message
       edited_message
       channel_post
@@ -151,7 +151,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       inline_query
       chosen_inline_result
       callback_query
-    )
+    ]
     (described_class::PAYLOAD_TYPES - custom_payload_types).each do |type|
       context "when payload is #{type}" do
         let(:payload_type) { type }
@@ -163,11 +163,11 @@ RSpec.describe Telegram::Bot::UpdatesController do
   context 'when `update` is a virtus model' do
     subject { controller }
     let(:update) { Telegram::Bot::Types::Update.new(super()) }
-    %w(
+    %w[
       message
       inline_query
       chosen_inline_result
-    ).each do |type|
+    ].each do |type|
       context "with #{type}" do
         type_class = Telegram::Bot::Types.const_get(type.camelize)
         let(:payload_type) { type }
@@ -194,7 +194,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
 
   describe '#process' do
     subject { -> { controller.process(:action, *args) } }
-    let(:args) { [:arg1, :arg2] }
+    let(:args) { %i[arg1 arg2] }
     let(:controller_class) do
       Class.new(described_class) do
         attr_reader :acted, :hooked

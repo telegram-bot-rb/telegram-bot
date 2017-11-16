@@ -35,7 +35,7 @@ module Telegram
       def request(method, uri, query = {}, body = nil)
         res = http_request(method, uri, query.merge(token: token), body)
         status = res.status
-        return JSON.parse(res.body) if 300 > status
+        return JSON.parse(res.body) if status < 300
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
         err_msg = "#{res.reason}: #{result && result['info'] || '-'}"
         raise Error, err_msg

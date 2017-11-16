@@ -2,7 +2,7 @@ module Telegram
   module Bot
     class UpdatesController
       module Testing
-        IVARS_TO_KEEP = %i(@_session).freeze
+        IVARS_TO_KEEP = %i[@_session].freeze
 
         # Perform multiple dispatches on same instance.
         def dispatch_again(bot = nil, update = nil)
