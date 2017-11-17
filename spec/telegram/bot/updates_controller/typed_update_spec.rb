@@ -9,11 +9,11 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
 
   context 'when `update` is a virtus model' do
     subject { controller }
-    %w(
+    %w[
       message
       inline_query
       chosen_inline_result
-    ).each do |type|
+    ].each do |type|
       context "with #{type}" do
         type_class = Telegram::Bot::Types.const_get(type.camelize)
         let(:payload_type) { type }

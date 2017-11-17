@@ -50,7 +50,7 @@ module Telegram
             end
           rescue Interrupt
             @running = false
-          rescue => e
+          rescue StandardError => e
             logger.error { ([e.message] + e.backtrace).join("\n") } if logger
           end
         end

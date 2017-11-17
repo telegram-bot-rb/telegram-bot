@@ -1,30 +1,52 @@
 Rails: {Enabled: true}
 
-Style/Alias: {Enabled: false}
-Style/AlignParameters:
+Layout/AlignParameters:
   # Disable, till rubocop supports combination of styles.
   # Use one of this styles where appropriate, keep it clean, compact and readable.
   Enabled: false
   # EnforcedStyle:
   # - with_first_parameter
   # - with_fixed_indentation
+
+# Breaks
+#
+#   I18n.t(key,
+#     param: val,
+#     # ...
+#   )
+Layout/ClosingParenthesisIndentation: {Enabled: false}
+Layout/DotPosition: {EnforcedStyle: trailing}
+Layout/FirstParameterIndentation: {EnforcedStyle: consistent}
+# Same as Layout/ClosingParenthesisIndentation
+Layout/MultilineMethodCallBraceLayout: {Enabled: false}
+Layout/MultilineMethodCallIndentation: {EnforcedStyle: indented}
+Layout/MultilineOperationIndentation: {EnforcedStyle: indented}
+Layout/SpaceInsideHashLiteralBraces: {EnforcedStyle: no_space}
+
+# Offences named scopes and `expect {}.to change {}`.
+Lint/AmbiguousBlockAssociation: {Enabled: false}
+
+Naming/PredicateName: {Enabled: false}
+Naming/VariableNumber: {EnforcedStyle: snake_case}
+
+Style/Alias: {Enabled: false}
 Style/AndOr: {EnforcedStyle: conditionals}
-Style/ClosingParenthesisIndentation: {Enabled: false}
 Style/Documentation: {Enabled: false}
-Style/DotPosition: {EnforcedStyle: trailing}
-Style/FirstParameterIndentation: {EnforcedStyle: consistent}
 Style/IfUnlessModifier: {Enabled: false}
+
+# Consistent to other definitions.
+Style/EmptyMethod: {EnforcedStyle: expanded}
+
 Style/ModuleFunction: {Enabled: false}
-Style/MultilineMethodCallIndentation: {EnforcedStyle: indented}
-Style/MultilineOperationIndentation: {EnforcedStyle: indented}
 Style/NestedParenthesizedCalls: {Enabled: false}
-Style/PredicateName: {Enabled: false}
 Style/SignalException: {EnforcedStyle: only_raise}
-Style/SpaceInsideHashLiteralBraces: {EnforcedStyle: no_space}
 Style/TrailingCommaInArguments: {Enabled: false}
 Style/TrailingCommaInLiteral: {EnforcedStyleForMultiline: comma}
 
 Metrics/AbcSize: {Max: 21}
+# Other metrics are just enough.
+# This one offences all specs, routes and some initializers.
+Metrics/BlockLength: {Enabled: false}
 Metrics/LineLength: {Max: 100}
 Metrics/MethodLength: {Max: 30}
 Metrics/CyclomaticComplexity: {Max: 8}

@@ -17,7 +17,7 @@ module Telegram
             payload   = event.payload
             additions = UpdatesController.log_process_action(payload)
             message = "Completed in #{event.duration.round}ms"
-            message << " (#{additions.join(' | ')})" unless additions.blank?
+            message << " (#{additions.join(' | ')})" if additions.present?
             message
           end
         end

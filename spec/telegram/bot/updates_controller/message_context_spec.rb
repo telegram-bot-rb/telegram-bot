@@ -65,7 +65,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
 
       context 'when message has new command' do
         let(:text) { '/action a s d' }
-        its(:call) { should eq [:action_result, *%w(a s d)] }
+        its(:call) { should eq [:action_result, 'a', 's', 'd'] }
         it { should change { session[:context] }.to nil }
       end
     end

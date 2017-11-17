@@ -49,7 +49,7 @@ module Telegram
       def request(action, body = {})
         res = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
         status = res.status
-        return JSON.parse(res.body) if 300 > status
+        return JSON.parse(res.body) if status < 300
         result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
         err_msg = result && result['description'] || '-'
         if result
@@ -63,7 +63,7 @@ module Telegram
       end
 
       # Splited to the sections similar to API docs.
-      %w(
+      %w[
         deleteWebhook
         getUpdates
         getWebhookInfo
@@ -124,7 +124,7 @@ module Telegram
         getGameHighScores
         sendGame
         setGameScore
-      ).each do |method|
+      ].each do |method|
         define_method(method.underscore) { |*args| request(method, *args) }
       end
 

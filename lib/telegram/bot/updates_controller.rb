@@ -78,7 +78,7 @@ module Telegram
 
       autoload :TypedUpdate, 'telegram/bot/updates_controller/typed_update'
 
-      PAYLOAD_TYPES = %w(
+      PAYLOAD_TYPES = %w[
         message
         edited_message
         channel_post
@@ -88,7 +88,7 @@ module Telegram
         callback_query
         shipping_query
         pre_checkout_query
-      ).freeze
+      ].freeze
       CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
       CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
 
