@@ -4,8 +4,8 @@
 [![Code Climate](https://codeclimate.com/github/telegram-bot-rb/telegram-bot/badges/gpa.svg)](https://codeclimate.com/github/telegram-bot-rb/telegram-bot)
 [![Build Status](https://travis-ci.org/telegram-bot-rb/telegram-bot.svg)](https://travis-ci.org/telegram-bot-rb/telegram-bot)
 
-Tools for developing bot for Telegram. Best used with Rails, but can be be used in
-[standalone app](https://github.com/telegram-bot-rb/telegram-bot/wiki/Non-rails-application).
+Tools for developing Telegram bots. Best used with Rails, but can be used in
+[standalone app](https://github.com/telegram-bot-rb/telegram-bot/wiki/Not-rails-application).
 Supposed to be used in webhook-mode in production, and poller-mode
 in development, but you can use poller in production if you want.
 
@@ -13,7 +13,7 @@ Package contains:
 
 - Ligthweight client for bot API (with fast and thread-safe
   [httpclient](https://github.com/nahi/httpclient) under the hood).
-- Controller with message parser. Allows to write separate methods for each command.
+- Controller with message parser: define methods for commands, not `case` branches.
 - Middleware and routes helpers for production env.
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
@@ -53,49 +53,62 @@ require 'telegram/bot'
 
 ## Usage
 
-### Configuration
+### Configuration in Rails app
 
 Add `telegram` section into `secrets.yml`:
 
 ```yml
-telegram:
-  bots:
-    # just set the token
-    chat: TOKEN_1
-    # or add username to support commands with mentions (/help@ChatBot)
-    auction:
-      token: TOKEN_2
-      username: ChatBot
+development:
+  telegram:
+    # Single bot can be specified like this
+    bot: TOKEN
+    # or
+    bot:
+      token: TOKEN
+      username: SomeBot
 
-  # Single bot can be specified like this
-  bot: TOKEN
-  # or
-  bot:
-    token: TOKEN
-    username: SomeBot
+    # For multiple bots in single app use hash of `internal_bot_id => settings`
+    bots:
+      # just set the bot token
+      chat: TOKEN_1
+      # or add username to support commands with mentions (/help@ChatBot)
+      auction:
+        token: TOKEN_2
+        username: ChatBot
 ```
-
-### Client
 
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.
 
-You can create clients manually with `Telegram::Bot::Client.new(token, username)`.
+### Client
+
+Client is instantiated with `Telegram::Bot::Client.new(token, username)`.
 Username is optional and used only to parse commands with mentions.
 
 There is `request(path_suffix, body)` method to perform any query.
-And there are also shortcuts for available queries in underscored style
-(`answer_inline_query` instead of `answerInlineQuery`).
-All this methods just post given params to specific URL.
+And there are shortcuts for all available requests in underscored style
+(`answer_inline_query(params)` instead of `answerInlineQuery`).
 
 ```ruby
 bot.request(:getMe) or bot.get_me
 bot.request(:getupdates, offset: 1) or bot.get_updates(offset: 1)
-bot.send_message chat_id: chat_id, text: 'Test'
+bot.send_message(chat_id: chat_id, text: 'Test')
 ```
 
+There is no magic, they just pass params as is and set `path_suffix`.
+See [`Client`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/client.rb)
+class for list of available methods. Please open PR or issue if it misses methods from
+new API versions.
+
+Any API request error will raise `Telegram::Bot::Error` with description in its message.
+Special `Telegram::Bot::Forbidden` is raised when bot can't post messages to the chat anymore.
+
+#### Typed responses
+
 By default client will return parsed json responses. You can enable
-response typecasting to virtus models using `telegram-bot-types` gem:
+response typecasting to virtus models using
+[`telegram-bot-types`](https://github.com/telegram-bot-rb/telegram-bot-types) gem:
+
 ```ruby
 # Add to your gemfile:
 gem 'telegram-bot-types', '~> x.x.x'
@@ -107,10 +120,15 @@ bot.extend Telegram::Bot::Client::TypedResponse
 bot.get_me.class # => Telegram::Bot::Types::User
 ```
 
-Any API request error will raise `Telegram::Bot::Error` with description in its message.
-Special `Telegram::Bot::Forbidden` is raised when bot can't post messages to the chat anymore.
-
 ### Controller
+
+Controller makes it easy to keep bot's code readable.
+It does nothing more than finding out action name for update and invoking it.
+So there is almost no overhead comparing to large `switch`, while you
+can represent actions as separate methods keeping source much more readable and supportable.
+
+New instance of controller is instantiated for each update.
+This way every update is processed in isolation from others.
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
@@ -118,7 +136,7 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   around_action :with_locale
 
   # Every update can have one of: message, inline_query, chosen_inline_result,
-  # callback_query.
+  # callback_query, etc.
   # Define method with same name to respond to this updates.
   def message(message)
     # message can be also accessed via instance method
@@ -171,7 +189,7 @@ end
 #### Reply helpers
 
 There are helpers to respond for basic actions. They just set chat/message/query
-identifiers from update. See `ReplyHelpers` method for more information.
+identifiers from update. See [`ReplyHelpers`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/updates_controller/reply_helpers.rb) module for more information.
 Here are this methods signatures:
 
 ```ruby
@@ -223,7 +241,8 @@ Default session id is made from bot's username and `(from || chat)['id']`.
 It means that session will be the same for updates from user in every chat,
 and different for every user in the same group chat.
 To change this behavior you can override `session_key` method, or even
-define multiple sessions in single controller. For details see `Session` module.
+define [multiple sessions](https://github.com/telegram-bot-rb/telegram-bot/wiki/Multiple-session-objects)
+in single controller. For details see `Session` module.
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
@@ -231,14 +250,14 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # or just shortcut:
   use_session!
 
-  # You can override global config
+  # You can override global config for this controller.
   self.session_store = :file_store
 
   def write(text = nil, *)
     session[:text] = text
   end
 
-  def read
+  def read(*)
     respond_with :message, text: session[:text]
   end
 
@@ -248,11 +267,6 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # Same user in other chat will have different session.
   def session_key
     "#{bot.username}:#{chat['id']}:#{from['id']}" if chat && from
-  end
-
-  # This session will be the same for all updates in chat.
-  def chat_session
-    @_chat_session ||= self.class.build_session(chat && "#{bot.username}:#{chat['id']}")
   end
 end
 ```
@@ -292,77 +306,80 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # This will call #rename like if it is called with message '/rename %text%'
   context_handler :rename
 
-  # If you have a lot of such methods you can use
+  # If you have a lot of such methods you can call this method
+  # to use context value as action name for all contexts which miss handlers:
   context_to_action!
-  # It'll use context value as action name for all contexts which miss handlers.
 end
 ```
 
-You can use `CallbackQueryContext` in the similar way to split `#callback_query` into
-several specific methods. It doesn't require session support, and takes context from
-data. If data has a prefix with colon like this `my_ctx:smth...` it'll call
-`my_ctx_callback_query('smth...')` when there is such action method. Otherwise
-it'll call `callback_query('my_ctx:smth...')` as usual.
+#### Callback queries
+
+You can include `CallbackQueryContext` module to split `#callback_query` into
+several methods. It doesn't require session support, and takes context from
+data: if data has a prefix with colon like this `my_ctx:smth...` it invokes
+`my_ctx_callback_query('smth...')` when such action method is defined. Otherwise
+it invokes `callback_query('my_ctx:smth...')` as usual.
+Callback queries without prefix stay untouched.
+
+```ruby
+# This one handles `set_value:%{something}`.
+def set_value_callback_query(new_value = nil, *)
+  save_this(value)
+  answer_callback_query('Saved!)
+end
+
+# And this one is for `make_cool:%{something}`
+def make_cool_callback_query(thing = nil, *)
+  do_it(thing)
+  answer_callback_query("#{thing} is cool now! Like a callback query context.") 
+end
+```
+
+### Routes in Rails app
+
+There is `telegram_webhooks` helper for rails app to define routes for webhooks.
+It defines routes at `telegram/#{bot.token}` and connects bots with controller.
+For more options see [examples in wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki/Routes-helpers-in-details).
+
+```ruby
+# Create routes for all Telegram.bots using single controller:
+telegram_webhooks TelegramController
+
+# Use different controllers for each bot:
+telegram_webhooks chat: TelegramChatController,
+                  auction: TelegramAuctionController
+```
 
 #### Processesing updates
 
-To process update run:
+To process update with controller call `.dispatch(bot, update)` on it.
+There are several options to run it automatically:
+
+- Use webhooks with routes helper (described above).
+- Use `Telegram::Bot::Middleware` with rack ([example in wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki/Not-rails-application)).
+- Use poller (described in the next section).
+
+To run action without update (ex., send notifications from jobs),
+you can call `#process` directly. In this case controller can be initialized 
+with `:from` and/or `:chat` options instead of `update` object:
 
 ```ruby
-ControllerClass.dispatch(bot, update)
-```
-
-There is also ability to run action without update:
-
-```ruby
-# Most likely you'll want to pass :from and :chat
 controller = ControllerClass.new(bot, from: telegram_user, chat: telegram_chat)
-controller.process(:help, *args)
+controller.process(:welcome, *args)
 ```
-
-### Routes
-
-Use `telegram_webhooks` helper to add routes. It will create routes for bots
-at "telegram/#{bot.token}" path.
-
-```ruby
-# Create routes for all Telegram.bots to use same controller:
-telegram_webhooks TelegramController
-
-# Or pass custom bots usin any of supported config options:
-telegram_webhooks TelegramController,
-                 bot,
-                 {token: token, username: username},
-                 other_bot_token
-
-# Use different controllers for each bot:
-telegram_webhooks bot => TelegramChatController,
-                  other_bot => TelegramAuctionController
-
-# telegram_webhooks creates named routes.
-# Route name depends on `Telegram.bots`.
-# When there is single bot it will use 'telegram_webhook'.
-# When there are it will use bot's key in the `Telegram.bots` as prefix
-# (eg. `chat_telegram_webhook`).
-# You can override this options or specify others:
-telegram_webhooks TelegramController, as: :my_webhook
-telegram_webhooks bot => [TelegramChatController, as: :chat_webhook],
-                  other_bot => TelegramAuctionController,
-                  admin_chat: TelegramAdminChatController
-```
-
-For Rack applications you can also use `Telegram::Bot::Middleware` or just
-call `.dispatch(bot, update)` on controller.
 
 ### Development & Debugging
 
-Use `rake telegram:bot:poller` to run poller. It'll automatically load
-changes without restart in development env. Optionally specify bot to run poller for
-with `BOT` envvar (`BOT=chat`).
+Use `rake telegram:bot:poller` to run poller in rails app. It automatically loads
+changes without restart in development env.
+Optionally pass bot id in `BOT` envvar (`BOT=chat`) to specify bot to run poller for.
 
-This task will not work if you don't use `telegram_webhooks`.
-You can run poller manually with
-`Telegram::Bot::UpdatesPoller.start(bot, controller_class)`.
+This task requires `telegram_webhooks` helper to be used as it connects bots with controller.
+To run poller in other cases use:
+
+```ruby
+Telegram::Bot::UpdatesPoller.start(bot, controller_class)
+```
 
 ### Testing
 
@@ -370,11 +387,11 @@ There is `Telegram::Bot::ClientStub` class to stub client for tests.
 Instead of performing API requests it stores them in `requests` hash.
 
 To stub all possible clients use `Telegram::Bot::ClientStub.stub_all!` before
-initializing clients. Most likely you'll want something like this:
+initializing clients. Here is template for RSpec:
 
 ```ruby
 # environments/test.rb
-# Make sure to run it before defining routes or storing bot to some place in app!
+# Make sure to run it before defining routes or accessing any bot in the app!
 Telegram.reset_bots
 Telegram::Bot::ClientStub.stub_all!
 
@@ -432,10 +449,11 @@ or just add `type: :request` to `describe`.
 
 See sample app for more examples.
 
-### Deploying
+### Deployment
 
-Use `rake telegram:bot:set_webhook` to update webhook url for all configured bots.
-Certificate can be specified with `CERT=path/to/cert`.
+While webhooks-mode is prefered, poller still can be used in production.
+See [comparison and examples](https://github.com/telegram-bot-rb/telegram-bot/wiki/Deployment)
+for details.
 
 ### Botan.io metrics
 
@@ -495,14 +513,13 @@ If you want async mode, but don't want to setup queue, know that Rails 5 are shi
 with Async adapter by default, and there is
 [Sucker Punch](https://github.com/brandonhilkert/sucker_punch) for Rails 4.
 
-Be aware of some limitations:
-
-- Client will not return API response.
-- Sending files is not available in async mode [now],
-  because them can not be serialized.
-
 To disable async mode for the block of code use `bot.async(false) { bot.send_photo }`.
 Yes, it's threadsafe too.
+
+#### Limitations
+
+- Client will not return API response.
+- Sending files is not available in async mode, because they can not be serialized.
 
 ## Development
 
