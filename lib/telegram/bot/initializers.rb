@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/keys'
+
 module Telegram
   module Bot
     module Initializers

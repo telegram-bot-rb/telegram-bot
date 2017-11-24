@@ -1,5 +1,11 @@
 # Unreleased
 
+# 0.12.2
+
+- New methods from Bot API v3.5
+- Collect all api helper-methods in Client::ApiHelper module.
+- Add `bin/fetch-telegram-methods` to update API methods list from website.
+
 # 0.12.1
 
 - Fix `set_webhook` rake task for async bots with self-issued certificates.

@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+#
+# Fetch list of methods from Telegram docs.
+# Use it to update client.rb.
+
+require 'net/http'
+require 'nokogiri'
+
+DOCS_URL = 'https://core.telegram.org/bots/api'.freeze
+
+page_html = Net::HTTP.get(URI(DOCS_URL))
+doc = Nokogiri::HTML(page_html)
+
+# Select `h4`s, but use `h3`s to group them.
+headers = doc.css('h3, h4').
+  chunk_while { |_, x| x.name == 'h4' }.
+  map { |g| g.select { |x| x.name == 'h4' } }.
+  map { |g| g.map(&:text) }
+
+# Method starts with lowercase and does not have spaces.
+NOT_METHOD_REGEXP = /(\A[^a-z])|\s/
+
+# Filter method names.
+method_list = headers.
+  map { |g| g.reject { |x| x.match?(NOT_METHOD_REGEXP) } }.
+  reject(&:empty?)
+
+api_version = doc.text.match(/^(Bot API ([\d\.]+))\.?$/)
+
+result = ['# Generated with bin/fetch-telegram-methods']
+result << "# #{api_version[1]}" if api_version
+result << ''
+result << method_list.map { |g| g.join("\n") }.join("\n\n")
+result << ''
+result_txt = result.join("\n")
+
+puts result_txt
+
+API_METHODS_FILE = File.expand_path('../lib/telegram/bot/client/api_methods.txt', __dir__).freeze
+File.write(API_METHODS_FILE, result_txt)
+puts '', "Updated #{API_METHODS_FILE}"

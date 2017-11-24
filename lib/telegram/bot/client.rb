@@ -1,11 +1,9 @@
 require 'json'
 require 'httpclient'
-require 'active_support/core_ext/string/inflections'
-require 'active_support/core_ext/hash/keys'
 
 module Telegram
   module Bot
-    class Client # rubocop:disable ClassLength
+    class Client
       URL_TEMPLATE = 'https://api.telegram.org/bot%s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
@@ -13,6 +11,9 @@ module Telegram
       prepend Async
       prepend Botan::ClientHelpers
       include DebugClient
+
+      require 'telegram/bot/client/api_helper'
+      include ApiHelper
 
       class << self
         def by_id(id)
@@ -60,72 +61,6 @@ module Telegram
           end
         end
         raise Error, "#{res.reason}: #{err_msg}"
-      end
-
-      # Splited to the sections similar to API docs.
-      %w[
-        deleteWebhook
-        getUpdates
-        getWebhookInfo
-        setWebhook
-
-        answerCallbackQuery
-        deleteChatPhoto
-        exportChatInviteLink
-        forwardMessage
-        getChat
-        getChatAdministrators
-        getChatMember
-        getChatMembersCount
-        getFile
-        getMe
-        getUserProfilePhotos
-        kickChatMember
-        leaveChat
-        pinChatMessage
-        promoteChatMember
-        restrictChatMember
-        sendAudio
-        sendChatAction
-        sendContact
-        sendDocument
-        sendLocation
-        sendMessage
-        sendPhoto
-        sendVenue
-        sendVideo
-        sendVideoNote
-        sendVoice
-        setChatDescription
-        setChatPhoto
-        setChatTitle
-        unbanChatMember
-        unpinChatMessage
-
-        deleteMessage
-        editMessageCaption
-        editMessageReplyMarkup
-        editMessageText
-
-        sendSticker
-        getStickerSet
-        uploadStickerFile
-        createNewStickerSet
-        addStickerToSet
-        setStickerPositionInSet
-        deleteStickerFromSet
-
-        answerInlineQuery
-
-        sendInvoice
-        answerShippingQuery
-        answerPreCheckoutQuery
-
-        getGameHighScores
-        sendGame
-        setGameScore
-      ].each do |method|
-        define_method(method.underscore) { |*args| request(method, *args) }
       end
 
       # Endpoint for low-level request. For easy host highjacking & instrumentation.
