@@ -2,6 +2,7 @@
 /.yardoc
 /Gemfile.lock
 /gemfiles/*.lock
+/gemfiles/.bundle
 /_yardoc/
 /coverage/
 /doc/
