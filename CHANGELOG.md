@@ -1,6 +1,10 @@
 # Unreleased
 
-# 0.12.2
+# 0.12.4
+
+- Fix spec helpers for callback queries.
+
+# 0.12.3
 
 - New methods from Bot API v3.5
 - Collect all api helper-methods in Client::ApiHelper module.
