@@ -130,6 +130,9 @@ can represent actions as separate methods keeping source much more readable and 
 New instance of controller is instantiated for each update.
 This way every update is processed in isolation from others.
 
+Bot controllers like usual rails controllers provides features like callbacks,
+`rescue_from` and instrumentation.
+
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # use callbacks like in any other controllers
@@ -331,7 +334,7 @@ end
 # And this one is for `make_cool:%{something}`
 def make_cool_callback_query(thing = nil, *)
   do_it(thing)
-  answer_callback_query("#{thing} is cool now! Like a callback query context.") 
+  answer_callback_query("#{thing} is cool now! Like a callback query context.")
 end
 ```
 
@@ -360,7 +363,7 @@ There are several options to run it automatically:
 - Use poller (described in the next section).
 
 To run action without update (ex., send notifications from jobs),
-you can call `#process` directly. In this case controller can be initialized 
+you can call `#process` directly. In this case controller can be initialized
 with `:from` and/or `:chat` options instead of `update` object:
 
 ```ruby

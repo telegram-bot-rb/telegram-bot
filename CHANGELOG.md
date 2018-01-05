@@ -1,5 +1,7 @@
 # Unreleased
 
+- `rescue_from`.
+
 # 0.12.4
 
 - Fix spec helpers for callback queries.

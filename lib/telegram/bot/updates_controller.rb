@@ -57,6 +57,7 @@ module Telegram
         instrumentation
         log_subscriber
         reply_helpers
+        rescue
         session
       ].each { |file| require "telegram/bot/updates_controller/#{file}" }
 
@@ -78,6 +79,7 @@ module Telegram
       end
 
       include AbstractController::Translation
+      include Rescue
       include ReplyHelpers
       prepend Instrumentation
       extend Session::ConfigMethods
