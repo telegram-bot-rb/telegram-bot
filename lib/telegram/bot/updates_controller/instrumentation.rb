@@ -4,12 +4,13 @@ module Telegram
       # Most methods are taken from ActionController::Instrumentation,
       # some are slightly modified.
       module Instrumentation
-        class << self
-          def prepended(base)
-            base.send :config_accessor, :logger
-            base.extend ClassMethods
-          end
+        extend ActiveSupport::Concern
 
+        included do
+          config_accessor :logger
+        end
+
+        class << self
           def instrument(action, *args, &block)
             ActiveSupport::Notifications.instrument(
               "#{action}.updates_controller.bot.telegram",

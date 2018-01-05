@@ -81,7 +81,8 @@ module Telegram
       include AbstractController::Translation
       include Rescue
       include ReplyHelpers
-      prepend Instrumentation
+      include Instrumentation
+
       extend Session::ConfigMethods
 
       PAYLOAD_TYPES = %w[
