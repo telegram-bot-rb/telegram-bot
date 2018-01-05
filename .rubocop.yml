@@ -1,3 +1,6 @@
+# Rubocop does not support 2.0
+Gemspec/RequiredRubyVersion: {Enabled: false}
+
 Rails: {Enabled: true}
 
 Layout/AlignParameters:

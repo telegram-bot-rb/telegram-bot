@@ -4,7 +4,7 @@ require 'httpclient'
 module Telegram
   module Bot
     class Client
-      URL_TEMPLATE = 'https://api.telegram.org/bot%s/'.freeze
+      URL_TEMPLATE = 'https://api.telegram.org/bot%<token>s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
       extend Initializers
@@ -44,7 +44,7 @@ module Telegram
         @client = HTTPClient.new
         @token = token || options[:token]
         @username = username || options[:username]
-        @base_uri = format URL_TEMPLATE, self.token
+        @base_uri = format(URL_TEMPLATE, token: self.token)
       end
 
       def request(action, body = {})

@@ -52,7 +52,7 @@ RSpec.describe Telegram::Bot::Client do
   describe '#request' do
     subject { -> { instance.request(action, request_body) } }
     let(:action) { :some_action }
-    let(:url) { "#{format described_class::URL_TEMPLATE, token}#{action}" }
+    let(:url) { "#{format(described_class::URL_TEMPLATE, token: token)}#{action}" }
     let(:request_body) { double(:body) }
     let(:prepared_body) { double(:prepared_body) }
     let(:response) { HTTP::Message.new_response(body).tap { |x| x.status = status } }
