@@ -53,12 +53,18 @@ module Telegram
     class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
       abstract!
 
-      require 'telegram/bot/updates_controller/session'
-      require 'telegram/bot/updates_controller/log_subscriber'
-      require 'telegram/bot/updates_controller/instrumentation'
-      require 'telegram/bot/updates_controller/reply_helpers'
-      autoload :CallbackQueryContext, 'telegram/bot/updates_controller/callback_query_context'
-      autoload :MessageContext, 'telegram/bot/updates_controller/message_context'
+      %w[
+        instrumentation
+        log_subscriber
+        reply_helpers
+        session
+      ].each { |file| require "telegram/bot/updates_controller/#{file}" }
+
+      %w[
+        CallbackQueryContext
+        MessageContext
+        TypedUpdate
+      ].each { |mod| autoload mod, "telegram/bot/updates_controller/#{mod.underscore}" }
 
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
@@ -75,8 +81,6 @@ module Telegram
       include ReplyHelpers
       prepend Instrumentation
       extend Session::ConfigMethods
-
-      autoload :TypedUpdate, 'telegram/bot/updates_controller/typed_update'
 
       PAYLOAD_TYPES = %w[
         message
