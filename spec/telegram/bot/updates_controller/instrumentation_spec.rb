@@ -50,7 +50,12 @@ RSpec.describe Telegram::Bot::UpdatesController::Instrumentation do
         x.before_action :halter_method
 
         def halter_method
-          throw :abort
+          require 'active_support/version'
+          if ActiveSupport::VERSION::MAJOR >= 5
+            throw :abort
+          else
+            false
+          end
         end
 
         self
