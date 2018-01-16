@@ -53,7 +53,7 @@ module Telegram
       def bots_config
         @bots_config ||=
           if defined?(Rails.application)
-            secrets = Rails.application.secrets.
+            secrets = (Rails.application.respond_to?(:credentials) ? Rails.application.credentials : Rails.application.secrets).
               fetch(:telegram, {}).with_indifferent_access
             secrets.fetch(:bots, {}).symbolize_keys.tap do |config|
               default = secrets[:bot]
