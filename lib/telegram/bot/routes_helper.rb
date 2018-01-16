@@ -45,22 +45,30 @@ module Telegram
       #                     other_bot => TelegramAuctionController,
       #                     admin_chat: TelegramAdminChatController
       #
+      # TODO: Deprecate it in favor of telegram_webhook.
       def telegram_webhooks(controllers, bots = nil, **options)
         unless controllers.is_a?(Hash)
           bots = bots ? Array.wrap(bots) : Telegram.bots.values
           controllers = Hash[bots.map { |x| [x, controllers] }]
         end
         controllers.each do |bot, controller|
-          bot = Client.wrap(bot)
           controller, bot_options = controller if controller.is_a?(Array)
-          params = {
-            to: Middleware.new(bot, controller),
-            as: RoutesHelper.route_name_for_bot(bot),
-            format: false,
-          }.merge!(options).merge!(bot_options || {})
-          post("telegram/#{RoutesHelper.escape_token bot.token}", params)
-          UpdatesPoller.add(bot, controller) if Telegram.bot_poller_mode?
+          telegram_webhook(controller, bot, options.merge(bot_options || {}))
         end
+      end
+
+      # Define route which processes requests using given controller and bot.
+      #
+      # See telegram_webhooks for examples.
+      def telegram_webhook(controller, bot, **options)
+        bot = Client.wrap(bot)
+        params = {
+          to: Middleware.new(bot, controller),
+          as: RoutesHelper.route_name_for_bot(bot),
+          format: false,
+        }.merge!(options)
+        post("telegram/#{RoutesHelper.escape_token bot.token}", params)
+        UpdatesPoller.add(bot, controller) if Telegram.bot_poller_mode?
       end
     end
   end

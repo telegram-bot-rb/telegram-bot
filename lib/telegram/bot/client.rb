@@ -36,6 +36,18 @@ module Telegram
         def prepare_async_args(action, body = {})
           [action.to_s, Async.prepare_hash(prepare_body(body))]
         end
+
+        def error_for_response(response)
+          result = JSON.parse(response.body) rescue nil # rubocop:disable RescueModifier
+          return Error.new(response.reason) unless result
+          message = result['description'] || '-'
+          # This errors are raised only for valid responses from Telegram
+          case response.status
+          when 403 then Forbidden.new(message)
+          when 404 then NotFound.new(message)
+          else Error.new("#{response.reason}: #{message}")
+          end
+        end
       end
 
       attr_reader :client, :token, :username, :base_uri
@@ -48,19 +60,9 @@ module Telegram
       end
 
       def request(action, body = {})
-        res = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
-        status = res.status
-        return JSON.parse(res.body) if status < 300
-        result = JSON.parse(res.body) rescue nil # rubocop:disable RescueModifier
-        err_msg = result && result['description'] || '-'
-        if result
-          # This errors are raised only for valid responses from Telegram
-          case status
-          when 403 then raise Forbidden, err_msg
-          when 404 then raise NotFound, err_msg
-          end
-        end
-        raise Error, "#{res.reason}: #{err_msg}"
+        response = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
+        raise self.class.error_for_response(response) if response.status >= 300
+        JSON.parse(response.body)
       end
 
       # Endpoint for low-level request. For easy host highjacking & instrumentation.
