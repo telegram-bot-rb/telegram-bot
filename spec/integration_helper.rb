@@ -16,15 +16,19 @@ class TestApplication < Rails::Application
   config.log_level = :debug
   config.action_dispatch.show_exceptions = false
 
-  unless Rails.application.respond_to?(:credentials)
+  telegram_config = {
+    bot: 'default_token',
+    bots: {
+      other: {token: 'other_token'},
+      named: {token: 'named_token', username: 'TestBot'},
+    },
+  }
+
+  if Rails.application.respond_to?(:credentials)
+    Rails.application.credentials.config[:telegram] = telegram_config
+  else
     secrets[:secret_key_base] = 'test'
-    secrets[:telegram] = {
-      bot: 'default_token',
-      bots: {
-        other: {token: 'other_token'},
-        named: {token: 'named_token', username: 'TestBot'},
-      },
-    }
+    secrets[:telegram] = telegram_config
   end
 end
 Rails.application.initialize!
