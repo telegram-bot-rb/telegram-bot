@@ -15,14 +15,25 @@ class TestApplication < Rails::Application
   config.eager_load = false
   config.log_level = :debug
   config.action_dispatch.show_exceptions = false
-  secrets[:secret_key_base] = 'test'
-  secrets[:telegram] = {
+
+  telegram_hash = {
     bot: 'default_token',
     bots: {
       other: {token: 'other_token'},
       named: {token: 'named_token', username: 'TestBot'},
     },
   }
+
+  if Rails.version.start_with? '5.2'
+    credentials = ActiveSupport::EncryptedConfiguration.new config_path: File.join('config', 'credentials.yml.enc'),
+                                                            key_path: File.join('config', 'master.key'),
+                                                            env_key: 'RAILS_MASTER_KEY'
+    credentials.write({telegram: telegram_hash}.to_yaml)
+  else
+
+    secrets[:secret_key_base] = 'test'
+    secrets[:telegram] = telegram_hash
+  end
 end
 Rails.application.initialize!
 
