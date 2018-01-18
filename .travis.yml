@@ -1,11 +1,17 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.2.3
+  - 2.5
+  - 2.4
+  - 2.3
 gemfile:
-  - gemfiles/rails_42.gemfile
-  - gemfiles/rails_50.gemfile
-  - gemfiles/rails_51.gemfile
   - gemfiles/rails_52.gemfile
+  - gemfiles/rails_51.gemfile
+  - gemfiles/rails_50.gemfile
+  - gemfiles/rails_42.gemfile
 notifications:
   email: false
+
+# for 2.5.0 until 2.5.1 is released: https://github.com/travis-ci/travis-ci/issues/8978
+before_install:
+  - gem update --system
