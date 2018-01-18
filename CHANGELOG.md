@@ -1,6 +1,7 @@
 # Unreleased
 
 - `rescue_from`.
+- Support for `credentials` store in Rails 5.2.
 
 # 0.12.4
 
