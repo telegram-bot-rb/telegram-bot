@@ -1,0 +1,8 @@
+checks:
+  method-complexity:
+    config:
+      threshold: 6 # should be just fine
+
+plugins:
+  rubocop:
+    enabled: true

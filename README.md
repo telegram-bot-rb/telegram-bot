@@ -328,7 +328,7 @@ Callback queries without prefix stay untouched.
 # This one handles `set_value:%{something}`.
 def set_value_callback_query(new_value = nil, *)
   save_this(value)
-  answer_callback_query('Saved!)
+  answer_callback_query('Saved!')
 end
 
 # And this one is for `make_cool:%{something}`
@@ -526,7 +526,7 @@ Yes, it's threadsafe too.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies.
+After checking out the repo, run `bin/setup` to install dependencies and git hooks.
 Then, run `appraisal rake spec` to run the tests.
 You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 

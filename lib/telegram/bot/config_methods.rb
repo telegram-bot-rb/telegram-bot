@@ -54,8 +54,8 @@ module Telegram
         @bots_config ||=
           if defined?(Rails.application)
             app = Rails.application
-            secrets = (app.respond_to?(:credentials) ? app.credentials : app.secrets).
-              fetch(:telegram, {}).with_indifferent_access
+            store = app.respond_to?(:credentials) ? app.credentials : app.secrets
+            secrets = store.fetch(:telegram, {}).with_indifferent_access
             secrets.fetch(:bots, {}).symbolize_keys.tap do |config|
               default = secrets[:bot]
               config[:default] = default if default

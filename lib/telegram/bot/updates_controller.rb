@@ -120,10 +120,17 @@ module Telegram
         # any commands.
         def command_from_text(text, username = nil)
           return unless text
-          match = text.match CMD_REGEX
+          match = text.match(CMD_REGEX)
           return unless match
-          return if match[3] && username != true && match[3] != username
-          [match[1], text.split.drop(1)]
+          mention = match[3]
+          [match[1], text.split.drop(1)] if username == true || !mention || mention == username
+        end
+
+        def payload_from_update(update)
+          update && PAYLOAD_TYPES.find do |type|
+            item = update[type]
+            return [item, type] if item
+          end
         end
       end
 
@@ -142,13 +149,7 @@ module Telegram
         @_update = update
         @_bot = bot
         @_chat, @_from = options && options.values_at(:chat, :from)
-
-        payload_data = nil
-        update && PAYLOAD_TYPES.find do |type|
-          item = update[type]
-          payload_data = [item, type] if item
-        end
-        @_payload, @_payload_type = payload_data
+        @_payload, @_payload_type = self.class.payload_from_update(update)
       end
 
       # Accessor to `'chat'` field of payload. Also tries `'chat'` in `'message'`

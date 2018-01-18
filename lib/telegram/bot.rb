@@ -5,8 +5,12 @@ module Telegram
 
   module Bot
     class Error < StandardError; end
-    class NotFound < Error; end
+
+    # Raised for valid telegram response with 403 status code.
     class Forbidden < Error; end
+
+    # Raised for valid telegram response with 404 status code.
+    class NotFound < Error; end
 
     autoload :Async,              'telegram/bot/async'
     autoload :Botan,              'telegram/bot/botan'

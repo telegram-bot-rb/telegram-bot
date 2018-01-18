@@ -24,8 +24,8 @@ class TestApplication < Rails::Application
     },
   }
 
-  if Rails.application.respond_to?(:credentials)
-    Rails.application.credentials.config[:telegram] = telegram_config
+  if respond_to?(:credentials)
+    credentials.config[:telegram] = telegram_config
   else
     secrets[:secret_key_base] = 'test'
     secrets[:telegram] = telegram_config

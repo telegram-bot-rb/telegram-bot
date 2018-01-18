@@ -16,7 +16,7 @@ $LOAD_PATH.unshift GEM_ROOT.join('lib')
 require 'telegram/bot'
 require 'telegram/bot/updates_controller/rspec_helpers'
 require 'telegram/bot/types'
-require 'active_support/core_ext/object/json'
+require 'active_support/json'
 
 Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }
 

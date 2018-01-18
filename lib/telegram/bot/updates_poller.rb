@@ -45,36 +45,44 @@ module Telegram
         log { 'Started bot poller.' }
         while running
           begin
-            fetch_updates do |update|
-              controller.dispatch(bot, update)
-            end
+            updates = fetch_updates
+            process_updates(updates) if updates && updates.any?
           rescue Interrupt
             @running = false
-          rescue StandardError => e
-            logger.error { ([e.message] + e.backtrace).join("\n") } if logger
           end
         end
-        log { 'Stop polling bot updates.' }
+        log { 'Stoped polling bot updates.' }
       end
 
+      # Method to stop poller from other thread.
       def stop
         return unless running
-        log { 'Killing polling thread.' }
+        log { 'Stopping polling bot updates.' }
         @running = false
       end
 
-      def fetch_updates
+      def fetch_updates(offset = self.offset)
         response = bot.async(false) { bot.get_updates(offset: offset, timeout: timeout) }
-        updates = response.is_a?(Array) ? response : response['result']
-        return unless updates && updates.any?
+        response.is_a?(Array) ? response : response['result']
+      rescue Timeout::Error
+        log { 'Fetch timeout' }
+        nil
+      end
+
+      def process_updates(updates)
         reload! do
           updates.each do |update|
             @offset = update['update_id'] + 1
-            yield update
+            process_update(update)
           end
         end
-      rescue Timeout::Error
-        log { 'Fetch timeout' }
+      rescue StandardError => e
+        logger.error { ([e.message] + e.backtrace).join("\n") } if logger
+      end
+
+      # Override this method to setup custom error collector.
+      def process_update(update)
+        controller.dispatch(bot, update)
       end
 
       def reload!
