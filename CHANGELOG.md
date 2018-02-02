@@ -1,5 +1,7 @@
 # Unreleased
 
+# 0.13.0
+
 - `rescue_from`.
 - Support for `credentials` store in Rails 5.2.
 - Deprecate `telegram_webhooks` in favor of `telegram_webhook`.
