@@ -41,17 +41,23 @@ module Telegram
 
       def start
         return if running
-        @running = true
-        log { 'Started bot poller.' }
-        while running
-          begin
-            updates = fetch_updates
-            process_updates(updates) if updates && updates.any?
-          rescue Interrupt
-            @running = false
-          end
+        begin
+          @running = true
+          log { 'Started bot poller.' }
+          run
+        rescue Interrupt
+          nil # noop
+        ensure
+          @running = false
         end
         log { 'Stoped polling bot updates.' }
+      end
+
+      def run
+        while running
+          updates = fetch_updates
+          process_updates(updates) if updates && updates.any?
+        end
       end
 
       # Method to stop poller from other thread.
