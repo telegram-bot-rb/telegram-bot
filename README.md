@@ -340,17 +340,19 @@ end
 
 ### Routes in Rails app
 
-There is `telegram_webhooks` helper for rails app to define routes for webhooks.
+There is `telegram_webhook` helper for rails app to define routes for webhooks.
 It defines routes at `telegram/#{bot.token}` and connects bots with controller.
 For more options see [examples in wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki/Routes-helpers-in-details).
 
 ```ruby
-# Create routes for all Telegram.bots using single controller:
-telegram_webhooks TelegramController
+# Most off apps would require
+telegram_webhook TelegramController
+# which is same as
+telegram_webhook TelegramController, :default
 
 # Use different controllers for each bot:
-telegram_webhooks chat: TelegramChatController,
-                  auction: TelegramAuctionController
+telegram_webhook TelegramChatController, :chat
+telegram_webhook TelegramAuctionController, :auction
 ```
 
 #### Processesing updates
@@ -377,7 +379,7 @@ Use `rake telegram:bot:poller` to run poller in rails app. It automatically load
 changes without restart in development env.
 Optionally pass bot id in `BOT` envvar (`BOT=chat`) to specify bot to run poller for.
 
-This task requires `telegram_webhooks` helper to be used as it connects bots with controller.
+This task requires `telegram_webhook` helper to be used as it connects bots with controller.
 To run poller in other cases use:
 
 ```ruby

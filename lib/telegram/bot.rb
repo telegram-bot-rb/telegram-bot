@@ -12,6 +12,15 @@ module Telegram
     # Raised for valid telegram response with 404 status code.
     class NotFound < Error; end
 
+    module_function
+
+    def deprecation_0_14
+      @deprecation ||= begin
+        require 'active_support/deprecation'
+        ActiveSupport::Deprecation.new('0.14', 'Telegram::Bot')
+      end
+    end
+
     autoload :Async,              'telegram/bot/async'
     autoload :Botan,              'telegram/bot/botan'
     autoload :Client,             'telegram/bot/client'

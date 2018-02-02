@@ -75,9 +75,9 @@ RSpec.configure do |config|
       require 'telegram/bot/routes_helper'
       extend Telegram::Bot::RoutesHelper
 
-      telegram_webhooks default: DefaultBotController,
-                        other: OtherBotController,
-                        named: NamedBotController
+      telegram_webhook DefaultBotController, :default
+      telegram_webhook OtherBotController, :other
+      telegram_webhook NamedBotController, :named
     end
   end
 end

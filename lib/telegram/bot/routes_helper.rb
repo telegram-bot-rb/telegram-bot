@@ -28,25 +28,19 @@ module Telegram
       #   telegram_webhooks TelegramController
       #
       #   # Or pass custom bots usin any of supported config options:
-      #   telegram_webhooks TelegramController,
-      #                     bot,
-      #                     {token: token, username: username},
-      #                     other_bot_token
-      #
-      #   # Use different controllers for each bot:
-      #   telegram_webhooks bot => TelegramChatController,
-      #                     other_bot => TelegramAuctionController
-      #
-      #   # telegram_webhooks creates named routes. See
-      #   # RoutesHelper.route_name_for_bot for more info.
-      #   # You can override this options or specify others:
-      #   telegram_webhooks TelegramController, as: :my_webhook
-      #   telegram_webhooks bot => [TelegramChatController, as: :chat_webhook],
-      #                     other_bot => TelegramAuctionController,
-      #                     admin_chat: TelegramAdminChatController
-      #
-      # TODO: Deprecate it in favor of telegram_webhook.
+      #   telegram_webhooks TelegramController, [
+      #     bot,
+      #     {token: token, username: username},
+      #     other_bot_token,
+      #   ]
       def telegram_webhooks(controllers, bots = nil, **options)
+        Bot.deprecation_0_14.deprecation_warning(:telegram_webhooks, <<-TXT.strip_heredoc)
+          It brings unnecessary complexity and encourages writeng less readable code.
+          Please use telegram_webhook method instead.
+          It's signature `telegram_webhook(controller, bot = :default, **options)`.
+          Multiple-bot environments now requires calling this method in a loop
+          or using statement for each bot.
+        TXT
         unless controllers.is_a?(Hash)
           bots = bots ? Array.wrap(bots) : Telegram.bots.values
           controllers = Hash[bots.map { |x| [x, controllers] }]
@@ -59,8 +53,15 @@ module Telegram
 
       # Define route which processes requests using given controller and bot.
       #
-      # See telegram_webhooks for examples.
-      def telegram_webhook(controller, bot, **options)
+      #   telegram_webhook TelegramController, bot
+      #
+      #   telegram_webhook TelegramController
+      #   # same as:
+      #   telegram_webhook TelegramController, :default
+      #
+      #   # pass additional options
+      #   telegram_webhook TelegramController, :default, as: :custom_route_name
+      def telegram_webhook(controller, bot = :default, **options)
         bot = Client.wrap(bot)
         params = {
           to: Middleware.new(bot, controller),
