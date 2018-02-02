@@ -342,7 +342,6 @@ end
 
 There is `telegram_webhook` helper for rails app to define routes for webhooks.
 It defines routes at `telegram/#{bot.token}` and connects bots with controller.
-For more options see [examples in wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki/Routes-helpers-in-details).
 
 ```ruby
 # Most off apps would require
@@ -353,6 +352,13 @@ telegram_webhook TelegramController, :default
 # Use different controllers for each bot:
 telegram_webhook TelegramChatController, :chat
 telegram_webhook TelegramAuctionController, :auction
+
+# Defined route is named and its name depends on `Telegram.bots`.
+# For single bot it will use 'telegram_webhook',
+# for multiple bots it uses bot's key in the `Telegram.bots` as prefix
+# (eg. `chat_telegram_webhook`).
+# You can override this with `as` option:
+telegram_webhook TelegramController, as: :custom_telegram_webhook
 ```
 
 #### Processesing updates
