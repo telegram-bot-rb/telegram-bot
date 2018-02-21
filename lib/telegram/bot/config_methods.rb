@@ -1,5 +1,4 @@
 require 'active_support/core_ext/hash/keys'
-require 'active_support/core_ext/hash/transform_values'
 require 'active_support/core_ext/hash/indifferent_access'
 
 module Telegram
@@ -43,7 +42,7 @@ module Telegram
 
       # Hash of botan clients made from #bots.
       def botans
-        @botans ||= bots.transform_values(&:botan)
+        @botans ||= bots.map { |k, v| [k, v.botan] }.to_h
       end
 
       # Returns config for .bots method. By default uses `telegram['bots']` section
