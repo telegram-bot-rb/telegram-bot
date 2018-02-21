@@ -1,5 +1,5 @@
 require 'active_support/core_ext/hash/keys'
-require 'active_support/core_ext/hash/transform_values'
+require 'active_support/core_ext/hash/transform_values' if RUBY_VERSION < '2.4'
 require 'active_support/core_ext/hash/indifferent_access'
 
 module Telegram
