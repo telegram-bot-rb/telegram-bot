@@ -11,7 +11,7 @@ in development, but you can use poller in production if you want.
 
 Package contains:
 
-- Ligthweight client for bot API (with fast and thread-safe
+- Lightweight client for bot API (with fast and thread-safe
   [httpclient](https://github.com/nahi/httpclient) under the hood).
 - Controller with message parser: define methods for commands, not `case` branches.
 - Middleware and routes helpers for production env.
