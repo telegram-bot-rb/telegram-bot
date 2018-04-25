@@ -1,35 +1,23 @@
+require 'telegram/bot/client/api_helper'
+require 'active_support/core_ext/string/inflections'
+
 module Telegram
   module Bot
     class Client
       # Actions with type-casted results. Install `telegram-bot-types` gem first.
       module TypedResponse
-        {
-          getFile:              :File,
-          getMe:                :User,
-          getUpdates:           [:Update],
-          getUserProfilePhotos: :UserProfilePhotos,
+        # First we define methods for every available api method to return `result`
+        # field instead of object.
+        ApiHelper.methods_list.each do |method|
+          define_method(method.to_s.underscore) do |*args|
+            super(*args)['result']
+          end
+        end
 
-          forwardMessage:       :Message,
-          sendAudio:            :Message,
-          sendDocument:         :Message,
-          sendLocation:         :Message,
-          sendMessage:          :Message,
-          sendPhoto:            :Message,
-          sendSticker:          :Message,
-          sendVideo:            :Message,
-          sendVoice:            :Message,
-        }.each do |method, type|
-          next unless type
-          if type.is_a?(Array)
-            type_class = Types.const_get(type.first)
-            define_method(method.to_s.underscore) do |*args|
-              request(method, *args)['result'].map { |x| type_class.new(x) }
-            end
-          else
-            type_class = Types.const_get(type)
-            define_method(method.to_s.underscore) do |*args|
-              type_class.new request(method, *args)['result']
-            end
+        # And then override some of them which has castable results.
+        Types::Response::WRAPPED_METHODS.each do |method, type|
+          define_method(method.to_s.underscore) do |*args|
+            Types::Response.wrap(super(*args)['result'], type)
           end
         end
       end

@@ -1,5 +1,8 @@
 # Unreleased
 
+- Extracted typed response mappings to telegram-bot-types gem.
+  It now provides definitions for all API v3.5 methods.
+
 # 0.13.0
 
 - `rescue_from`.
