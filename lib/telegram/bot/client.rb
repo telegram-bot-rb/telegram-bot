@@ -53,7 +53,7 @@ module Telegram
       attr_reader :client, :token, :username, :base_uri
 
       def initialize(token = nil, username = nil, **options)
-        @client = HTTPClient.new
+        @client = HTTPClient.new { self.ssl_config.set_default_paths }
         @token = token || options[:token]
         @username = username || options[:username]
         @base_uri = format(URL_TEMPLATE, token: self.token)
