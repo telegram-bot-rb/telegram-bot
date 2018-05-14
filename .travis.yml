@@ -26,6 +26,9 @@ matrix:
 notifications:
   email: false
 
-# for 2.5.0 until 2.5.1 is released: https://github.com/travis-ci/travis-ci/issues/8978
+# for 2.5.0 until 2.5.1 is released:
+#   https://github.com/travis-ci/travis-ci/issues/8978
+#   https://github.com/travis-ci/travis-ci/issues/8969#issuecomment-354135622
 before_install:
   - gem update --system
+  - gem install bundler
