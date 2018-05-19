@@ -9,17 +9,40 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
 
   context 'when `update` is a virtus model' do
     subject { controller }
-    %w[
-      message
-      inline_query
-      chosen_inline_result
-    ].each do |type|
+    unique_types = Telegram::Bot::UpdatesController::PAYLOAD_TYPES - %w[
+      edited_message
+      channel_post
+      edited_channel_post
+    ]
+    unique_types.each do |type|
       context "with #{type}" do
         type_class = Telegram::Bot::Types.const_get(type.camelize)
         let(:payload_type) { type }
-        let(:payload) { {} }
+        let(:payload) do
+          {}.tap do |result|
+            result[:chat] = chat if type_class.instance_methods.include?(:chat)
+            result[:from] = from if type_class.instance_methods.include?(:from)
+          end
+        end
+        let(:chat) { {id: 'chat_id'} }
+        let(:from) { {id: 'from_id'} }
         its(:payload_type) { should eq payload_type }
         its(:payload) { should be_instance_of type_class }
+
+        if type_class.instance_methods.include?(:chat)
+          # Virtus does not support ==. :(
+          its(:chat) { should be_instance_of Telegram::Bot::Types::Chat }
+          its('chat.to_hash') { should include chat }
+        else
+          its(:chat) { should eq nil }
+        end
+
+        if type_class.instance_methods.include?(:from)
+          its(:from) { should be_instance_of Telegram::Bot::Types::User }
+          its('from.to_hash') { should include from }
+        else
+          its(:from) { should eq nil }
+        end
       end
     end
   end

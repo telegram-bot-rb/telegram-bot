@@ -157,7 +157,14 @@ module Telegram
       #
       # Can be overriden with `chat` option for #initialize.
       def chat
-        @_chat ||= payload.try! { |x| x['chat'] || x['message'] && x['message']['chat'] }
+        @_chat ||=
+          if payload
+            if payload.is_a?(Hash)
+              payload['chat'] || payload['message'] && payload['message']['chat']
+            else
+              payload.try(:chat) || payload.try(:message).try!(:chat)
+            end
+          end
       end
 
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
