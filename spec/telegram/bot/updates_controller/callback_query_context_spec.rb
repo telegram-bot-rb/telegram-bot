@@ -27,7 +27,7 @@ RSpec.describe Telegram::Bot::UpdatesController::CallbackQueryContext do
   describe '#dispatch' do
     subject { -> { dispatch } }
     let(:payload_type) { :callback_query }
-    let(:payload) { {'data' => data} }
+    let(:payload) { {data: data} }
     let(:data) { text }
     let(:text) { 'asd qwe zxc' }
 

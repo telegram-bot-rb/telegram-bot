@@ -416,47 +416,65 @@ RSpec.configure do |config|
 end
 ```
 
-There are integration and controller contexts for RSpec and some built-in matchers:
+RSpec contexts and helpers are included automatically for groups and examples with matching
+tags. In RSpec < 3.4 it's require to use `include_context` explicitly.
+See [list of available helpers](https://github.com/telegram-bot-rb/telegram-bot/tree/master/lib/telegram/bot/rspec)
+for details.
+
+Integration tests simulate webhooks from Telegram. It works for Rails applications
+using bot in webhooks mode without any additional configuration,
+and may require some setup in other cases. It works on top of request-spec,
+so it's required to use `type: :request` or place specs in `spec/requests` directory
+with RSpec's `infer_spec_type_from_file_location!`.
 
 ```ruby
 # spec/requests/telegram_webhooks_spec.rb
 require 'telegram/bot/rspec/integration'
 
 RSpec.describe TelegramWebhooksController, :telegram_bot do
-  # for old rspec add:
+  # for old RSpec:
   # include_context 'telegram/bot/integration'
 
+  # Main method is #dispatch(update). Some helpers are:
+  #   #dispatch_message(text, options = {})
+  #   #dispatch_command(cmd, *args)
+
+  # Available matchers can be found in Telegram::Bot::RSpec::ClientMatchers.
+  it 'shows usage of basic matchers'
+    # The most basic one is #make_telegram_request(bot, endpoint, params_matcher)
+    expect { dispatch_command(:start) }.
+      to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
+    # There are some shortcuts for ba
+    expect { send_message('Hi') }.to send_telegram_message(bot, /msg regexp/, some: :option)
+  end
+
   describe '#start' do
-    subject { -> { dispatch_command :start } }
+    subject { -> { dispatch_command :start } }sic actions.
+    # Using built in matcher for `respond_to`:
     it { should respond_with_message 'Hi there!' }
   end
 
-  # There is context for callback queries with related matchers.
+  # There is context for callback queries with related matchers,
+  # use :callback_query tag to include it.
   describe '#hey_callback_query', :callback_query do
     let(:data) { "hey:#{name}" }
     let(:name) { 'Joe' }
     it { should answer_callback_query('Hey Joe') }
     it { should edit_current_message :text, text: 'Done' }
+  end
 end
-
-# For controller specs use
-require 'telegram/bot/updates_controller/rspec_helpers'
-RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
-  # for old rspec add:
-  # include_context 'telegram/bot/updates_controller'
-end
-
-# Matchers are available for custom specs:
-include Telegram::Bot::RSpec::ClientMatchers
-
-expect(&process_update).to send_telegram_message(bot, /msg regexp/, some: :option)
-expect(&process_update).
-  to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
 ```
 
-Place integration tests inside `spec/requests`
-when using RSpec's `infer_spec_type_from_file_location!`,
-or just add `type: :request` to `describe`.
+There is context for testing bot controller in the way similar to Rails controller tests.
+It's supposed to be low-level alternative for request specs
+
+```ruby
+require 'telegram/bot/updates_controller/rspec_helpers'
+RSpec.describe TelegramWebhooksController, type: :telegram_bot_controller do
+  # for old RSpec:
+  # include_context 'telegram/bot/updates_controller'
+end
+```
 
 See sample app for more examples.
 
