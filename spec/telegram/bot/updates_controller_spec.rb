@@ -278,11 +278,13 @@ RSpec.describe Telegram::Bot::UpdatesController do
       instance_eval(&block)
       context 'when re-initialized' do
         let(:controller) do
-          described_class.new(double(:other_bot), build_update(:message,
+          initial_update = deep_stringify message: {
             text: 'original message',
             from: double(:original_from),
             chat: double(:original_chat),
-          )).tap { |x| x.send(:initialize, bot, update) }
+          }
+          described_class.new(double(:other_bot), initial_update).
+            tap { |x| x.send(:initialize, *controller_args) }
         end
         instance_eval(&block)
       end
@@ -300,7 +302,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
     end
 
     context 'when options hash is given' do
-      let(:update) { {from: from, chat: chat} }
+      let(:controller_args) { [bot, from: from, chat: chat] }
       with_reinitialize do
         its(:bot) { should eq bot }
         its(:update) { should eq nil }

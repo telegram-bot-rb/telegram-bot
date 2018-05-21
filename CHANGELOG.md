@@ -1,3 +1,11 @@
+# Unreleased
+
+- Make integration & controller specs consistent.
+  __Breaking changes__ for controller specs:
+    - Changed signature `dispatch(bot, update) => dispatch(update, bot)`.
+    - `update` helper is symbolized by default.
+    - `build_update(type, data)` is dropped in favor of `deep_stringify(type => data)`.
+
 # 0.13.1
 
 - Extracted typed response mappings to telegram-bot-types gem.

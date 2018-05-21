@@ -7,7 +7,6 @@ RSpec.describe Telegram::Bot::Middleware do
 
   describe '#call' do
     subject { instance.call(env) }
-    let(:env) { {'action_dispatch.request.request_parameters' => json_body} }
     let(:update) { {'message' => {'id' => 1}} }
     let(:env) do
       Rack::MockRequest.env_for('/',
