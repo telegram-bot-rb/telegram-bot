@@ -1,9 +1,11 @@
 require 'telegram/bot/updates_controller/testing'
 require 'telegram/bot/rspec/message_helpers'
+require 'telegram/bot/rspec/callback_query_helpers'
 
 RSpec.shared_context 'telegram/bot/updates_controller' do
   include Telegram::Bot::RSpec::ClientMatchers
   include_context 'telegram/bot/message_helpers'
+  include_context 'telegram/bot/callback_query', :callback_query
 
   let(:controller_class) { described_class }
   let(:controller) do
@@ -34,8 +36,6 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
   end
 end
 
-RSpec.configure do |config|
-  if config.respond_to?(:include_context)
-    config.include_context 'telegram/bot/updates_controller', type: :telegram_bot_controller
-  end
+Telegram::Bot::RSpec.with_include_context do |config|
+  config.include_context 'telegram/bot/updates_controller', type: :telegram_bot_controller
 end
