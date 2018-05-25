@@ -192,8 +192,9 @@ end
 #### Reply helpers
 
 There are helpers to respond for basic actions. They just set chat/message/query
-identifiers from update. See [`ReplyHelpers`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/updates_controller/reply_helpers.rb) module for more information.
-Here are this methods signatures:
+identifiers from update. See
+[`ReplyHelpers`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/updates_controller/reply_helpers.rb)
+module for more information. Here are this methods signatures:
 
 ```ruby
 def respond_with(type, params); end
@@ -421,19 +422,27 @@ tags. In RSpec < 3.4 it's require to use `include_context` explicitly.
 See [list of available helpers](https://github.com/telegram-bot-rb/telegram-bot/tree/master/lib/telegram/bot/rspec)
 for details.
 
-Integration tests simulate webhooks from Telegram. It works for Rails applications
-using bot in webhooks mode without any additional configuration,
-and may require some setup in other cases. It works on top of request-spec,
-so it's required to use `type: :request` or place specs in `spec/requests` directory
-with RSpec's `infer_spec_type_from_file_location!`.
+There are 3 types of integration tests:
+
+- `:rails` - for testing bot in webhooks-mode in Rails application.
+  It simulates webhook requests like request specs, POSTing data to controller's endpoint.
+- `:rack` - for testing bot in webhooks-mode in non-Rails application.
+  It uses `rack-test` gem to POST requests to bot's endpoint.
+- `:poller` - calls `.dispatch` directly on controller class.
+
+Pick the appropriate one, then require `telegram/bot/rspec/integration/#{type}`
+and mark spec group with tag `telegram_bot: type`. See configuration options
+for each type in `telegram/bot/rspec/integration/`.
+
+Here is example for Rails app:
 
 ```ruby
 # spec/requests/telegram_webhooks_spec.rb
-require 'telegram/bot/rspec/integration'
+require 'telegram/bot/rspec/integration/rails'
 
-RSpec.describe TelegramWebhooksController, :telegram_bot do
+RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
   # for old RSpec:
-  # include_context 'telegram/bot/integration'
+  # include_context 'telegram/bot/integration/rails'
 
   # Main method is #dispatch(update). Some helpers are:
   #   #dispatch_message(text, options = {})
@@ -466,7 +475,11 @@ end
 ```
 
 There is context for testing bot controller in the way similar to Rails controller tests.
-It's supposed to be low-level alternative for request specs
+It's supposed to be low-level alternative for request specs. Among the differencies is
+that controller tests use single controller instance for all dispatches in single exaple,
+session is stubbed (does not use configured store engine), and update is not serialized
+so it support mocks. This can be useful for unit testing, but should not be considered as
+default way to test bot.
 
 ```ruby
 require 'telegram/bot/updates_controller/rspec_helpers'

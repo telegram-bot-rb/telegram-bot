@@ -5,6 +5,10 @@
     - Changed signature `dispatch(bot, update) => dispatch(update, bot)`.
     - `update` helper is symbolized by default.
     - `build_update(type, data)` is dropped in favor of `deep_stringify(type => data)`.
+- Provide support for integration testing of bots in poller mode and non-Rails apps.
+  __Breaking changes__:
+    - `telegram/bot/rspec/integration` is moved to `telegram/bot/rspec/integration/rails`.
+    - `:telegram_bot` rspec tag is replaced with `telegram_bot: :rails`.
 
 # 0.13.1
 

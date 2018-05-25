@@ -3,7 +3,6 @@ require 'telegram/bot/rspec/message_helpers'
 
 # Shared helpers for testing callback query updates.
 RSpec.shared_context 'telegram/bot/callback_query' do
-  include_context 'telegram/bot/integration'
   include_context 'telegram/bot/message_helpers'
 
   subject { -> { dispatch callback_query: payload } }
@@ -36,11 +35,5 @@ RSpec.shared_context 'telegram/bot/callback_query' do
     Telegram::Bot::RSpec::ClientMatchers::MakeTelegramRequest.new(
       bot, :answerCallbackQuery, description: description
     ).with(hash_including(options))
-  end
-end
-
-RSpec.configure do |config|
-  if config.respond_to?(:include_context)
-    config.include_context 'telegram/bot/callback_query', :telegram_bot, :callback_query
   end
 end
