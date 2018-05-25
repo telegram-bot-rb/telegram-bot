@@ -1,7 +1,6 @@
 require 'telegram/bot/rspec/integration'
 require 'action_controller'
 require 'action_dispatch'
-require 'action_dispatch/testing/integration'
 
 RSpec.describe 'Integrations helper', :telegram_bot do
   include ActionDispatch::Integration::Runner
