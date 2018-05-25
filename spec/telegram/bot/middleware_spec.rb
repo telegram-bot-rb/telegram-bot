@@ -20,7 +20,6 @@ RSpec.describe Telegram::Bot::Middleware do
     if ActionPack::VERSION::MAJOR < 5
       # Before Rails 5, params are parsed in middleware.
       # In Rails 5, they are parsed in Request#request_parameters.
-      require 'action_dispatch/middleware/params_parser'
       let(:instance) { ActionDispatch::ParamsParser.new(super()) }
     end
 
