@@ -48,7 +48,7 @@ module Telegram
         end
 
         # Action to clear context.
-        def cancel
+        def cancel!
           # Context is already cleared in action_for_message
         end
 
@@ -71,7 +71,10 @@ module Telegram
           @context = val && val.to_sym
           super || context && begin
             handler = handler_for_context
-            [true, handler, payload['text'].try!(:split) || []] if handler
+            if handler
+              action_options = {type: :message_context, context: context}
+              [[handler, action_options], payload['text'].try!(:split) || []]
+            end
           end
         end
 

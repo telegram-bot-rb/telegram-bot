@@ -10,6 +10,8 @@
     - Requiring `telegram/bot/rspec/integration` is deprecated in favor of
       `telegram/bot/rspec/integration/rails`.
     - `:telegram_bot` rspec tag is replaced with `telegram_bot: :rails`.
+- __Breaking change__. Use bang-methods as actions for commands.
+  This prevents calling context contextual actions and payload specific actions with commands.
 
 # 0.13.1
 

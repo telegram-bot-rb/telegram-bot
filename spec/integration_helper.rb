@@ -35,7 +35,7 @@ Rails.application.initialize!
 # # Controllers
 %w[default other named].each do |bot_name|
   controller = Class.new(Telegram::Bot::UpdatesController) do
-    define_method :start do |*|
+    define_method :start! do |*|
       respond_with :message, text: "from #{bot_name}"
     end
   end
@@ -46,7 +46,7 @@ end
   klass.class_eval do
     use_session!
 
-    define_method :load_session do |*|
+    define_method :load_session! do |*|
       session[:test]
     end
   end

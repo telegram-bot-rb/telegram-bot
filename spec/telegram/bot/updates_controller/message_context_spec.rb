@@ -28,7 +28,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
         [:method_result, *args]
       end
 
-      def action(*args)
+      def action!(*args)
         [:action_result, *args]
       end
 
@@ -109,7 +109,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       end
 
       context 'when context is action`s name but not mapped' do
-        before { session[:context] = :action }
+        before { session[:context] = :action! }
         its(:call) { should eq [:action_result, *text.split] }
         it { should_not change(controller, :filter_done) }
         it { should change { session[:context] }.to nil }

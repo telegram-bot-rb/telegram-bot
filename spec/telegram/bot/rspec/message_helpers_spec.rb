@@ -69,7 +69,7 @@ RSpec.describe 'Integration: message helpers', telegram_bot: :poller do
   let(:bot) { Telegram::Bot::ClientStub.new('token') }
   let(:controller_class) do
     Class.new(Telegram::Bot::UpdatesController) do
-      def start(*args)
+      def start!(*args)
         respond_with :message, text: "Start: #{args.inspect}, option: #{payload['option']}"
       end
     end

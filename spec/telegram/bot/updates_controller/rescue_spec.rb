@@ -8,11 +8,11 @@ RSpec.describe Telegram::Bot::UpdatesController::Rescue do
       Class.new(Telegram::Bot::UpdatesController) do
         rescue_from ArgumentError, with: -> { respond_with :message, text: 'Rescued' }
 
-        def rescuable(*)
+        def rescuable!(*)
           raise ArgumentError, 'rescuable'
         end
 
-        def not_rescuable(*)
+        def not_rescuable!(*)
           raise 'not_rescuable'
         end
       end
