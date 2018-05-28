@@ -206,9 +206,11 @@ module Telegram
         [payload_type, [payload['data']]]
       end
 
-      # Silently ignore unsupported messages.
-      # Params are `action, *args`.
-      def action_missing(*)
+      # Silently ignore unsupported messages to not fail when user crafts
+      # an update with usupported command, callback query context, etc.
+      def action_missing(action, *_args)
+        logger.debug { "The action '#{action}' is not defined in #{self.class.name}" } if logger
+        nil
       end
 
       PAYLOAD_TYPES.each do |type|

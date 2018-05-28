@@ -288,12 +288,12 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   end
 
   # register context handlers to handle this context
-  context_handler :rename do |*words|
+  def rename(*words)
     update_name words[0]
     respond_with :message, text: 'Renamed!'
   end
 
-  # You can do it in other way:
+  # You can use same action name as context name:
   def rename!(name = nil, *)
     if name
       update_name name
@@ -303,13 +303,6 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
       respond_with :message, text: 'What name do you like?'
     end
   end
-
-  # This will call #rename! like if it is called with message '/rename %text%'
-  context_handler :rename!
-
-  # If you have a lot of such methods you can call this method
-  # to use context value as action name for all contexts which miss handlers:
-  context_to_action!
 end
 ```
 

@@ -6,7 +6,7 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       include described_class
 
       attr_accessor :filter_done
-      before_action only: :redirect do
+      before_action only: :context_with_filter do
         self.filter_done = true
       end
 
@@ -17,19 +17,16 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
         [:no_context, *args]
       end
 
-      context_handler :block do |*args|
-        [:block_result, *args]
+      def handler_method(*args)
+        [:method_result_1, *args]
       end
 
-      context_handler :redirect
-      context_handler :other_redirect, :redirect
-
-      def redirect(*args)
-        [:method_result, *args]
+      def context_with_filter(*args)
+        [:method_result_2, *args]
       end
 
       def action!(*args)
-        [:action_result, *args]
+        [:command_result, *args]
       end
 
       private
@@ -52,85 +49,59 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       it { should_not change { session[:context] } }
     end
 
-    context 'when context is handled by block' do
-      before { session[:context] = :block }
-      its(:call) { should eq [:block_result, *text.split] }
+    context 'when context is handled by handler_method' do
+      before { session[:context] = :handler_method }
+      its(:call) { should eq [:method_result_1, *text.split] }
       it { should_not change(controller, :filter_done) }
       it { should change { session[:context] }.to nil }
 
       context 'when message has no text' do
         let(:payload) { {'audio' => {'file_id' => 123}} }
-        its(:call) { should eq [:block_result] }
+        its(:call) { should eq [:method_result_1] }
       end
 
       context 'when message has new command' do
         let(:text) { '/action a s d' }
-        its(:call) { should eq [:action_result, 'a', 's', 'd'] }
+        its(:call) { should eq [:command_result, 'a', 's', 'd'] }
         it { should change { session[:context] }.to nil }
       end
     end
 
-    context 'when context is handled by short redirect' do
-      before { session[:context] = :redirect }
-      its(:call) { should eq [:method_result, *text.split] }
+    context 'when context is handled by short context_with_filter' do
+      before { session[:context] = :context_with_filter }
+      its(:call) { should eq [:method_result_2, *text.split] }
       it { should change(controller, :filter_done).to true }
       it { should change { session[:context] }.to nil }
       it { should change(controller, :callbacks_runs).to 1 }
 
       context 'when message has no text' do
         let(:payload) { {'audio' => {'file_id' => 123}} }
-        its(:call) { should eq [:method_result] }
+        its(:call) { should eq [:method_result_2] }
         it { should change(controller, :filter_done).to true }
         it { should change { session[:context] }.to nil }
       end
     end
 
-    context 'when context is handled by custom redirect' do
-      before { session[:context] = :other_redirect }
-      its(:call) { should eq [:method_result, *text.split] }
-      it { should change(controller, :filter_done).to true }
-      it { should change { session[:context] }.to nil }
-    end
-
-    context 'when context is action`s name but not mapped' do
-      before { session[:context] = :action }
-      its(:call) { should eq [:no_context, payload] }
+    context 'when context is command-action`s name' do
+      before { session[:context] = :action! }
+      its(:call) { should eq [:command_result, *text.split] }
       it { should_not change(controller, :filter_done) }
       it { should change { session[:context] }.to nil }
     end
 
-    context 'when context_to_action is true' do
-      before { controller_class.context_to_action! }
-
-      context 'when context is not set' do
-        its(:call) { should eq [:no_context, payload] }
-        it { should_not change(controller, :filter_done) }
-        it { should_not change { session[:context] } }
+    context 'when context is not an action`s name' do
+      before { session[:context] = :not_action }
+      it do
+        should raise_error(AbstractController::ActionNotFound).
+          and change { session[:context] }.to nil
       end
+    end
 
-      context 'when context is action`s name but not mapped' do
-        before { session[:context] = :action! }
-        its(:call) { should eq [:action_result, *text.split] }
-        it { should_not change(controller, :filter_done) }
-        it { should change { session[:context] }.to nil }
-      end
-
-      context 'when context is invalid' do
-        before { session[:context] = :invalid }
-        it 'raises error and clears context' do
-          expect do
-            should raise_error AbstractController::ActionNotFound
-          end.to change { session[:context] }.to nil
-        end
-      end
-
-      context 'when context is private method`s name' do
-        before { session[:context] = :not_action }
-        it 'raises error and clears context' do
-          expect do
-            should raise_error AbstractController::ActionNotFound
-          end.to change { session[:context] }.to nil
-        end
+    context 'when context is invalid name' do
+      before { session[:context] = :invalid }
+      it do
+        should raise_error(AbstractController::ActionNotFound).
+          and change { session[:context] }.to nil
       end
     end
   end
