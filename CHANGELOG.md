@@ -1,4 +1,4 @@
-# Unreleased
+# 0.13.1
 
 - Extracted typed response mappings to telegram-bot-types gem.
   It now provides definitions for all API v3.5 methods.
