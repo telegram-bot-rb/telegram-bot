@@ -1,6 +1,5 @@
 require 'telegram/bot/rspec/integration/shared'
 
-#
 RSpec.shared_context 'telegram/bot/integration/rails', type: :request do
   include_context 'telegram/bot/integration/shared'
 
