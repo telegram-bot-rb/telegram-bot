@@ -1,6 +1,6 @@
 require 'integration_helper'
 
-RSpec.describe OtherBotController, :telegram_bot, type: :request do
+RSpec.describe OtherBotController, telegram_bot: :rails do
   let(:bot) { Telegram.bots[:other] }
   describe '#start' do
     subject { -> { dispatch_command :start } }

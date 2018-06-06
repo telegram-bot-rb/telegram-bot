@@ -24,6 +24,5 @@ RSpec.shared_context 'telegram/bot/integration/rails', type: :request do
 end
 
 Telegram::Bot::RSpec.with_include_context do |config|
-  config.include_context 'telegram/bot/integration/rails', :telegram_bot
   config.include_context 'telegram/bot/integration/rails', telegram_bot: :rails
 end
