@@ -1,4 +1,5 @@
 require 'abstract_controller'
+require 'active_support/core_ext/string/inflections'
 require 'active_support/callbacks'
 require 'active_support/version'
 
@@ -54,13 +55,14 @@ module Telegram
       abstract!
 
       %w[
-        commands
-        instrumentation
-        log_subscriber
-        reply_helpers
-        rescue
-        session
-      ].each { |file| require "telegram/bot/updates_controller/#{file}" }
+        Commands
+        Instrumentation
+        LogSubscriber
+        ReplyHelpers
+        Rescue
+        Session
+        Translation
+      ].each { |name| require "telegram/bot/updates_controller/#{name.underscore}" }
 
       %w[
         CallbackQueryContext
@@ -79,10 +81,12 @@ module Telegram
                           skip_after_callbacks_if_terminated: true
       end
 
-      include AbstractController::Translation
       include Commands
       include Rescue
       include ReplyHelpers
+      include Translation
+      # Add instrumentations hooks at the bottom, to ensure they instrument
+      # all the methods properly.
       include Instrumentation
 
       extend Session::ConfigMethods
