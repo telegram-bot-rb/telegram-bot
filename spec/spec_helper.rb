@@ -32,6 +32,14 @@ RSpec.configure do |config|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
+  # This config option will be enabled by default on RSpec 4,
+  # but for reasons of backwards compatibility, you have to
+  # set it on RSpec 3.
+  #
+  # It causes the host group and examples to inherit metadata
+  # from the shared context.
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+
   config.mock_with :rspec do |mocks|
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object. This is generally recommended, and will default to

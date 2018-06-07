@@ -24,33 +24,6 @@ module Telegram
         end
       end
 
-      #   # Create routes for all Telegram.bots to use same controller:
-      #   telegram_webhooks TelegramController
-      #
-      #   # Or pass custom bots usin any of supported config options:
-      #   telegram_webhooks TelegramController, [
-      #     bot,
-      #     {token: token, username: username},
-      #     other_bot_token,
-      #   ]
-      def telegram_webhooks(controllers, bots = nil, **options)
-        Bot.deprecation_0_14.deprecation_warning(:telegram_webhooks, <<-TXT.strip_heredoc)
-          It brings unnecessary complexity and encourages writeng less readable code.
-          Please use telegram_webhook method instead.
-          It's signature `telegram_webhook(controller, bot = :default, **options)`.
-          Multiple-bot environments now requires calling this method in a loop
-          or using statement for each bot.
-        TXT
-        unless controllers.is_a?(Hash)
-          bots = bots ? Array.wrap(bots) : Telegram.bots.values
-          controllers = Hash[bots.map { |x| [x, controllers] }]
-        end
-        controllers.each do |bot, controller|
-          controller, bot_options = controller if controller.is_a?(Array)
-          telegram_webhook(controller, bot, options.merge(bot_options || {}))
-        end
-      end
-
       # Define route which processes requests using given controller and bot.
       #
       #   telegram_webhook TelegramController, bot

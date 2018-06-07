@@ -4,8 +4,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
   let(:respond_type) { :photo }
   let(:result) { double(:result) }
   let(:payload_type) { :message }
-  let(:payload) { {message_id: double(:message_id)} }
-  let(:chat) { {'id' => double(:chat_id)} }
+  let(:payload) { {message_id: double(:message_id), chat: chat} }
+  let(:chat) { {id: double(:chat_id)} }
 
   shared_examples 'missing chat' do
     context 'when chat is missing' do
@@ -19,9 +19,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
     include_examples 'missing chat'
 
     it 'sets chat_id & reply_to_message_id' do
-      expect(controller).to receive(:chat) { chat }
       expect(bot).to receive("send_#{respond_type}").
-        with(params.merge(chat_id: chat['id'])) { result }
+        with(params.merge(chat_id: chat[:id])) { result }
       should eq result
     end
   end
@@ -31,19 +30,18 @@ RSpec.describe Telegram::Bot::UpdatesController do
     include_examples 'missing chat'
 
     it 'sets chat_id & reply_to_message_id' do
-      expect(controller).to receive(:chat) { chat }
       expect(bot).to receive("send_#{respond_type}").with(params.merge(
-        chat_id: chat['id'],
+        chat_id: chat[:id],
         reply_to_message_id: payload[:message_id],
       )) { result }
       should eq result
     end
 
     context 'when update is not set' do
-      let(:update) { {chat: chat} }
+      let(:controller_args) { [bot, chat: deep_stringify(chat)] }
       it 'sets chat_id' do
         expect(bot).to receive("send_#{respond_type}").
-          with(params.merge(chat_id: chat['id'])) { result }
+          with(params.merge(chat_id: chat[:id])) { result }
         should eq result
       end
     end
@@ -70,7 +68,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it 'sets chat_id & message_id' do
         expect(bot).to receive("edit_message_#{type}").with(params.merge(
           message_id: payload[:message][:message_id],
-          chat_id: payload[:message][:chat]['id'],
+          chat_id: payload[:message][:chat][:id],
         )) { result }
         should eq result
       end

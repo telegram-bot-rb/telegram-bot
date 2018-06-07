@@ -14,10 +14,10 @@ module Telegram
 
     module_function
 
-    def deprecation_0_14
+    def deprecation_0_15
       @deprecation ||= begin
         require 'active_support/deprecation'
-        ActiveSupport::Deprecation.new('0.14', 'Telegram::Bot')
+        ActiveSupport::Deprecation.new('0.15', 'Telegram::Bot')
       end
     end
 

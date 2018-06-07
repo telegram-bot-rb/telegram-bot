@@ -2,9 +2,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Instrumentation do
   include_context 'telegram/bot/updates_controller'
 
   subject { -> { dispatch } }
-  let(:update) do
-    build_update :message, default_message_options.merge(text: '/start')
-  end
+  let(:update) { {message: default_message_options.merge(text: '/start')} }
 
   let(:controller_class) do
     Class.new(Telegram::Bot::UpdatesController) do
@@ -36,11 +34,11 @@ RSpec.describe Telegram::Bot::UpdatesController::Instrumentation do
 
       action = action_name(:start_processing)
       expect(events[action].size).to eq(1)
-      expect(events[action][0].last).to include(update: update)
+      expect(events[action][0].last).to include(update: deep_stringify(update))
 
       action = action_name(:process_action)
       expect(events[action].size).to eq(1)
-      expect(events[action][0].last).to include(update: update)
+      expect(events[action][0].last).to include(update: deep_stringify(update))
     end
   end
 

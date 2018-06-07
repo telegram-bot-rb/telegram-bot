@@ -1,8 +1,7 @@
 require 'active_support/concern'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/json'
-require 'action_dispatch/http/mime_type'
-require 'action_dispatch/http/request'
+require 'action_dispatch'
 
 module Telegram
   module Bot

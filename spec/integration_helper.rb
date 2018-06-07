@@ -1,7 +1,6 @@
-require 'telegram/bot/rspec/integration'
+require 'telegram/bot/rspec/integration/rails'
 require 'action_controller'
 require 'action_dispatch'
-require 'action_dispatch/testing/integration'
 
 require 'rails'
 require 'telegram/bot/railtie'
