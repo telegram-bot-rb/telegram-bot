@@ -4,6 +4,8 @@
 [![Code Climate](https://codeclimate.com/github/telegram-bot-rb/telegram-bot/badges/gpa.svg)](https://codeclimate.com/github/telegram-bot-rb/telegram-bot)
 [![Build Status](https://travis-ci.org/telegram-bot-rb/telegram-bot.svg)](https://travis-ci.org/telegram-bot-rb/telegram-bot)
 
+__Breaking changes in v0.14!__ See [upgrading guide](https://github.com/telegram-bot-rb/telegram-bot/wiki/Upgrading-to-0.14).
+
 Tools for developing Telegram bots. Best used with Rails, but can be used in
 [standalone app](https://github.com/telegram-bot-rb/telegram-bot/wiki/Not-rails-application).
 Supposed to be used in webhook-mode in production, and poller-mode

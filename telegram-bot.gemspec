@@ -17,6 +17,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.post_install_message = 'Breaking changes in v0.14! ' \
+    'See upgrade guide at https://github.com/telegram-bot-rb/telegram-bot/wiki/Upgrading-to-0.14'
+
   spec.required_ruby_version = '~> 2.0'
 
   spec.add_dependency 'actionpack', '>= 4.0', '< 6.0'
