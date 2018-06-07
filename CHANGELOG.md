@@ -16,6 +16,7 @@
 - __Breaking change__. Drop `.context_handler`, `.context_to_action!` methods.
   Use pass action name directly to `#save_context`.
   It's the same as `.context_to_action!` is enabled by default.
+- Class-level helper for lazy translations.
 
 # 0.13.1
 

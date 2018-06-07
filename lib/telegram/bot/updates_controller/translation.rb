@@ -8,6 +8,17 @@ module Telegram
       #
       # To disable this behaviour use `alias_method :action_name_i18n_key, :action_name`.
       module Translation
+        extend ActiveSupport::Concern
+
+        module ClassMethods
+          # Class-level helper for lazy translations.
+          def translate(key, options = {})
+            key = "#{controller_path.tr('/', '.')}#{key}" if key.to_s.start_with?('.')
+            I18n.translate(key, options)
+          end
+          alias :t :translate
+        end
+
         # See toplevel description.
         def translate(key, options = {})
           if key.to_s.start_with?('.')
