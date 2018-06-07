@@ -283,12 +283,12 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
 
   def rename!(*)
     # set context for the next message
-    save_context :rename
+    save_context :rename_from_message
     respond_with :message, text: 'What name do you like?'
   end
 
   # register context handlers to handle this context
-  def rename(*words)
+  def rename_from_message(*words)
     update_name words[0]
     respond_with :message, text: 'Renamed!'
   end
