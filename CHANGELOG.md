@@ -10,6 +10,13 @@
     - Requiring `telegram/bot/rspec/integration` is deprecated in favor of
       `telegram/bot/rspec/integration/rails`.
     - `:telegram_bot` rspec tag is replaced with `telegram_bot: :rails`.
+- __Breaking change__. Use bang-methods as actions for commands.
+  This prevents calling context contextual actions and payload specific actions with commands.
+  Translation helper strips `!` from action name for lazy translations.
+- __Breaking change__. Drop `.context_handler`, `.context_to_action!` methods.
+  Use pass action name directly to `#save_context`.
+  It's the same as `.context_to_action!` is enabled by default.
+- Class-level helper for lazy translations.
 
 # 0.13.1
 

@@ -1,4 +1,5 @@
 require 'abstract_controller'
+require 'active_support/core_ext/string/inflections'
 require 'active_support/callbacks'
 require 'active_support/version'
 
@@ -54,12 +55,14 @@ module Telegram
       abstract!
 
       %w[
-        instrumentation
-        log_subscriber
-        reply_helpers
-        rescue
-        session
-      ].each { |file| require "telegram/bot/updates_controller/#{file}" }
+        Commands
+        Instrumentation
+        LogSubscriber
+        ReplyHelpers
+        Rescue
+        Session
+        Translation
+      ].each { |name| require "telegram/bot/updates_controller/#{name.underscore}" }
 
       %w[
         CallbackQueryContext
@@ -78,9 +81,12 @@ module Telegram
                           skip_after_callbacks_if_terminated: true
       end
 
-      include AbstractController::Translation
+      include Commands
       include Rescue
       include ReplyHelpers
+      include Translation
+      # Add instrumentations hooks at the bottom, to ensure they instrument
+      # all the methods properly.
       include Instrumentation
 
       extend Session::ConfigMethods
@@ -96,34 +102,11 @@ module Telegram
         shipping_query
         pre_checkout_query
       ].freeze
-      CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
-      CONFLICT_CMD_REGEX = Regexp.new("^(#{PAYLOAD_TYPES.join('|')}|\\d)")
 
       class << self
         # Initialize controller and process update.
         def dispatch(*args)
           new(*args).dispatch
-        end
-
-        # Overrid it to filter or transform commands.
-        # Default implementation is to convert to downcase and add `on_` prefix
-        # for conflicting commands.
-        def action_for_command(cmd)
-          cmd.downcase!
-          cmd.match(CONFLICT_CMD_REGEX) ? "on_#{cmd}" : cmd
-        end
-
-        # Fetches command from text message. All subsequent words are returned
-        # as arguments.
-        # If command has mention (eg. `/test@SomeBot`), it returns commands only
-        # for specified username. Set `username` to `true` to accept
-        # any commands.
-        def command_from_text(text, username = nil)
-          return unless text
-          match = text.match(CMD_REGEX)
-          return unless match
-          mention = match[3]
-          [match[1], text.split.drop(1)] if username == true || !mention || mention == username
         end
 
         def payload_from_update(update)
@@ -134,8 +117,7 @@ module Telegram
         end
       end
 
-      attr_internal_reader :update, :bot, :payload, :payload_type, :is_command
-      alias_method :command?, :is_command
+      attr_internal_reader :update, :bot, :payload, :payload_type
       delegate :username, to: :bot, prefix: true, allow_nil: true
 
       # Second argument can be either update object with hash access & string
@@ -175,54 +157,64 @@ module Telegram
 
       # Processes current update.
       def dispatch
-        @_is_command, action, args = action_for_payload
+        action, args = action_for_payload
         process(action, *args)
+      end
+
+      attr_internal_reader :action_options
+
+      # It provides support for passing array as action, where first vaule
+      # is action name and second is action metadata.
+      # This metadata is stored inside action_options
+      def process(action, *args)
+        action, options = action if action.is_a?(Array)
+        @_action_options = options || {}
+        super
+      end
+
+      # There are multiple ways how action name is calculated for update
+      # (see Commands, MessageContext, etc.). This method represents the
+      # way how action was calculated for current udpate.
+      #
+      # Some of possible values are `:payload, :command, :message_context`.
+      def action_type
+        action_options[:type] || :payload
       end
 
       # Calculates action name and args for payload.
       # Uses `action_for_#{payload_type}` methods.
       # If this method doesn't return anything
       # it uses fallback with action same as payload type.
-      # Returns array `[is_command?, action, args]`.
+      # Returns array `[action, args]`.
       def action_for_payload
         if payload_type
           send("action_for_#{payload_type}") || action_for_default_payload
         else
-          [false, :unsupported_payload_type, []]
+          [:unsupported_payload_type, []]
         end
       end
 
       def action_for_default_payload
-        [false, payload_type, [payload]]
+        [payload_type, [payload]]
       end
-
-      # If payload is a message with command, then returned action is an
-      # action for this command.
-      # Separate method, so it can be easily overriden (ex. MessageContext).
-      #
-      # This is not used for edited messages/posts. It process them as basic updates.
-      def action_for_message
-        cmd, args = self.class.command_from_text(payload['text'], bot_username)
-        cmd &&= self.class.action_for_command(cmd)
-        [true, cmd, args] if cmd
-      end
-      alias_method :action_for_channel_post, :action_for_message
 
       def action_for_inline_query
-        [false, payload_type, [payload['query'], payload['offset']]]
+        [payload_type, [payload['query'], payload['offset']]]
       end
 
       def action_for_chosen_inline_result
-        [false, payload_type, [payload['result_id'], payload['query']]]
+        [payload_type, [payload['result_id'], payload['query']]]
       end
 
       def action_for_callback_query
-        [false, payload_type, [payload['data']]]
+        [payload_type, [payload['data']]]
       end
 
-      # Silently ignore unsupported messages.
-      # Params are `action, *args`.
-      def action_missing(*)
+      # Silently ignore unsupported messages to not fail when user crafts
+      # an update with usupported command, callback query context, etc.
+      def action_missing(action, *_args)
+        logger.debug { "The action '#{action}' is not defined in #{self.class.name}" } if logger
+        nil
       end
 
       PAYLOAD_TYPES.each do |type|

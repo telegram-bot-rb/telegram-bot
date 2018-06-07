@@ -2,7 +2,7 @@ RSpec.shared_examples 'shared integration examples' do
   let(:bot) { Telegram::Bot::ClientStub.new('token') }
   let(:controller_class) do
     Class.new(Telegram::Bot::UpdatesController) do
-      def start(data = nil, *)
+      def start!(data = nil, *)
         respond_with :message, text: "Hi #{data}"
       end
 

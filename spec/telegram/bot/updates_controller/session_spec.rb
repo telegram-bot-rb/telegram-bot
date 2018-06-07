@@ -19,11 +19,11 @@ RSpec.describe Telegram::Bot::UpdatesController::Session do
       controller_class.class_eval do
         self.session_store = :memory_store
 
-        def write(text)
+        def write!(text)
           session[:text] = text
         end
 
-        def read
+        def read!
           session[:text]
         end
 

@@ -154,14 +154,11 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   #   chosen_inline_result(result_id, query)
   #   callback_query(data)
 
-  # Define public methods to respond to commands.
+  # Define public methods ending with `!` to handle commands.
   # Command arguments will be parsed and passed to the method.
   # Be sure to use splat args and default values to not get errors when
   # someone passed more or less arguments in the message.
-  #
-  # For some commands like /message or /123 method names should start with
-  # `on_` to avoid conflicts.
-  def start(data = nil, *)
+  def start!(data = nil, *)
     # do_smth_with(data)
 
     # There are `chat` & `from` shortcut methods.
@@ -257,11 +254,11 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # You can override global config for this controller.
   self.session_store = :file_store
 
-  def write(text = nil, *)
+  def write!(text = nil, *)
     session[:text] = text
   end
 
-  def read(*)
+  def read!(*)
     respond_with :message, text: session[:text]
   end
 
@@ -284,35 +281,28 @@ it asks you for additional argument. There is `MessageContext` for this:
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
   include Telegram::Bot::UpdatesController::MessageContext
 
-  def rename(*)
+  def rename!(*)
     # set context for the next message
-    save_context :rename
+    save_context :rename_from_message
     respond_with :message, text: 'What name do you like?'
   end
 
   # register context handlers to handle this context
-  context_handler :rename do |*words|
+  def rename_from_message(*words)
     update_name words[0]
     respond_with :message, text: 'Renamed!'
   end
 
-  # You can do it in other way:
-  def rename(name = nil, *)
+  # You can use same action name as context name:
+  def rename!(name = nil, *)
     if name
       update_name name
       respond_with :message, text: 'Renamed!'
     else
-      save_context :rename
+      save_context :rename!
       respond_with :message, text: 'What name do you like?'
     end
   end
-
-  # This will call #rename like if it is called with message '/rename %text%'
-  context_handler :rename
-
-  # If you have a lot of such methods you can call this method
-  # to use context value as action name for all contexts which miss handlers:
-  context_to_action!
 end
 ```
 
@@ -460,7 +450,7 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     expect { dispatch_message('Hi') }.to send_telegram_message(bot, /msg regexp/, some: :option)
   end
 
-  describe '#start' do
+  describe '#start!' do
     subject { -> { dispatch_command :start } }
     # Using built in matcher for `respond_to`:
     it { should respond_with_message 'Hi there!' }

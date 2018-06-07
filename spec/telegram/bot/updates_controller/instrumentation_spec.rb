@@ -6,7 +6,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Instrumentation do
 
   let(:controller_class) do
     Class.new(Telegram::Bot::UpdatesController) do
-      def start(*)
+      def start!(*)
       end
     end
   end
@@ -72,7 +72,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Instrumentation do
 
   describe '#respond_with' do
     before do
-      def controller.start(*)
+      def controller.start!(*)
         respond_with :message, text: 'sample response'
       end
     end
