@@ -15,6 +15,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Commands do
 
     it 'prepends on_ to commands that start with a number' do
       assert_subject '1test', 'on_1test!'
+      assert_subject '123test', 'on_123test!'
     end
   end
 
