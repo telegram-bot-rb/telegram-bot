@@ -172,6 +172,13 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
     reply_with :photo, photo: File.open('party.jpg')
   end
 
+  # If a comand starts with a number, then you must prefix
+  # it with `on_` because Ruby doesn't allow functions to
+  # start with numbers.
+  def on_1command!(*)
+    respond_with :message, text: 'You sent /1command'
+  end
+
   private
 
   def with_locale(&block)

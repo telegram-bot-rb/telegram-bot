@@ -7,10 +7,15 @@ RSpec.describe Telegram::Bot::UpdatesController::Commands do
       expect(subject.call input).to eq expected
     end
 
-    it 'bypasses and downcases not conflictint commands' do
+    it 'bypasses and downcases not conflicting commands' do
       assert_subject 'test', 'test!'
       assert_subject 'TeSt', 'test!'
       assert_subject '_Te1St', '_te1st!'
+    end
+
+    it 'prepends on_ to commands that start with a number' do
+      assert_subject '1test', 'on_1test!'
+      assert_subject '123test', 'on_123test!'
     end
   end
 

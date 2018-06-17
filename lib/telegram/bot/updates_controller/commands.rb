@@ -4,6 +4,7 @@ module Telegram
       #  Support for parsing commands
       module Commands
         CMD_REGEX = %r{\A/([a-z\d_]{,31})(@(\S+))?(\s|$)}i
+        CMD_CONFLICT_REGEX = /^(\d)/
 
         class << self
           # Fetches command from text message. All subsequent words are returned
@@ -22,8 +23,10 @@ module Telegram
 
         # Override it to filter or transform commands.
         # Default implementation is to downcase and add `!` suffix.
+        # If the command conflict with the way that Ruby names methods (i.e. starts with
+        # a number) then it will prepend 'on_'
         def action_for_command(cmd)
-          "#{cmd.downcase}!"
+          cmd.match(CMD_CONFLICT_REGEX) ? "on_#{cmd.downcase}!" : "#{cmd.downcase}!"
         end
 
         # If payload is a message with command, then returned action is an
