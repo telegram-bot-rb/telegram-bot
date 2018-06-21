@@ -57,7 +57,7 @@ require 'telegram/bot'
 
 ### Configuration in Rails app
 
-Add `telegram` section into `secrets.yml`:
+For Rails < 5.2 add `telegram` section into `secrets.yml`:
 
 ```yml
 development:
@@ -78,6 +78,8 @@ development:
         token: TOKEN_2
         username: ChatBot
 ```
+
+For Rails > 5.2 edit credentials `EDITOR=nano rails credentials:edit`
 
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.
