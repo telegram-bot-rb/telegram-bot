@@ -206,7 +206,7 @@ def edit_message(type, params = {}); end
 #### Optional typecasting
 
 You can enable typecasting of `update` with `telegram-bot-types` by including
-`Telegram::Bot::UpdatesPoller::TypedUpdate`:
+`Telegram::Bot::UpdatesController::TypedUpdate`:
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
