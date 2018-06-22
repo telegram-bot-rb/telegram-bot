@@ -1,20 +1,15 @@
 module Telegram
   module Bot
-    # Telegram & Botan clients can perform requests in async way with
+    # Telegram clients can perform requests in async way with
     # any job adapter (ActiveJob by default). Using Rails you don't need any
     # additional configuration. However you may want to enable async requests
-    # by default with `async: true` in `secrets.yml`. Botan client doesn't inherit
-    # async setting from client and must be configured separately.
+    # by default with `async: true` in `secrets.yml`.
     #
     #   telegram:
     #     bots:
     #       chat_async:
     #         token: secret
     #         async: true # enable async mode for client
-    #         botan: botan_token # in this way botan will not be async
-    #         botan: # in this way - it's in async mode
-    #           token: botan_token
-    #           async: true
     #
     # Without Rails To start using async requests
     # initialize client with `id` kwarg and make sure the client is

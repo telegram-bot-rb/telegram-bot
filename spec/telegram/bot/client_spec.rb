@@ -1,7 +1,6 @@
 RSpec.describe Telegram::Bot::Client do
   let(:instance) { described_class.new 'token' }
   let(:token) { 'token' }
-  let(:botan_token) { double(:botan_token) }
 
   include_examples 'initializers'
   it_behaves_like 'async', request_args: -> { [double(:action), {body: :content}] }

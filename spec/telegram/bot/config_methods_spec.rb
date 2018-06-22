@@ -11,12 +11,10 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       chat: {
         token: 'chat_token',
         username: 'Chat',
-        botan: 'chat_botan_token',
       },
       other_chat: {
         'token' => 'other_chat_token',
         'username' => 'OtherChat',
-        'botan' => 'other_chat_botan_token',
       },
     }
   end
@@ -43,7 +41,6 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       its(:id) { should eq :chat }
       its(:token) { should eq config[:chat][:token] }
       its(:username) { should eq config[:chat][:username] }
-      its('botan.token') { should eq config[:chat][:botan] }
     end
 
     context 'configured by hash with stringified keys' do
@@ -51,18 +48,6 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       its(:id) { should eq :other_chat }
       its(:token) { should eq config[:other_chat]['token'] }
       its(:username) { should eq config[:other_chat]['username'] }
-      its('botan.token') { should eq config[:other_chat]['botan'] }
-    end
-  end
-
-  describe '#botans' do
-    subject { registry.botans }
-    it do
-      should eq(
-        default: nil,
-        chat: registry.bots[:chat].botan,
-        other_chat: registry.bots[:other_chat].botan,
-      )
     end
   end
 

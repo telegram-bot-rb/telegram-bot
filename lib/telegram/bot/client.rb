@@ -9,7 +9,6 @@ module Telegram
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
       extend Initializers
       prepend Async
-      prepend Botan::ClientHelpers
       include DebugClient
 
       require 'telegram/bot/client/api_helper'

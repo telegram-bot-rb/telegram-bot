@@ -1,5 +1,8 @@
 # Unreleased
 
+- Remove botan.io support. It's already shut down, so it should not be a braking change.
+  https://github.com/botanio/sdk#this-service-will-be-shut-down-on-25th-may-2018
+
 # 0.14.0
 
 - Make integration & controller specs consistent.

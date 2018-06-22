@@ -40,11 +40,6 @@ module Telegram
         end
       end
 
-      # Hash of botan clients made from #bots.
-      def botans
-        @botans ||= bots.map { |k, v| [k, v.botan] }.to_h
-      end
-
       # Returns config for .bots method. By default uses `telegram['bots']` section
       # from `secrets.yml` merging `telegram['bot']` at `:default` key.
       #
@@ -69,7 +64,6 @@ module Telegram
         @bots = nil
         @bot = nil
         @bots_config = nil
-        @botans = nil
       end
     end
   end
