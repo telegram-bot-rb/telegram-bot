@@ -19,7 +19,7 @@ Package contains:
 - Middleware and routes helpers for production env.
 - Poller with automatic source-reloader for development env.
 - Rake tasks to update webhook urls.
-- __[Async mode](#async-mode)__ for Telegram and/or Botan API.
+- __[Async mode](#async-mode)__.
   Let the queue adapter handle network errors!
 
 Here is sample [telegram_bot_app](https://github.com/telegram-bot-rb/telegram_bot_app)
@@ -57,7 +57,7 @@ require 'telegram/bot'
 
 ### Configuration in Rails app
 
-Add `telegram` section into `secrets.yml`:
+For Rails < 5.2 add `telegram` section into `secrets.yml`:
 
 ```yml
 development:
@@ -78,6 +78,8 @@ development:
         token: TOKEN_2
         username: ChatBot
 ```
+
+For Rails > 5.2 edit credentials `EDITOR=nano rails credentials:edit`
 
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.
@@ -206,7 +208,7 @@ def edit_message(type, params = {}); end
 #### Optional typecasting
 
 You can enable typecasting of `update` with `telegram-bot-types` by including
-`Telegram::Bot::UpdatesPoller::TypedUpdate`:
+`Telegram::Bot::UpdatesController::TypedUpdate`:
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
@@ -494,48 +496,12 @@ While webhooks-mode is prefered, poller still can be used in production.
 See [comparison and examples](https://github.com/telegram-bot-rb/telegram-bot/wiki/Deployment)
 for details.
 
-### Botan.io metrics
-
-Initialize with `bot = Telegram::Bot::Client.new(token, botan: 'botan token')`
-or just add `botan` key in `secrets.yml`:
-
-```yml
-  telegram:
-    bot:
-      token: bot_token
-      botan: botan_token
-```
-
-Access to Botan client with `bot.botan`.
-Use `bot.botan.track(event, uid, payload)` to track events.
-
-There are some helpers for controllers in `Telegram::Bot::Botan::ControllerHelpers`:
-
-```ruby
-class Telegram::WebhookController < Telegram::Bot::UpdatesController
-  include Telegram::Bot::Botan::ControllerHelpers
-
-  # This will track with event: action_name & data: payload
-  before_action :botan_track_action
-
-  def smth(*)
-    # This will track event for current user only when botan is configured.
-    botan_track :my_event, custom_data
-
-    # or get access directly to botan client:
-    botan.track(...)
-  end
-end
-```
-
-There is no stubbing for botan clients, so don't set botan token in tests.
-
 ### Async mode
 
 There is built in support for async requests using ActiveJob. Without Rails
 you can implement your own worker class to handle such requests. This allows:
 
-- Process updates very fast, without waiting for telegram and botan responses.
+- Process updates very fast, without waiting for telegram responses.
 - Handle and retry network and other errors with queue adapter.
 - ???
 
@@ -543,7 +509,7 @@ Instead of performing request instantly client serializes it, pushes to queue,
 and immediately return control back. The job is then fetched with a worker
 and real API request is performed. And this all is absolutely transparent for the app.
 
-To enable this mode add `async: true` to bot's and botan's config.
+To enable this mode add `async: true` to bot's config.
 For more information and custom configuration check out
 [docs](http://www.rubydoc.info/github/telegram-bot-rb/telegram-bot/master/Telegram/Bot/Async) or
 [source](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/async.rb).
