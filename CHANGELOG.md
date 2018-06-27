@@ -1,5 +1,6 @@
 # Unreleased
 
+- Read config from secrets when credentials don't provide it in rails >= 5.2.
 - Remove botan.io support. It's already shut down, so it should not be a braking change.
   https://github.com/botanio/sdk#this-service-will-be-shut-down-on-25th-may-2018
 

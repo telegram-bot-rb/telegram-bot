@@ -55,9 +55,28 @@ require 'telegram/bot'
 
 ## Usage
 
+### Configuration
+
+While clients can be instantiated explicitly, there is `Telegram.bots_config=` method
+to configure app-wide clients, which are accessible via `Telegram.bots`.
+It accepts hash of `{bot_id: bot_config}`, and there is special id `:default`
+which is used for `Telegram.bot`.
+
+```ruby
+Telegram.bots_config = {
+  default: DEFAULT_BOT_TOKEN,
+  chat: {token: CHAT_BOT_TOKEN, username: 'chatbot'},
+}
+
+Telegram.bot.get_updates
+Telegram.bot == Telegram.bots[:default] # true
+Telegram.bots[:chat].send_message(...)
+```
+
 ### Configuration in Rails app
 
-For Rails < 5.2 add `telegram` section into `secrets.yml`:
+In Rails app `Telegram.bots_config` is read from `secrets.yml` automatically
+from `telegram` section:
 
 ```yml
 development:
@@ -79,7 +98,14 @@ development:
         username: ChatBot
 ```
 
-For Rails > 5.2 edit credentials `EDITOR=nano rails credentials:edit`
+For Rails >= 5.2 `Telegram::Bot` searches for config first in credentials and then in secrets.
+To use credentials as config store, add telegram section to credentials instead of secrets using
+`rails credentials:edit`. In this case be aware of that [Rails may not load
+credentials in dev environment by default](https://github.com/telegram-bot-rb/telegram-bot/issues/74#issuecomment-384205609).
+
+I suggest not using Rails 5.2 credentials because it can lead to leakage of sesitive data
+and it's more difficult to use in multiple environments. See
+[secure_credentials](https://github.com/printercu/secure_credentials) gem for better option.
 
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.

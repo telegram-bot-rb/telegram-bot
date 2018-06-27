@@ -61,13 +61,14 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       it { should eq({}) }
 
       context 'in rails environment' do
-        before { stub_const('Rails', double(application: double(secrets: secrets))) }
+        before { stub_const('Rails', double(application: double(app_stub))) }
+        let(:app_stub) { {secrets: secrets} }
         let(:secrets) { {} }
         it { should eq({}) }
 
         context 'when there is telegram section in secrets' do
-          let(:secrets) { {telegram: config.stringify_keys} }
-          let(:config) do
+          let(:secrets) { {telegram: secrets_config} }
+          let(:secrets_config) do
             {
               bot: double(:bot_config),
               bots: {
@@ -76,13 +77,21 @@ RSpec.describe Telegram::Bot::ConfigMethods do
               },
             }
           end
-          it { should include default: config[:bot] }
-          it { should include config[:bots] }
+          it { should include default: secrets_config[:bot] }
+          it { should include secrets_config[:bots] }
 
           context 'on rails >5.1 (deep symbolized keys)' do
-            let(:secrets) { {telegram: config.deep_symbolize_keys} }
-            it { should include default: config[:bot] }
-            it { should include config[:bots] }
+            let(:secrets) { super().deep_symbolize_keys }
+            it { should include default: secrets_config[:bot] }
+            it { should include secrets_config[:bots] }
+          end
+
+          context 'and credentials (>= 5.2)' do
+            let(:app_stub) { super().merge(credentials: credentials) }
+            let(:credentials) { {telegram: credentials_config} }
+            let(:credentials_config) { {bot: double(:credentials_bot_config)} }
+            it { should include default: credentials_config[:bot] }
+            it { should_not include secrets[:bots] }
           end
         end
       end
