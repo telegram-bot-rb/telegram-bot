@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 3.5.
+# Bot API 4.1
 
 getUpdates
 setWebhook
@@ -13,6 +13,7 @@ sendPhoto
 sendAudio
 sendDocument
 sendVideo
+sendAnimation
 sendVoice
 sendVideoNote
 sendMediaGroup
@@ -46,6 +47,7 @@ answerCallbackQuery
 
 editMessageText
 editMessageCaption
+editMessageMedia
 editMessageReplyMarkup
 deleteMessage
 
@@ -62,6 +64,8 @@ answerInlineQuery
 sendInvoice
 answerShippingQuery
 answerPreCheckoutQuery
+
+setPassportDataErrors
 
 sendGame
 setGameScore
