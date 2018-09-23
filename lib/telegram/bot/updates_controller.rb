@@ -7,13 +7,13 @@ module Telegram
   module Bot
     # Base class to create update processors. With callbacks, session and helpers.
     #
-    # Define public methods for each command and they will be called when
-    # update has this command. Message is automatically parsed and
-    # words are passed as method arguments. Be sure to use default values and
+    # Public methods ending with `!` handle messages with commands.
+    # Message text is automatically parsed  into method arguments.
+    # Be sure to use default values and
     # splat arguments in every action method to not get errors, when user
     # sends command without necessary args / with extra args.
     #
-    #     def start(token = nil, *)
+    #     def start!(token = nil, *)
     #       if token
     #         # ...
     #       else
@@ -21,25 +21,21 @@ module Telegram
     #       end
     #     end
     #
-    #     def help(*)
+    #     def help!(*)
     #       respond_with :message, text:
     #     end
     #
     # To process plain text messages (without commands) or other updates just
-    # define public method with name of payload type. They will receive payload
-    # as an argument.
+    # define public method with name of payload type.
+    # By default they receive payload as an argument, but some of them are called
+    # with more usefuk args:
     #
     #     def message(message)
     #       respond_with :message, text: "Echo: #{message['text']}"
     #     end
     #
-    #     def inline_query(query)
-    #       answer_inline_query results_for_query(query), is_personal: true
-    #     end
-    #
-    #     # To process conflicting commands (`/message args`) just use `on_` prefix:
-    #     def on_message(*args)
-    #       # ...
+    #     def inline_query(query, offset)
+    #       answer_inline_query results_for_query(query, offset), is_personal: true
     #     end
     #
     # To process update run:
