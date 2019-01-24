@@ -103,7 +103,7 @@ To use credentials as config store, add telegram section to credentials instead 
 `rails credentials:edit`. In this case be aware of that [Rails may not load
 credentials in dev environment by default](https://github.com/telegram-bot-rb/telegram-bot/issues/74#issuecomment-384205609).
 
-I suggest not using Rails 5.2 credentials because it can lead to leakage of sesitive data
+I suggest not using Rails 5.2 credentials because it can lead to leakage of sensitive data
 and it's more difficult to use in multiple environments. See
 [secure_credentials](https://github.com/printercu/secure_credentials) gem for better option.
 
