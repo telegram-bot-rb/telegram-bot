@@ -5,7 +5,7 @@ group :development do
   gem 'appraisal', '~> 2.2'
 
   gem 'pry', '~> 0.10.1'
-  gem 'pry-byebug', '~> 3.2.0'
+  gem 'pry-byebug', '~> 3.7.0'
   gem 'sdoc', '~> 0.4.1'
 
   gem 'telegram-bot-types', '~> 0.6.0'

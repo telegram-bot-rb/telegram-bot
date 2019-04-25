@@ -1,9 +1,11 @@
 language: ruby
 cache: bundler
 rvm:
+- 2.6
 - 2.5
 - 2.4
 gemfile:
+- gemfiles/rails_60.gemfile
 - gemfiles/rails_52.gemfile
 - gemfiles/rails_51.gemfile
 matrix:
@@ -16,12 +18,14 @@ matrix:
   # old rubies
   - rvm: 2.3
     gemfile: gemfiles/rails_52.gemfile
-  # future rails
+  # current rails
   - rvm: 2.5
     gemfile: gemfiles/rails_60.gemfile
+  - rvm: 2.6
+    gemfile: gemfiles/rails_61.gemfile
   # Allow rails 6 to fail while master branch is used
   allow_failures:
-  - rvm: 2.5
-    gemfile: gemfiles/rails_60.gemfile
+  - rvm: 2.6
+    gemfile: gemfiles/rails_61.gemfile
 notifications:
   email: false
