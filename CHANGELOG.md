@@ -1,8 +1,16 @@
 # Unreleased
 
+# 0.14.2
+
+- Add reply helpers: `answer_pre_checkout_query`, `answer_shipping_query`.
+- Update to Bot API 4.3.
+
+# 0.14.1
+
 - Read config from secrets when credentials don't provide it in rails >= 5.2.
 - Remove botan.io support. It's already shut down, so it should not be a braking change.
   https://github.com/botanio/sdk#this-service-will-be-shut-down-on-25th-may-2018
+- Update to Bot API 4.1.
 
 # 0.14.0
 
