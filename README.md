@@ -100,8 +100,10 @@ development:
 
 For Rails >= 5.2 `Telegram::Bot` searches for config first in credentials and then in secrets.
 To use credentials as config store, add telegram section to credentials instead of secrets using
-`rails credentials:edit`. In this case be aware of that [Rails may not load
+`rails credentials:edit`. In this case be aware of that [Rails < 6.0 may not load
 credentials in dev environment by default](https://github.com/telegram-bot-rb/telegram-bot/issues/74#issuecomment-384205609).
+In Rails >= 6.0 run `rails credentials:edit --environment development` to configure bot
+in each environment.
 
 I suggest not using Rails 5.2 credentials because it can lead to leakage of sensitive data
 and it's more difficult to use in multiple environments. See
