@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 4.1
+# Bot API 4.3
 
 getUpdates
 setWebhook
@@ -22,6 +22,7 @@ editMessageLiveLocation
 stopMessageLiveLocation
 sendVenue
 sendContact
+sendPoll
 sendChatAction
 getUserProfilePhotos
 getFile
@@ -49,6 +50,7 @@ editMessageText
 editMessageCaption
 editMessageMedia
 editMessageReplyMarkup
+stopPoll
 deleteMessage
 
 sendSticker
