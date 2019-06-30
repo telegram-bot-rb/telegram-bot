@@ -39,6 +39,15 @@ module Telegram
           bot.answer_callback_query(params)
         end
 
+        # Same as reply_with, but for pre checkout queries.
+        def answer_pre_checkout_query(ok, params = {})
+          params = params.merge(
+            pre_checkout_query_id: payload['id'],
+            ok: ok,
+          )
+          bot.answer_pre_checkout_query(params)
+        end
+
         # Edit message from callback query.
         def edit_message(type, params = {})
           params =
