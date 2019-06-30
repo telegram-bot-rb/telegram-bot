@@ -40,7 +40,7 @@ module Telegram
         end
 
         # Same as reply_with, but for pre checkout queries.
-         def answer_pre_checkout_query(ok, params = {})
+        def answer_pre_checkout_query(ok, params = {})
           params = params.merge(
             pre_checkout_query_id: payload['id'],
             ok: ok,
