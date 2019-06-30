@@ -229,6 +229,8 @@ def reply_with(type, params); end
 def answer_inline_query(results, params = {}); end
 def answer_callback_query(text, params = {}); end
 def edit_message(type, params = {}); end
+def answer_pre_checkout_query(ok, params = {}); end
+def answer_shipping_query(ok, params = {}); end
 ```
 
 #### Optional typecasting

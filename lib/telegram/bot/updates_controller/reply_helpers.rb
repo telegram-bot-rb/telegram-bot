@@ -21,7 +21,7 @@ module Telegram
           respond_with(type, params)
         end
 
-        # Same as reply_with, but for inline queries.
+        # Same as respond_with, but for inline queries.
         def answer_inline_query(results, params = {})
           params = params.merge(
             inline_query_id: payload['id'],
@@ -30,7 +30,7 @@ module Telegram
           bot.answer_inline_query(params)
         end
 
-        # Same as reply_with, but for callback queries.
+        # Same as respond_with, but for callback queries.
         def answer_callback_query(text, params = {})
           params = params.merge(
             callback_query_id: payload['id'],
@@ -39,13 +39,21 @@ module Telegram
           bot.answer_callback_query(params)
         end
 
-        # Same as reply_with, but for pre checkout queries.
+        # Same as respond_with, but for pre checkout queries.
         def answer_pre_checkout_query(ok, params = {})
           params = params.merge(
             pre_checkout_query_id: payload['id'],
             ok: ok,
           )
           bot.answer_pre_checkout_query(params)
+        end
+
+        def answer_shipping_query(ok, params = {})
+          params = params.merge(
+            shipping_query_id: payload['id'],
+            ok: ok,
+          )
+          bot.answer_shipping_query(params)
         end
 
         # Edit message from callback query.
