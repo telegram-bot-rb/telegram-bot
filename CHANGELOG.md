@@ -1,5 +1,7 @@
 # Unreleased
 
+- Rails 6.0 support.
+
 # 0.14.2
 
 - Add reply helpers: `answer_pre_checkout_query`, `answer_shipping_query`.
