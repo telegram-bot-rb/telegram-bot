@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 4.3
+# Bot API 4.4
 
 getUpdates
 setWebhook
@@ -30,6 +30,7 @@ kickChatMember
 unbanChatMember
 restrictChatMember
 promoteChatMember
+setChatPermissions
 exportChatInviteLink
 setChatPhoto
 deleteChatPhoto
