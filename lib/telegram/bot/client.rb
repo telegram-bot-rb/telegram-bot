@@ -53,6 +53,9 @@ module Telegram
 
       def initialize(token = nil, username = nil, **options)
         @client = HTTPClient.new
+        if ENV['HTTP_PROXY']
+          @client.set_proxy_auth(ENV['HTTP_PROXY_USER'], ENV['HTTP_PROXY_PASSWORD'])
+        end
         @token = token || options[:token]
         @username = username || options[:username]
         @base_uri = format(URL_TEMPLATE, token: self.token)
