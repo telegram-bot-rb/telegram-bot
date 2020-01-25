@@ -16,8 +16,8 @@ module Telegram
     # accessible via `Teletgram.bots[id]` in job worker. Or just use
     # `Telegram.bots_config=` for configuration.
     #
-    # Being in async mode `#request` enqueues job instead to perform
-    # http request instead of performing it directly.
+    # Being in async mode `#request` enqueues job to perform
+    # http request instead of performing it immediately.
     # Async behavior is controlled with `#async=` writer
     # and can be enabled/disabled for the block with `#async`:
     #
@@ -29,7 +29,7 @@ module Telegram
     # while `#async(val, &block)` is thread-safe.
     #
     # It can be set with custom job class or classname. By default it defines
-    # job classes for every client class, inherited from ApplicationRecord, which
+    # job classes inherited from ApplicationJob, which
     # can be accessed via `.default_async_job`. You can integrate it with any
     # other job provider by defining a class with `.perform_later(bot_id, *args)`
     # method. See Async::Job for implemetation.
