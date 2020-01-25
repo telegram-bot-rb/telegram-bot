@@ -475,7 +475,7 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
   #   dispatch_command(cmd, *args)
 
   # Available matchers can be found in Telegram::Bot::RSpec::ClientMatchers.
-  it 'shows usage of basic matchers'
+  it 'shows usage of basic matchers' do
     # The most basic one is #make_telegram_request(bot, endpoint, params_matcher)
     expect { dispatch_command(:start) }.
       to make_telegram_request(bot, :sendMessage, hash_including(text: 'msg text'))
