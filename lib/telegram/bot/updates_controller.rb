@@ -117,16 +117,17 @@ module Telegram
       delegate :username, to: :bot, prefix: true, allow_nil: true
 
       # Second argument can be either update object with hash access & string
-      # keys or Hash with `:from` or `:chat` to override this values and assume
-      # that update is nil.
+      # keys or Hash with `:from`, `:chat`, or `location` to override this
+      # values and assume that update is nil.
       def initialize(bot = nil, update = nil)
-        if update.is_a?(Hash) && (update.key?(:from) || update.key?(:chat))
+        if update.is_a?(Hash) &&
+            (update.key?(:from) || update.key?(:chat) || update.key?(:location))
           options = update
           update = nil
         end
         @_update = update
         @_bot = bot
-        @_chat, @_from = options && options.values_at(:chat, :from)
+        @_chat, @_from, @_location = options && options.values_at(:chat, :from, :location)
         @_payload, @_payload_type = self.class.payload_from_update(update)
       end
 
@@ -149,6 +150,12 @@ module Telegram
       # for #initialize.
       def from
         @_from ||= payload && payload['from']
+      end
+
+      # Accessor to `'location'` field of payload. Can be overriden with
+      # `location` option for #initialize.
+      def location
+        @_location ||= payload && payload['location']
       end
 
       # Processes current update.

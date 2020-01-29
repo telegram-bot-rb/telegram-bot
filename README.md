@@ -193,8 +193,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   def start!(data = nil, *)
     # do_smth_with(data)
 
-    # There are `chat` & `from` shortcut methods.
-    # For callback queries `chat` if taken from `message` when it's available.
+    # There are `chat` & `from` & `location` shortcut methods.
+    # For callback queries `chat` is taken from `message` when it's available.
     response = from ? "Hello #{from['username']}!" : 'Hi there!'
     # There is `respond_with` helper to set `chat_id` from received message:
     respond_with :message, text: response

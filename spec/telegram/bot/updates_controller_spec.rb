@@ -246,4 +246,21 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq nil }
     end
   end
+
+  describe '#location' do
+    subject { controller.location }
+    let(:payload_type) { :message }
+    let(:payload) { {location: {'latitude' => 48.833675, 'longitude' => 2.375342}} }
+    it { should eq payload[:location] }
+
+    context 'when payload is not set' do
+      let(:payload) {}
+      it { should eq nil }
+    end
+
+    context 'when payload has no such field' do
+      let(:payload) { {smth: 'other'} }
+      it { should eq nil }
+    end
+  end
 end

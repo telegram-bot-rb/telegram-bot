@@ -2,6 +2,7 @@
 
 - Rails 6.0 support.
 - Update to Bot API 4.4.
+- Add `location` helper
 
 # 0.14.2
 
