@@ -26,6 +26,12 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq [payload_type, payload.values_at(:data)] }
     end
 
+    context 'when payload is poll_answer' do
+      let(:payload_type) { 'poll_answer' }
+      let(:payload) { stub_payload(:poll_id, :user, :option_ids) }
+      it { should eq [payload_type, payload.values_at(:poll_id, :option_ids)] }
+    end
+
     context 'when payload is not supported' do
       let(:payload_type) { '_unsupported_' }
       it { should eq [:unsupported_payload_type, []] }
@@ -39,6 +45,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       inline_query
       chosen_inline_result
       callback_query
+      poll_answer
     ]
     (described_class::PAYLOAD_TYPES - custom_payload_types).each do |type|
       context "when payload is #{type}" do

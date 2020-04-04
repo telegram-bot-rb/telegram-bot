@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 4.4
+# Bot API 4.7
 
 getUpdates
 setWebhook
@@ -23,6 +23,7 @@ stopMessageLiveLocation
 sendVenue
 sendContact
 sendPoll
+sendDice
 sendChatAction
 getUserProfilePhotos
 getFile
@@ -30,6 +31,7 @@ kickChatMember
 unbanChatMember
 restrictChatMember
 promoteChatMember
+setChatAdministratorCustomTitle
 setChatPermissions
 exportChatInviteLink
 setChatPhoto
@@ -46,6 +48,8 @@ getChatMember
 setChatStickerSet
 deleteChatStickerSet
 answerCallbackQuery
+setMyCommands
+getMyCommands
 
 editMessageText
 editMessageCaption
@@ -61,6 +65,7 @@ createNewStickerSet
 addStickerToSet
 setStickerPositionInSet
 deleteStickerFromSet
+setStickerSetThumb
 
 answerInlineQuery
 

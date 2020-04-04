@@ -97,6 +97,8 @@ module Telegram
         callback_query
         shipping_query
         pre_checkout_query
+        poll
+        poll_answer
       ].freeze
 
       class << self
@@ -148,7 +150,7 @@ module Telegram
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
       # for #initialize.
       def from
-        @_from ||= payload && payload['from']
+        @_from ||= payload.is_a?(Hash) ? payload['from'] : payload.try(:from)
       end
 
       # Processes current update.
@@ -204,6 +206,10 @@ module Telegram
 
       def action_for_callback_query
         [payload_type, [payload['data']]]
+      end
+
+      def action_for_poll_answer
+        [payload_type, [payload['poll_id'], payload['option_ids']]]
       end
 
       # Silently ignore unsupported messages to not fail when user crafts
