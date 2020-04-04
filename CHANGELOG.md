@@ -1,5 +1,9 @@
 # Unreleased
 
+- Update to Bot API 4.7
+
+# 0.14.3
+
 - Rails 6.0 support.
 - Update to Bot API 4.4.
 
