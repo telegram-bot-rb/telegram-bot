@@ -50,7 +50,7 @@ module Telegram
         ensure
           @running = false
         end
-        log { 'Stoped polling bot updates.' }
+        log { 'Stopped polling bot updates.' }
       end
 
       def run
