@@ -41,57 +41,61 @@ RSpec.describe Telegram::Bot::RoutesHelper do
   end
 
   describe '#telegram_webhook' do
-    subject { mapper.telegram_webhook(*input) }
+    subject { ->(*args) { mapper.telegram_webhook(*args) } }
     let(:mapper) { double(:mapper).tap { |x| x.extend described_class } }
-    let(:bots) { {default: bot, other: other_bot} }
     let(:controller) { double(:controller, name: :controller) }
-    let(:other_controller) { double(:other_controller, name: :other_controller) }
     before { allow(Telegram).to receive(:bots) { bots } }
 
-    def assert_routes(bot, controller, route_name, options) # rubocop:disable AbcSize
-      expected_path = options.delete(:path) || "telegram/#{bot.token}"
-      expect(mapper).to receive(:post) do |path, params|
-        expect(path).to eq expected_path
-        middleware = params[:to]
+    def assert_route(bot, controller, path: nil, **expected_options) # rubocop:disable AbcSize
+      path ||= "telegram/#{described_class.token_hash(bot.token)}"
+      expect(mapper).to receive(:post) do |actual_path, actual_options|
+        expect(actual_path).to eq(path)
+        middleware = actual_options[:to]
         expect(middleware.controller).to eq(controller)
         expect(middleware.bot.token).to eq(bot.token)
         expect(middleware.bot.username).to eq(bot.username)
-        expect(params[:as]).to eq route_name
-        expect(params).to include(options) if options
+        expect(actual_options).to include(expected_options)
       end
-      subject
+      yield
     end
 
-    context 'when called with controller' do
-      let(:input) { [controller, option: :val] }
-
-      it 'creates routes for default bot and this controller' do
-        assert_routes bot, controller, 'default_telegram_webhook', option: :val
+    it 'creates routes for default bot' do
+      assert_route(bot, controller, as: 'default_telegram_webhook') do
+        subject[controller]
       end
 
-      context 'and bot does not have configured token' do
-        let(:bot) { create_bot(nil) }
-        it 'creates routes for default bot and this controller' do
-          assert_routes bot, controller, 'default_telegram_webhook', option: :val
-        end
+      other_controller = double(:other_controller, name: :other_controller)
+      assert_route(bot, other_controller, as: 'custom_route') do
+        subject[other_controller, as: 'custom_route']
       end
+    end
 
-      context 'and bot has colon in token' do
-        let(:bot) { create_bot('some:token') }
-        it 'replaces colon with underscore' do
-          assert_routes bot, controller, 'default_telegram_webhook',
-            option: :val,
-            path: 'telegram/some_token'
+    it 'passes extra options' do
+      assert_route(bot, controller, as: 'default_telegram_webhook', option: :val, other: 2) do
+        subject[controller, option: :val, other: 2]
+      end
+    end
+
+    it 'uses :path param to override default path' do
+      assert_route(bot, controller, as: 'default_telegram_webhook', path: 'custom/path') do
+        subject[controller, path: 'custom/path']
+      end
+    end
+
+    context 'when bot does not have configured token' do
+      let(:bot) { create_bot(nil) }
+      it 'creates route anyway' do
+        assert_route(bot, controller, as: 'default_telegram_webhook', path: 'telegram/') do
+          subject[controller]
         end
       end
     end
 
     context 'when called with controller and smth castable to bot' do
-      let(:input) { [controller, 'custom_token', option: :val] }
-
       it 'creates routes for every created bot and controller' do
-        assert_routes create_bot('custom_token'), controller, 'telegram_webhook',
-          option: :val
+        assert_route(create_bot('custom_token'), controller, as: 'telegram_webhook') do
+          subject[controller, 'custom_token']
+        end
       end
     end
   end

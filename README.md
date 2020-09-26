@@ -366,7 +366,7 @@ end
 ### Routes in Rails app
 
 There is `telegram_webhook` helper for rails app to define routes for webhooks.
-It defines routes at `telegram/#{bot.token}` and connects bots with controller.
+It defines routes at `telegram/#{hash_of(bot.token)}` and connects bots with controller.
 
 ```ruby
 # Most off apps would require
