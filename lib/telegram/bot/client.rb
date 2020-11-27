@@ -1,3 +1,4 @@
+require 'active_support/core_ext/hash/keys'
 require 'json'
 require 'httpclient'
 
@@ -7,7 +8,6 @@ module Telegram
       URL_TEMPLATE = 'https://api.telegram.org/bot%<token>s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
-      extend Initializers
       prepend Async
       include DebugClient
 
@@ -15,6 +15,16 @@ module Telegram
       include ApiHelper
 
       class << self
+        # Accepts different options to initialize bot.
+        def wrap(input, **options)
+          case input
+          when Symbol then by_id(input) or raise "#{name} #{input.inspect} not configured"
+          when self   then input
+          when Hash   then new(**input.symbolize_keys, **options)
+          else        new(input, **options)
+          end
+        end
+
         def by_id(id)
           Telegram.bots[id]
         end

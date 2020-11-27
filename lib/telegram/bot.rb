@@ -25,7 +25,6 @@ module Telegram
     autoload :Client,             'telegram/bot/client'
     autoload :ClientStub,         'telegram/bot/client_stub'
     autoload :DebugClient,        'telegram/bot/debug_client'
-    autoload :Initializers,       'telegram/bot/initializers'
     autoload :Middleware,         'telegram/bot/middleware'
     autoload :RSpec,              'telegram/bot/rspec'
     autoload :Tasks,              'telegram/bot/tasks'
