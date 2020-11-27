@@ -14,6 +14,7 @@ class TestApplication < Rails::Application
   config.eager_load = false
   config.log_level = :debug
   config.action_dispatch.show_exceptions = false
+  routes.default_url_options = {host: 'test.rpsec'}
 
   telegram_config = {
     bot: 'default_token',
