@@ -65,7 +65,11 @@ which is used for `Telegram.bot`.
 ```ruby
 Telegram.bots_config = {
   default: DEFAULT_BOT_TOKEN,
-  chat: {token: CHAT_BOT_TOKEN, username: 'chatbot'},
+  chat: {
+    token: CHAT_BOT_TOKEN,
+    username: 'ChatBot', # to support commands with mentions (/help@ChatBot)
+    server: 'http://local.bot.api.server', # for Local Bot API Server
+  },
 }
 
 Telegram.bot.get_updates
@@ -87,6 +91,7 @@ development:
     bot:
       token: TOKEN
       username: SomeBot
+      server: http://local.bot.api.server
 
     # For multiple bots in single app use hash of `internal_bot_id => settings`
     bots:

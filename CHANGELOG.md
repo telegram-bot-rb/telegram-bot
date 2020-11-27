@@ -4,6 +4,7 @@
 - __Breaking change!__ Default route is generated using hashed bot token.
   Please reconfigure webhook after update (`rake telegram:bot:set_webhook`).
 - Update to Bot API 5.0, add rake tasks for `deleteWebhook`, `close` & `logOut`.
+- Add `server` option for client to support local bot API servers.
 
 # 0.14.4
 

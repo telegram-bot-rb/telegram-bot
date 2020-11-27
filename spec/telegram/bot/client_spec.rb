@@ -95,26 +95,45 @@ RSpec.describe Telegram::Bot::Client do
 
   describe '.new' do
     subject { described_class.new(*args) }
+    let(:token) { 'secret' }
+    let(:username) { 'superbot' }
 
     context 'when multiple args are given' do
-      let(:args) { %w[secret superbot] }
-      its(:token) { should eq args[0] }
-      its(:username) { should eq args[1] }
-      its(:base_uri) { should include args[0] }
+      let(:args) { [token, username] }
+      its(:token) { should eq token }
+      its(:username) { should eq username }
+      its(:base_uri) { should eq "#{described_class::SERVER}/bot#{token}/" }
     end
 
     context 'when hash is given' do
       let(:args) { [token: 'secret', username: 'superbot'] }
-      its(:token) { should eq args[0][:token] }
-      its(:username) { should eq args[0][:username] }
-      its(:base_uri) { should include args[0][:token] }
+      its(:token) { should eq token }
+      its(:username) { should eq username }
+      its(:base_uri) { should eq "#{described_class::SERVER}/bot#{token}/" }
+    end
+
+    context 'with custom server' do
+      let(:server) { 'http://my.server' }
+      let(:args) { [token, username, server: server] }
+      its(:base_uri) { should eq "#{server}/bot#{token}/" }
+
+      context 'and hash options' do
+        let(:args) { [token: token, username: username, server: server] }
+        its(:base_uri) { should eq "#{server}/bot#{token}/" }
+      end
     end
   end
 
   describe '#request' do
     subject { -> { instance.request(action, request_body) } }
     let(:action) { :some_action }
-    let(:url) { "#{format(described_class::URL_TEMPLATE, token: token)}#{action}" }
+    let(:url) do
+      base_uri = format(described_class::URL_TEMPLATE,
+        server: described_class::SERVER,
+        token: token,
+      )
+      "#{base_uri}#{action}"
+    end
     let(:request_body) { double(:body) }
     let(:prepared_body) { double(:prepared_body) }
     let(:response) { HTTP::Message.new_response(body).tap { |x| x.status = status } }
