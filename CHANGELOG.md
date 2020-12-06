@@ -1,5 +1,7 @@
 # Unreleased
 
+# 0.15.0
+
 - Add `:path` option to `telegram_webhook` route helper.
 - __Breaking change!__ Default route is generated using hashed bot token.
   Please reconfigure webhook after update (`rake telegram:bot:set_webhook`).
