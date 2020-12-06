@@ -25,7 +25,7 @@ method_list = headers.
   map { |g| g.reject { |x| x.match?(NOT_METHOD_REGEXP) } }.
   reject(&:empty?)
 
-api_version = doc.text.match(/^(Bot API ([\d\.]+))\.?$/)
+api_version = doc.text.match(/^(?:Introducing )?(Bot API ([\d\.]+))\.?$/)
 
 result = ['# Generated with bin/fetch-telegram-methods']
 result << "# #{api_version[1]}" if api_version

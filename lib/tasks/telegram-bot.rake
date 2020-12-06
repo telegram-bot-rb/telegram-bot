@@ -14,15 +14,22 @@ namespace :telegram do
 
     desc 'Set webhook urls for all bots'
     task set_webhook: :environment do
-      routes = Rails.application.routes.url_helpers
-      cert_file = ENV['CERT']
-      cert = File.open(cert_file) if cert_file
-      Telegram.bots.each do |key, bot|
-        route_name = Telegram::Bot::RoutesHelper.route_name_for_bot(bot)
-        url = routes.send("#{route_name}_url")
-        puts "Setting webhook for #{key}..."
-        bot.async(false) { bot.set_webhook(url: url, certificate: cert) }
-      end
+      Telegram::Bot::Tasks.set_webhook
+    end
+
+    desc 'Delete webhooks for all or specific BOT'
+    task :delete_webhook do
+      Telegram::Bot::Tasks.delete_webhook
+    end
+
+    desc 'Perform logOut command for all or specific BOT'
+    task :log_out do
+      Telegram::Bot::Tasks.log_out
+    end
+
+    desc 'Perform `close` command for all or specific BOT'
+    task :close do
+      Telegram::Bot::Tasks.close
     end
   end
 end

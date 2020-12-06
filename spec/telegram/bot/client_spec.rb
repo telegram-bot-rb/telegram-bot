@@ -2,8 +2,71 @@ RSpec.describe Telegram::Bot::Client do
   let(:instance) { described_class.new 'token' }
   let(:token) { 'token' }
 
-  include_examples 'initializers'
   it_behaves_like 'async', request_args: -> { [double(:action), {body: :content}] }
+
+  describe '.wrap' do
+    subject { described_class.wrap(input, **options) }
+    let(:options) { {} }
+    let(:result) { double(:result) }
+    let(:username) { 'username' }
+
+    context 'when input is a string' do
+      let(:input) { token }
+
+      it 'treats string as token' do
+        expect(described_class).to receive(:new).with(token, {}) { result }
+        should eq result
+      end
+
+      context 'and additional options are given' do
+        let(:options) { {id: :test} }
+
+        it 'passes them to initializer' do
+          expect(described_class).to receive(:new).with(input, **options) { result }
+          should eq result
+        end
+      end
+    end
+
+    context 'when input is a hash' do
+      let(:input) { {token: token, 'username' => username, other: :options} }
+
+      it 'passes it with symbolized keys' do
+        expect(described_class).to receive(:new).with(**input.symbolize_keys) { result }
+        should eq result
+      end
+
+      context 'and additional options are given' do
+        let(:options) { {id: :test} }
+
+        it 'passes them to initializer' do
+          expect(described_class).to receive(:new).
+            with(**input.symbolize_keys, **options) { result }
+          should eq result
+        end
+      end
+    end
+
+    context 'when input is an instance of described_class' do
+      let!(:input) { instance }
+
+      it 'returns input' do
+        expect(described_class).to_not receive(:new)
+        should eq input
+      end
+    end
+
+    context 'when input is a Symbol' do
+      let(:input) { :client_1 }
+      before { allow(Telegram).to receive(:bots) { {client_1: instance} } }
+      it { should eq Telegram.bots[:client_1] }
+
+      context 'and there is no such bot' do
+        let(:input) { :invalid }
+        it { expect { subject }.to raise_error(/not configured/) }
+      end
+    end
+  end
 
   describe '.prepare_body' do
     subject { described_class.prepare_body(input) }
@@ -32,26 +95,45 @@ RSpec.describe Telegram::Bot::Client do
 
   describe '.new' do
     subject { described_class.new(*args) }
+    let(:token) { 'secret' }
+    let(:username) { 'superbot' }
 
     context 'when multiple args are given' do
-      let(:args) { %w[secret superbot] }
-      its(:token) { should eq args[0] }
-      its(:username) { should eq args[1] }
-      its(:base_uri) { should include args[0] }
+      let(:args) { [token, username] }
+      its(:token) { should eq token }
+      its(:username) { should eq username }
+      its(:base_uri) { should eq "#{described_class::SERVER}/bot#{token}/" }
     end
 
     context 'when hash is given' do
       let(:args) { [token: 'secret', username: 'superbot'] }
-      its(:token) { should eq args[0][:token] }
-      its(:username) { should eq args[0][:username] }
-      its(:base_uri) { should include args[0][:token] }
+      its(:token) { should eq token }
+      its(:username) { should eq username }
+      its(:base_uri) { should eq "#{described_class::SERVER}/bot#{token}/" }
+    end
+
+    context 'with custom server' do
+      let(:server) { 'http://my.server' }
+      let(:args) { [token, username, server: server] }
+      its(:base_uri) { should eq "#{server}/bot#{token}/" }
+
+      context 'and hash options' do
+        let(:args) { [token: token, username: username, server: server] }
+        its(:base_uri) { should eq "#{server}/bot#{token}/" }
+      end
     end
   end
 
   describe '#request' do
     subject { -> { instance.request(action, request_body) } }
     let(:action) { :some_action }
-    let(:url) { "#{format(described_class::URL_TEMPLATE, token: token)}#{action}" }
+    let(:url) do
+      base_uri = format(described_class::URL_TEMPLATE,
+        server: described_class::SERVER,
+        token: token,
+      )
+      "#{base_uri}#{action}"
+    end
     let(:request_body) { double(:body) }
     let(:prepared_body) { double(:prepared_body) }
     let(:response) { HTTP::Message.new_response(body).tap { |x| x.status = status } }

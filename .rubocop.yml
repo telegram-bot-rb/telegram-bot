@@ -40,6 +40,7 @@ Style/IfUnlessModifier: {Enabled: false}
 # Consistent to other definitions.
 Style/EmptyMethod: {EnforcedStyle: expanded}
 
+Style/Lambda: {EnforcedStyle: literal}
 Style/ModuleFunction: {Enabled: false}
 Style/NestedParenthesizedCalls: {Enabled: false}
 Style/SignalException: {EnforcedStyle: only_raise}

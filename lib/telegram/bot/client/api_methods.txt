@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 4.7
+# Bot API 5.0
 
 getUpdates
 setWebhook
@@ -7,8 +7,11 @@ deleteWebhook
 getWebhookInfo
 
 getMe
+logOut
+close
 sendMessage
 forwardMessage
+copyMessage
 sendPhoto
 sendAudio
 sendDocument
@@ -40,6 +43,7 @@ setChatTitle
 setChatDescription
 pinChatMessage
 unpinChatMessage
+unpinAllChatMessages
 leaveChat
 getChat
 getChatAdministrators

@@ -1,13 +1,14 @@
+require 'active_support/core_ext/hash/keys'
 require 'json'
 require 'httpclient'
 
 module Telegram
   module Bot
     class Client
-      URL_TEMPLATE = 'https://api.telegram.org/bot%<token>s/'.freeze
+      SERVER = 'https://api.telegram.org'.freeze
+      URL_TEMPLATE = '%<server>s/bot%<token>s/'.freeze
 
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
-      extend Initializers
       prepend Async
       include DebugClient
 
@@ -15,6 +16,16 @@ module Telegram
       include ApiHelper
 
       class << self
+        # Accepts different options to initialize bot.
+        def wrap(input, **options)
+          case input
+          when Symbol then by_id(input) or raise "#{name} #{input.inspect} not configured"
+          when self   then input
+          when Hash   then new(**input.symbolize_keys, **options)
+          else        new(input, **options)
+          end
+        end
+
         def by_id(id)
           Telegram.bots[id]
         end
@@ -51,11 +62,11 @@ module Telegram
 
       attr_reader :client, :token, :username, :base_uri
 
-      def initialize(token = nil, username = nil, **options)
+      def initialize(token = nil, username = nil, server: SERVER, **options)
         @client = HTTPClient.new
         @token = token || options[:token]
         @username = username || options[:username]
-        @base_uri = format(URL_TEMPLATE, token: self.token)
+        @base_uri = format(URL_TEMPLATE, server: server, token: self.token)
       end
 
       def request(action, body = {})
