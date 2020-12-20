@@ -1,8 +1,6 @@
 appraise 'rails-61' do
-  git 'https://github.com/rails/rails.git' do
-    gem 'actionpack', '~> 6.1.0.alpha'
-    gem 'railties', '~> 6.1.0.alpha'
-  end
+  gem 'actionpack', '~> 6.1.0'
+  gem 'railties', '~> 6.1.0'
 end
 
 appraise 'rails-60' do

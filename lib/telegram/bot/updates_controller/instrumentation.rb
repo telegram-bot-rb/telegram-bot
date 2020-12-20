@@ -49,7 +49,7 @@ module Telegram
         private
 
         # A hook invoked every time a before callback is halted.
-        def halted_callback_hook(filter)
+        def halted_callback_hook(filter, *)
           Instrumentation.instrument(:halted_callback, filter: filter)
         end
 
