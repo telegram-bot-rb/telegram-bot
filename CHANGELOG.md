@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.15.1
+
+- Rails 6.1 support.
+
 # 0.15.0
 
 - Add `:path` option to `telegram_webhook` route helper.
