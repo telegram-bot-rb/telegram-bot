@@ -1,3 +1,5 @@
+os: linux
+dist: xenial
 language: ruby
 cache: bundler
 rvm:
@@ -7,8 +9,13 @@ gemfile:
 - gemfiles/rails_61.gemfile
 - gemfiles/rails_60.gemfile
 - gemfiles/rails_52.gemfile
-matrix:
+jobs:
   include:
+  # ruby 3.x
+  - rvm: 3.0
+    gemfile: gemfiles/rails_61.gemfile
+  - rvm: 3.0
+    gemfile: gemfiles/rails_60.gemfile
   # old rails
   - rvm: 2.5
     gemfile: gemfiles/rails_51.gemfile
@@ -18,8 +25,6 @@ matrix:
     gemfile: gemfiles/rails_42.gemfile
   # old rubies
   - rvm: 2.4
-    gemfile: gemfiles/rails_52.gemfile
-  - rvm: 2.3
     gemfile: gemfiles/rails_52.gemfile
 notifications:
   email: false
