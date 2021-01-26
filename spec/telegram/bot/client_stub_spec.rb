@@ -37,11 +37,13 @@ RSpec.describe Telegram::Bot::ClientStub do
   end
 
   describe '#new' do
-    subject { described_class.new(*args) }
+    subject { described_class.new(*args, **kwargs) }
+    let(:args) { [] }
+    let(:kwargs) { {} }
 
     context 'when only username is given' do
-      let(:args) { 'superbot' }
-      its(:username) { should eq args }
+      let(:args) { ['superbot'] }
+      its(:username) { should eq args[0] }
     end
 
     context 'when username and token are given' do
@@ -51,9 +53,9 @@ RSpec.describe Telegram::Bot::ClientStub do
     end
 
     context 'when hash config is given' do
-      let(:args) { [token: 'token', username: 'superbot'] }
-      its(:token) { should eq args[0][:token] }
-      its(:username) { should eq args[0][:username] }
+      let(:kwargs) { {token: 'token', username: 'superbot'} }
+      its(:token) { should eq kwargs[:token] }
+      its(:username) { should eq kwargs[:username] }
     end
   end
 end

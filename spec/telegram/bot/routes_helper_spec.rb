@@ -41,7 +41,7 @@ RSpec.describe Telegram::Bot::RoutesHelper do
   end
 
   describe '#telegram_webhook' do
-    subject { ->(*args) { mapper.telegram_webhook(*args) } }
+    subject { ->(*args, **kwargs) { mapper.telegram_webhook(*args, **kwargs) } }
     let(:mapper) { double(:mapper).tap { |x| x.extend described_class } }
     let(:controller) { double(:controller, name: :controller) }
     before { allow(Telegram).to receive(:bots) { bots } }

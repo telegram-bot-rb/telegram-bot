@@ -14,7 +14,10 @@ RSpec.describe Telegram::Bot::Client do
       let(:input) { token }
 
       it 'treats string as token' do
-        expect(described_class).to receive(:new).with(token, {}) { result }
+        expect(described_class).to receive(:new) do |*args, **kwargs|
+          expect([*args, kwargs]).to eq([token, {}]) # not using .with to support ruby 2.x and 3.x
+          result
+        end
         should eq result
       end
 
@@ -94,7 +97,9 @@ RSpec.describe Telegram::Bot::Client do
   end
 
   describe '.new' do
-    subject { described_class.new(*args) }
+    subject { described_class.new(*args, **kwargs) }
+    let(:args) { [] }
+    let(:kwargs) { {} }
     let(:token) { 'secret' }
     let(:username) { 'superbot' }
 
@@ -106,7 +111,7 @@ RSpec.describe Telegram::Bot::Client do
     end
 
     context 'when hash is given' do
-      let(:args) { [token: 'secret', username: 'superbot'] }
+      let(:kwargs) { {token: 'secret', username: 'superbot'} }
       its(:token) { should eq token }
       its(:username) { should eq username }
       its(:base_uri) { should eq "#{described_class::SERVER}/bot#{token}/" }
@@ -114,11 +119,12 @@ RSpec.describe Telegram::Bot::Client do
 
     context 'with custom server' do
       let(:server) { 'http://my.server' }
-      let(:args) { [token, username, server: server] }
+      let(:args) { [token, username] }
+      let(:kwargs) { {server: server} }
       its(:base_uri) { should eq "#{server}/bot#{token}/" }
 
       context 'and hash options' do
-        let(:args) { [token: token, username: username, server: server] }
+        let(:kwargs) { {token: token, username: username, server: server} }
         its(:base_uri) { should eq "#{server}/bot#{token}/" }
       end
     end

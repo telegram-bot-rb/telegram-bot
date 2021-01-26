@@ -1,4 +1,4 @@
-RSpec.shared_examples 'async' do |request_args: -> {}|
+RSpec.shared_examples 'async' do |request_args:|
   let(:instance) { described_class.new(token: token, id: id, async: async) }
   let(:id) { :default_bot }
   let(:async) { true }
@@ -103,7 +103,7 @@ RSpec.shared_examples 'async' do |request_args: -> {}|
   end
 
   describe '#request' do
-    subject { ->(*args) { instance.request(*(args.empty? ? self.args : args)) } }
+    subject { ->(*args) { instance.request(*args) } }
     let(:args, &request_args)
     let(:result) { double(:result) }
 
@@ -112,7 +112,7 @@ RSpec.shared_examples 'async' do |request_args: -> {}|
         expect(instance).to_not receive(:http_request)
         expect(described_class).to receive(:prepare_async_args).with(*args) { args }
         expect(instance.async).to receive(:perform_later).with(id.to_s, *args) { result }
-        expect(subject.call).to eq result
+        expect(subject.call(*args)).to eq result
       end
     end
 
@@ -131,12 +131,11 @@ RSpec.shared_examples 'async' do |request_args: -> {}|
     context 'when async is disabled' do
       let(:async) { false }
       let(:result) { double(status: 200, body: '{"test":"ok"}') }
-      let(:args, &request_args)
 
       it 'performs request immediately' do
         expect(instance).to receive(:request).with(*args).and_call_original
         expect(instance).to receive(:http_request) { result }
-        expect(subject[]).to eq 'test' => 'ok'
+        expect(subject.call(*args)).to eq 'test' => 'ok'
       end
     end
   end
