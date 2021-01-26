@@ -1,5 +1,7 @@
 # Unreleased
 
+# 0.15.2
+
 - Ruby 3.0 support. Drop support for Ruby < 2.4.
 
 # 0.15.1

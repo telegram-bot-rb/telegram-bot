@@ -131,9 +131,9 @@ bot.send_message(chat_id: chat_id, text: 'Test')
 ```
 
 There is no magic, they just pass params as is and set `path_suffix`.
-See [`Client`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/client.rb)
-class for list of available methods. Please open PR or issue if it misses methods from
-new API versions.
+See [list of available methods](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/client/api_methods.txt)
+fetched from [API docs](https://core.telegram.org/bots/api).
+Please open PR or issue if it misses methods from new API versions.
 
 Any API request error will raise `Telegram::Bot::Error` with description in its message.
 Special `Telegram::Bot::Forbidden` is raised when bot can't post messages to the chat anymore.
