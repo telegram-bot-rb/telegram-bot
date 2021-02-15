@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.15.3
+
+- Ruby 3.0 support: fix translation helpers.
+
 # 0.15.2
 
 - Ruby 3.0 support. Drop support for Ruby < 2.4.
