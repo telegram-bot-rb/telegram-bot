@@ -12,15 +12,15 @@ module Telegram
 
         module ClassMethods
           # Class-level helper for lazy translations.
-          def translate(key, options = {})
+          def translate(key, **options)
             key = "#{controller_path.tr('/', '.')}#{key}" if key.to_s.start_with?('.')
-            I18n.translate(key, options)
+            I18n.translate(key, **options)
           end
           alias :t :translate
         end
 
         # See toplevel description.
-        def translate(key, options = {})
+        def translate(key, **options)
           if key.to_s.start_with?('.')
             path = controller_path.tr('/', '.')
             defaults = [:"#{path}#{key}"]
@@ -28,7 +28,7 @@ module Telegram
             options[:default] = defaults.flatten
             key = "#{path}.#{action_name_i18n_key}#{key}"
           end
-          I18n.translate(key, options)
+          I18n.translate(key, **options)
         end
         alias :t :translate
 
