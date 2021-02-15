@@ -23,7 +23,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Translation do
       end
 
       it 'uses controller_path for lazy translations' do
-        expect(I18n).to receive(:translate).with('telegram.webhooks.hello', {})
+        expect(I18n).to receive(:translate).with('telegram.webhooks.hello')
         controller_class.t('.hello')
       end
     end
