@@ -25,9 +25,9 @@ with session, keyboards and inline queries.
 Run it on your local machine in 1 minute!
 
 And here is [app template](https://github.com/telegram-bot-rb/rails_template)
-to generate clean app in seconds.
+to generate new rails app in seconds.
 
-Examples and cookbook in [wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki).
+See examples and cookbook in [the wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki).
 
 ## Installation
 
@@ -39,11 +39,15 @@ gem 'telegram-bot'
 
 And then execute:
 
-    $ bundle
+```
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install telegram-bot
+```
+gem install telegram-bot
+```
 
 Require if necessary:
 
@@ -170,19 +174,18 @@ Bot controllers like usual rails controllers provides features like callbacks,
 
 ```ruby
 class Telegram::WebhookController < Telegram::Bot::UpdatesController
-  # use callbacks like in any other controllers
+  # use callbacks like in any other controller
   around_action :with_locale
 
-  # Every update can have one of: message, inline_query, chosen_inline_result,
+  # Every update has one of: message, inline_query, chosen_inline_result,
   # callback_query, etc.
-  # Define method with same name to respond to this updates.
+  # Define method with the same name to handle this type of update.
   def message(message)
-    # message can be also accessed via instance method
-    message == self.payload # true
     # store_message(message['text'])
   end
 
-  # This basic methods receives commonly used params:
+  # For the following types of updates commonly used params are passed as arguments,
+  # full payload object is available with `payload` instance method.
   #
   #   message(payload)
   #   inline_query(query, offset)
@@ -193,14 +196,19 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   # Command arguments will be parsed and passed to the method.
   # Be sure to use splat args and default values to not get errors when
   # someone passed more or less arguments in the message.
-  def start!(data = nil, *)
-    # do_smth_with(data)
+  def start!(word = nil, *other_words)
+    # do_smth_with(word)
+
+    # full message object is also available via `payload` instance method:
+    # process_raw_message(payload['text'])
 
     # There are `chat` & `from` shortcut methods.
-    # For callback queries `chat` if taken from `message` when it's available.
+    # For callback queries `chat` is taken from `message` when it's available.
     response = from ? "Hello #{from['username']}!" : 'Hi there!'
+
     # There is `respond_with` helper to set `chat_id` from received message:
     respond_with :message, text: response
+
     # `reply_with` also sets `reply_to_message_id`:
     reply_with :photo, photo: File.open('party.jpg')
   end
@@ -223,10 +231,10 @@ end
 
 #### Reply helpers
 
-There are helpers to respond for basic actions. They just set chat/message/query
-identifiers from update. See
+There are helpers for basic responses. They just set chat/message/query
+identifiers from the update. See
 [`ReplyHelpers`](https://github.com/telegram-bot-rb/telegram-bot/blob/master/lib/telegram/bot/updates_controller/reply_helpers.rb)
-module for more information. Here are this methods signatures:
+module for more information. Here are these methods signatures:
 
 ```ruby
 def respond_with(type, params); end
