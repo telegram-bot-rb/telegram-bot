@@ -29,6 +29,30 @@ to generate new rails app in seconds.
 
 See examples and cookbook in [the wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki).
 
+## Table of Contents
+
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Configuration](#configuration)
+  * [Configuration in Rails app](#configuration-in-rails-app)
+  * [Client](#client)
+    * [Typed responses](#typed-responses)
+  * [Controller](#controller)
+    * [Reply helpers](#reply-helpers)
+    * [Optional typecasting](#optional-typecasting)
+    * [Session](#session)
+    * [Message context](#message-context)
+    * [Callback queries](#callback-queries)
+  * [Routes in Rails app](#routes-in-rails-app)
+    * [Processing updates](#processing-updates)
+  * [Development & Debugging](#development--debugging)
+  * [Testing](#testing)
+  * [Deployment](#deployment)
+  * [Async mode](#async-mode)
+    * [Limitations](#limitations)
+* [Development](#development)
+* [Contributing](#contributing)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -397,7 +421,7 @@ telegram_webhook TelegramAuctionController, :auction
 telegram_webhook TelegramController, as: :custom_telegram_webhook
 ```
 
-#### Processesing updates
+#### Processing updates
 
 To process update with controller call `.dispatch(bot, update)` on it.
 There are several options to run it automatically:
