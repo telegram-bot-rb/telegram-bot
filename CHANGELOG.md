@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.15.4
+
+- Update to Bot API 5.3
+
 # 0.15.3
 
 - Ruby 3.0 support: fix translation helpers.
