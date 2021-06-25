@@ -9,14 +9,19 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
 
   context 'when `update` is a virtus model' do
     subject { controller }
-    unique_types = Telegram::Bot::UpdatesController::PAYLOAD_TYPES - %w[
+    unique_types = (Telegram::Bot::UpdatesController::PAYLOAD_TYPES - %w[
       edited_message
       channel_post
       edited_channel_post
-    ]
-    unique_types.each do |type|
+      my_chat_member
+      chat_member
+    ]).
+      map { |x| [x, Telegram::Bot::Types.const_get(type.camelize)] }.to_h.
+      merge(
+        'chat_member' => Telegram::Bot::Types::ChatMemberUpdated
+      )
+    unique_types.each do |type, type_class|
       context "with #{type}" do
-        type_class = Telegram::Bot::Types.const_get(type.camelize)
         let(:payload_type) { type }
         let(:payload) do
           {}.tap do |result|

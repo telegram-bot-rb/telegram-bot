@@ -8,7 +8,7 @@ group :development do
   gem 'pry-byebug', '~> 3.9.0'
   gem 'sdoc', '~> 2.0.3'
 
-  gem 'telegram-bot-types', '~> 0.6.2'
+  gem 'telegram-bot-types', '~> 0.6.3'
 
   gem 'rspec', '~> 3.10.0'
   gem 'rspec-its', '~> 1.3.0'
