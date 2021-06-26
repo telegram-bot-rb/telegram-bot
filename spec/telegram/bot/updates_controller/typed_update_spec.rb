@@ -16,7 +16,7 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       my_chat_member
       chat_member
     ]).
-      map { |x| [x, Telegram::Bot::Types.const_get(type.camelize)] }.to_h.
+      map { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.to_h.
       merge(
         'chat_member' => Telegram::Bot::Types::ChatMemberUpdated
       )
