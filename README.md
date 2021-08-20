@@ -539,7 +539,7 @@ end
 
 There is a context for testing bot controller in the way similar to Rails controller tests.
 It's supposed to be a low-level alternative for integration tests. Among the differences is
-that controller tests use a single controller instance for all dispatches in specific exaple,
+that controller tests use a single controller instance for all dispatches in specific example,
 session is stubbed (does not use configured store engine), and update is not serialized
 so it also supports mocks. This can be useful for unit testing, but should not be used as
 the default way to test the bot.
