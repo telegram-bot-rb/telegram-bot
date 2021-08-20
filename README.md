@@ -466,6 +466,13 @@ initializing clients. Here is a template for RSpec:
 Telegram.reset_bots
 Telegram::Bot::ClientStub.stub_all!
 
+# environments/test.rb (for Rails 6)
+Rails.application.configure do
+  ...
+  config.hosts.clear
+  ...
+end
+
 # rails_helper.rb
 RSpec.configure do |config|
   # ...
