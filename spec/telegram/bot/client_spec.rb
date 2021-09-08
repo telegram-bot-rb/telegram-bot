@@ -71,25 +71,6 @@ RSpec.describe Telegram::Bot::Client do
     end
   end
 
-  describe '.prepare_body' do
-    subject { described_class.prepare_body(input) }
-
-    context 'when plain hash is given' do
-      let(:input) { {a: 1, b: '2', c: nil} }
-      it { should eq input }
-    end
-
-    context 'when nested hash is given' do
-      let(:input) { {a: 1, b: '2', c: [1, 2], d: {a: 1}, e: {b: []}} }
-
-      it 'encodes nested hashes to json' do
-        expected = input.dup
-        %i[c d e].each { |x| expected[x] = expected[x].to_json }
-        should eq expected
-      end
-    end
-  end
-
   describe '.prepare_async_args' do
     subject { described_class.prepare_async_args(*input) }
     let(:input) { [:action, a: 1, b: :sym, c: [:other], 'd' => 'str'] }

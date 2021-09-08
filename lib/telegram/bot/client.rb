@@ -1,5 +1,4 @@
 require 'active_support/core_ext/hash/keys'
-require 'json'
 require 'httpclient'
 
 module Telegram
@@ -8,7 +7,9 @@ module Telegram
       SERVER = 'https://api.telegram.org'.freeze
       URL_TEMPLATE = '%<server>s/bot%<token>s/'.freeze
 
+      autoload :RequestBodyFormatter, 'telegram/bot/client/request_body_formatter'
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
+
       prepend Async
       include DebugClient
 
@@ -35,16 +36,8 @@ module Telegram
           prepend TypedResponse
         end
 
-        # Encodes nested hashes as json.
-        def prepare_body(body)
-          body = body.dup
-          body.each do |k, val|
-            body[k] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
-          end
-        end
-
         def prepare_async_args(action, body = {})
-          [action.to_s, Async.prepare_hash(prepare_body(body))]
+          [action.to_s, Async.prepare_hash(RequestBodyFormatter.format(body))]
         end
 
         def error_for_response(response)
@@ -70,7 +63,7 @@ module Telegram
       end
 
       def request(action, body = {})
-        response = http_request("#{base_uri}#{action}", self.class.prepare_body(body))
+        response = http_request("#{base_uri}#{action}", RequestBodyFormatter.format(body))
         raise self.class.error_for_response(response) if response.status >= 300
         JSON.parse(response.body)
       end
