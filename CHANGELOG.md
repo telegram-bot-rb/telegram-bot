@@ -1,5 +1,7 @@
 # Unreleased
 
+- Rails 7.0 support.
+
 # 0.15.4
 
 - Update to Bot API 5.3
