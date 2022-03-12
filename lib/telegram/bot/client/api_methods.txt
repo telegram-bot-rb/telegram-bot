@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 5.3
+# Bot API 5.7
 
 getUpdates
 setWebhook
@@ -35,11 +35,15 @@ unbanChatMember
 restrictChatMember
 promoteChatMember
 setChatAdministratorCustomTitle
+banChatSenderChat
+unbanChatSenderChat
 setChatPermissions
 exportChatInviteLink
 createChatInviteLink
 editChatInviteLink
 revokeChatInviteLink
+approveChatJoinRequest
+declineChatJoinRequest
 setChatPhoto
 deleteChatPhoto
 setChatTitle

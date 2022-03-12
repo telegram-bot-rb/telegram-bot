@@ -1,7 +1,10 @@
 # Unreleased
 
+# 0.15.5
+
 - Rails 7.0 support.
 - Fix sending File objects in nested objects in sendMediaGroup.
+- Update to Bot API 5.7
 
 # 0.15.4
 
