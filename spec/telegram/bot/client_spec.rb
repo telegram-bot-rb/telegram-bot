@@ -129,7 +129,8 @@ RSpec.describe Telegram::Bot::Client do
     let(:body) { body_json.to_json }
     let(:body_json) { {'param' => 'val', 'description' => 'some description'} }
     before do
-      expect(described_class).to receive(:prepare_body).with(request_body) { prepared_body }
+      expect(Telegram::Bot::Client::RequestBodyFormatter).
+        to receive(:format).with(request_body, action) { prepared_body }
       expect(instance).to receive(:http_request).with(url, prepared_body) { response }
     end
     around { |ex| Telegram::Bot::ClientStub.stub_all!(false) { ex.run } }

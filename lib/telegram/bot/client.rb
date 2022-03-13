@@ -37,7 +37,7 @@ module Telegram
         end
 
         def prepare_async_args(action, body = {})
-          [action.to_s, Async.prepare_hash(RequestBodyFormatter.format(body))]
+          [action.to_s, Async.prepare_hash(RequestBodyFormatter.format(body, action))]
         end
 
         def error_for_response(response)
@@ -63,7 +63,7 @@ module Telegram
       end
 
       def request(action, body = {})
-        response = http_request("#{base_uri}#{action}", RequestBodyFormatter.format(body))
+        response = http_request("#{base_uri}#{action}", RequestBodyFormatter.format(body, action))
         raise self.class.error_for_response(response) if response.status >= 300
         JSON.parse(response.body)
       end

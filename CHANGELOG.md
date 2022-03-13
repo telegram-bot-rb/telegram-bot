@@ -1,6 +1,6 @@
 # Unreleased
 
-# 0.15.5
+# 0.15.6
 
 - Rails 7.0 support.
 - Fix sending File objects in nested objects in sendMediaGroup.
