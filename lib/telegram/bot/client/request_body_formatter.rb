@@ -11,8 +11,14 @@ module Telegram
 
         def format(body, action)
           body = body.dup
-          if action.to_s == 'sendMediaGroup'
-            body = extract_files_from_array!(body, :media)
+          case action.to_s
+          when 'sendMediaGroup'
+            extract_files_from_array!(body, :media)
+          when 'editMessageMedia'
+            replace_field(body, :media) do |value|
+              files = {}
+              extract_files_from_hash(value, files).tap { body.merge!(files) }
+            end
           end
           body.each do |key, val|
             body[key] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
@@ -21,12 +27,19 @@ module Telegram
 
         private
 
-        def extract_files_from_array!(body, field_name)
-          field_name = [field_name.to_sym, field_name.to_s].find { |x| body.key?(x) }
-          return body unless field_name && body[field_name].is_a?(Array)
-          files = {}
-          body[field_name] = body[field_name].map { |x| extract_files_from_hash(x, files) }
-          body.merge!(files)
+        # Detects field by symbol or string name and replaces it with mapped value.
+        def replace_field(hash, field_name)
+          field_name = [field_name.to_sym, field_name.to_s].find { |x| hash.key?(x) }
+          hash[field_name] = yield hash[field_name] if field_name
+        end
+
+        def extract_files_from_array!(hash, field_name)
+          replace_field(hash, field_name) do |value|
+            break value unless value.is_a?(Array)
+            files = {}
+            value.map { |x| extract_files_from_hash(x, files) }.
+              tap { hash.merge!(files) }
+          end
         end
 
         # Replace File objects with `attach` URIs. File objects are added into `files` hash.
