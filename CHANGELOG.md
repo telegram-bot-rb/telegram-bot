@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.15.7
+
+- Add support for editMessageMedia similar to sendMediaGroup.
+
 # 0.15.6
 
 - Rails 7.0 support.
