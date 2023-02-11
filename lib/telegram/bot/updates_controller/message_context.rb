@@ -11,7 +11,7 @@ module Telegram
       #       respond_with :message, text: 'Where are you?'
       #     end
       #
-      #     def set_location_from_messge(city = nil, *)
+      #     def set_location_from_message(city = nil, *)
       #       # update
       #     end
       #
