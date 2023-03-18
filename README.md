@@ -419,6 +419,9 @@ telegram_webhook TelegramAuctionController, :auction
 # (eg. `chat_telegram_webhook`).
 # You can override this with `as` option:
 telegram_webhook TelegramController, as: :custom_telegram_webhook
+
+# You can specify the constraint to limit the allowed IPs
+telegram_webhook TelegramController, constraints: Telegram::Bot::AllowedSubnetsConstraint.new
 ```
 
 #### Processing updates
