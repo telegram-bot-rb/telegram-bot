@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 5.7
+# Bot API 6.6
 
 getUpdates
 setWebhook
@@ -21,8 +21,6 @@ sendVoice
 sendVideoNote
 sendMediaGroup
 sendLocation
-editMessageLiveLocation
-stopMessageLiveLocation
 sendVenue
 sendContact
 sendPoll
@@ -58,30 +56,61 @@ getChatMemberCount
 getChatMember
 setChatStickerSet
 deleteChatStickerSet
+getForumTopicIconStickers
+createForumTopic
+editForumTopic
+closeForumTopic
+reopenForumTopic
+deleteForumTopic
+unpinAllForumTopicMessages
+editGeneralForumTopic
+closeGeneralForumTopic
+reopenGeneralForumTopic
+hideGeneralForumTopic
+unhideGeneralForumTopic
 answerCallbackQuery
 setMyCommands
 deleteMyCommands
 getMyCommands
+setMyDescription
+getMyDescription
+setMyShortDescription
+getMyShortDescription
+setChatMenuButton
+getChatMenuButton
+setMyDefaultAdministratorRights
+getMyDefaultAdministratorRights
 
 editMessageText
 editMessageCaption
 editMessageMedia
+editMessageLiveLocation
+stopMessageLiveLocation
 editMessageReplyMarkup
 stopPoll
 deleteMessage
 
 sendSticker
 getStickerSet
+getCustomEmojiStickers
 uploadStickerFile
 createNewStickerSet
 addStickerToSet
 setStickerPositionInSet
 deleteStickerFromSet
-setStickerSetThumb
+setStickerEmojiList
+setStickerKeywords
+setStickerMaskPosition
+setStickerSetTitle
+setStickerSetThumbnail
+setCustomEmojiStickerSetThumbnail
+deleteStickerSet
 
 answerInlineQuery
+answerWebAppQuery
 
 sendInvoice
+createInvoiceLink
 answerShippingQuery
 answerPreCheckoutQuery
 
