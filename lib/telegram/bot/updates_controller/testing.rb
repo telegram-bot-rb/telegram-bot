@@ -5,9 +5,9 @@ module Telegram
         IVARS_TO_KEEP = %i[@_session].freeze
 
         # Perform multiple dispatches on same instance.
-        def dispatch_again(bot = nil, update = nil)
+        def dispatch_again(bot = nil, update = nil, webhook_request = nil)
           recycle!
-          initialize(bot, update)
+          initialize(bot, update, webhook_request)
           dispatch
         end
 

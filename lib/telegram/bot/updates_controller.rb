@@ -117,21 +117,24 @@ module Telegram
         end
       end
 
-      attr_internal_reader :update, :bot, :payload, :payload_type
+      attr_internal_reader :bot, :payload, :payload_type, :update, :webhook_request
       delegate :username, to: :bot, prefix: true, allow_nil: true
 
-      # Second argument can be either update object with hash access & string
+      # `update` can be either update object with hash access & string
       # keys or Hash with `:from` or `:chat` to override this values and assume
       # that update is nil.
-      def initialize(bot = nil, update = nil)
+      # ActionDispatch::Request object is passed in `webhook_request` when bot running
+      # in webhook mode.
+      def initialize(bot = nil, update = nil, webhook_request = nil)
         if update.is_a?(Hash) && (update.key?(:from) || update.key?(:chat))
           options = update
           update = nil
         end
-        @_update = update
         @_bot = bot
+        @_update = update
         @_chat, @_from = options && options.values_at(:chat, :from)
         @_payload, @_payload_type = self.class.payload_from_update(update)
+        @_webhook_request = webhook_request
       end
 
       # Accessor to `'chat'` field of payload. Also tries `'chat'` in `'message'`

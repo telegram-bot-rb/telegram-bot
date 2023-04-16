@@ -24,7 +24,8 @@ RSpec.describe Telegram::Bot::Middleware do
     end
 
     it 'calls dispatch on controller' do
-      expect(controller).to receive(:dispatch).with(bot, update)
+      expect(controller).to receive(:dispatch).
+        with(bot, update, instance_of(ActionDispatch::Request))
       subject
     end
 

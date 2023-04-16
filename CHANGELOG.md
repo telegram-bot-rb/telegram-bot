@@ -1,5 +1,8 @@
 # Unreleased
 
+- Add `UpdatesController#webhook_request` that is set to `ActionDispatch::Request`
+  in webhook mode.
+
 # 0.15.7
 
 - Add support for editMessageMedia similar to sendMediaGroup.
