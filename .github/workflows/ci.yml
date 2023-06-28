@@ -1,0 +1,48 @@
+name: Lint & Test
+
+on: [push, pull_request]
+
+jobs:
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: '3.0'
+  #         bundler-cache: true
+  #     - run: bundle exec rubocop
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - '2.5'
+          - '2.6'
+        gemfile:
+          - gemfiles/rails_61.gemfile
+          - gemfiles/rails_60.gemfile
+          - gemfiles/rails_52.gemfile
+        include:
+          # ruby 3.x
+          - ruby: '3.0'
+            gemfile: gemfiles/rails_61.gemfile
+          - ruby: '3.0'
+            gemfile: gemfiles/rails_60.gemfile
+          # old rails
+          - ruby: '2.5'
+            gemfile: gemfiles/rails_51.gemfile
+          - ruby: '2.5'
+            gemfile: gemfiles/rails_50.gemfile
+          - ruby: '2.5'
+            gemfile: gemfiles/rails_42.gemfile
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake spec
