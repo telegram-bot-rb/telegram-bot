@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 6.6
+# Bot API 6.7
 
 getUpdates
 setWebhook
@@ -72,6 +72,8 @@ answerCallbackQuery
 setMyCommands
 deleteMyCommands
 getMyCommands
+setMyName
+getMyName
 setMyDescription
 getMyDescription
 setMyShortDescription
