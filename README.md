@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/telegram-bot.svg)](http://badge.fury.io/rb/telegram-bot)
 [![Code Climate](https://codeclimate.com/github/telegram-bot-rb/telegram-bot/badges/gpa.svg)](https://codeclimate.com/github/telegram-bot-rb/telegram-bot)
-[![Build Status](https://github.com/telegram-bot-rb/telegram-bot/actions/workflows/ci/badge.svg)](https://github.com/telegram-bot-rb/telegram-bot/actions/workflows/ci.yml)
+[![Lint & Test](https://github.com/telegram-bot-rb/telegram-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/telegram-bot-rb/telegram-bot/actions/workflows/ci.yml)
 
 Tools for developing Telegram bots. Best used with Rails, but can be used in
 [standalone app](https://github.com/telegram-bot-rb/telegram-bot/wiki/Not-rails-application).
