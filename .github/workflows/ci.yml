@@ -26,6 +26,8 @@ jobs:
           - gemfiles/rails_52.gemfile
         include:
           # ruby 3.x
+          - ruby: '3.2'
+            gemfile: gemfiles/rails_71.gemfile
           - ruby: '3.0'
             gemfile: gemfiles/rails_61.gemfile
           - ruby: '3.0'
