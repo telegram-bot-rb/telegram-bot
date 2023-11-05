@@ -18,12 +18,12 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - '2.5'
-          - '2.6'
+          - '2.7'
         gemfile:
           - gemfiles/rails_61.gemfile
           - gemfiles/rails_60.gemfile
           - gemfiles/rails_52.gemfile
+          - gemfiles/rails_51.gemfile
         include:
           # ruby 3.x
           - ruby: '3.2'
@@ -32,13 +32,6 @@ jobs:
             gemfile: gemfiles/rails_61.gemfile
           - ruby: '3.0'
             gemfile: gemfiles/rails_60.gemfile
-          # old rails
-          - ruby: '2.5'
-            gemfile: gemfiles/rails_51.gemfile
-          - ruby: '2.5'
-            gemfile: gemfiles/rails_50.gemfile
-          - ruby: '2.5'
-            gemfile: gemfiles/rails_42.gemfile
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
     steps:
