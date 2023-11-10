@@ -1,3 +1,8 @@
+appraise 'rails-71' do
+  gem 'actionpack', '~> 7.1.0'
+  gem 'railties', '~> 7.1.0'
+end
+
 appraise 'rails-70' do
   gem 'actionpack', '~> 7.0.0'
   gem 'railties', '~> 7.0.0'
@@ -21,14 +26,4 @@ end
 appraise 'rails-51' do
   gem 'actionpack', '~> 5.1.0'
   gem 'railties', '~> 5.1.0'
-end
-
-appraise 'rails-50' do
-  gem 'actionpack', '~> 5.0.0'
-  gem 'railties', '~> 5.0.0'
-end
-
-appraise 'rails-42' do
-  gem 'actionpack', '~> 4.2.0'
-  gem 'railties', '~> 4.2.0'
 end

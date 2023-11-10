@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 6.7
+# Bot API 6.8
 
 getUpdates
 setWebhook
@@ -68,6 +68,7 @@ closeGeneralForumTopic
 reopenGeneralForumTopic
 hideGeneralForumTopic
 unhideGeneralForumTopic
+unpinAllGeneralForumTopicMessages
 answerCallbackQuery
 setMyCommands
 deleteMyCommands
