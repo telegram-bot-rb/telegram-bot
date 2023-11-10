@@ -1,5 +1,7 @@
 # Unreleased
 
+# 0.16.0
+
 - Add `UpdatesController#webhook_request` that is set to `ActionDispatch::Request`
   in webhook mode.
 - Update to Bot API 6.8
