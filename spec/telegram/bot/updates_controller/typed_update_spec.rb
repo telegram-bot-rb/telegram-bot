@@ -15,6 +15,7 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       edited_channel_post
       my_chat_member
       chat_member
+      chat_join_request
     ]).
       map { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.to_h.
       merge(

@@ -1,5 +1,8 @@
 # Unreleased
 
+- Update to Bot API 6.8
+- Added `chat_join_request` to PAYLOAD_TYPES
+
 # 0.15.7
 
 - Add support for editMessageMedia similar to sendMediaGroup.
