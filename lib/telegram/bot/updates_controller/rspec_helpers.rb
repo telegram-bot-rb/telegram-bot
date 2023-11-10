@@ -13,8 +13,9 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
       x.extend Telegram::Bot::UpdatesController::Testing
     end
   end
-  let(:controller_args) { [bot, deep_stringify(update)] }
+  let(:controller_args) { [bot, deep_stringify(update), webhook_request] }
   let(:update) { {payload_type => payload} }
+  let(:webhook_request) { nil }
   let(:payload_type) { :some_type }
   let(:payload) { double(:payload) }
   let(:bot) { Telegram::Bot::ClientStub.new(bot_name) }
@@ -22,8 +23,8 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
   let(:session) { controller.send(:session) }
 
   # Process update.
-  def dispatch(update = self.update, bot = self.bot)
-    controller.dispatch_again(bot, deep_stringify(update))
+  def dispatch(update = self.update, bot = self.bot, webhook_request = self.webhook_request)
+    controller.dispatch_again(bot, deep_stringify(update), webhook_request)
   end
 
   # Same as `.as_json` but mocks-friendly.

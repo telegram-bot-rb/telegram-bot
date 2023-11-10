@@ -17,4 +17,13 @@ RSpec.describe 'Rack integration spec', telegram_bot: :rack do
       ActionDispatch::ParamsParser.new(app)
     end
   end
+
+  describe '#dispatch' do
+    it 'provides webhook_request' do
+      expect(controller_class).to receive(:dispatch).
+        with(bot, hash_including('message'), instance_of(ActionDispatch::Request)).
+        and_call_original
+      dispatch_message :test
+    end
+  end
 end

@@ -430,6 +430,10 @@ There are several options to run it automatically:
 - Use `Telegram::Bot::Middleware` with rack ([example in wiki](https://github.com/telegram-bot-rb/telegram-bot/wiki/Not-rails-application)).
 - Use poller (described in the next section).
 
+When controller runs in webhook mode `Telegram::Bot::Middleware` passes
+`ActionDispatch::Request` object to the `.dispatch` method.
+It's available via `#webhook_request` controller method.
+
 To run action without update (ex., send notifications from jobs),
 you can call `#process` directly. In this case controller can be initialized
 with `:from` and/or `:chat` options instead of `update` object:
