@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.16.1
+
+- Fix logger in poller mode in rails 7.1
+
 # 0.16.0
 
 - Add `UpdatesController#webhook_request` that is set to `ActionDispatch::Request`
