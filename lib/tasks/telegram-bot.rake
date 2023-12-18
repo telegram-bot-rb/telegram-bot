@@ -7,7 +7,11 @@ namespace :telegram do
       Rake::Task['environment'].invoke
       if ENV.fetch('LOG_TO_STDOUT') { Rails.env.development? }.present?
         console = ActiveSupport::Logger.new(STDERR)
-        Rails.logger.extend ActiveSupport::Logger.broadcast console
+        if ::Rails.logger.respond_to?(:broadcast_to)
+          ::Rails.logger.broadcast_to(console)
+        else
+          Rails.logger.extend ActiveSupport::Logger.broadcast console
+        end
       end
       Telegram::Bot::UpdatesPoller.start(ENV['BOT'].try!(:to_sym) || :default)
     end
