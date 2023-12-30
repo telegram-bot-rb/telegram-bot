@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     class UpdatesController
@@ -23,8 +25,8 @@ module Telegram
         def process_action(*args)
           raw_payload = {
             controller: self.class.name,
-            action:     action_name,
-            update:     update,
+            action: action_name,
+            update: update,
           }
           Instrumentation.instrument(:start_processing, raw_payload.dup)
           Instrumentation.instrument(:process_action, raw_payload) do |payload|
@@ -61,14 +63,14 @@ module Telegram
         #   end
         #
         # :api: plugin
-        def cleanup_view_runtime #:nodoc:
+        def cleanup_view_runtime # :nodoc:
           yield
         end
 
         # Every time after an action is processed, this method is invoked
         # with the payload, so you can add more information.
         # :api: plugin
-        def append_info_to_payload(_payload) #:nodoc:
+        def append_info_to_payload(_payload) # :nodoc:
         end
 
         module ClassMethods
@@ -76,7 +78,7 @@ module Telegram
           # controller process action. This method should return an array
           # with the messages to be added.
           # :api: plugin
-          def log_process_action(_payload) #:nodoc:
+          def log_process_action(_payload) # :nodoc:
             []
           end
         end

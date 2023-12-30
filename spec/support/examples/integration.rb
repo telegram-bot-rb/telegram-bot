@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'shared integration examples' do
   let(:bot) { Telegram::Bot::ClientStub.new('token') }
   let(:controller_class) do

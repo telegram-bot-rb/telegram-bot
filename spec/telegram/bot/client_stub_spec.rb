@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::ClientStub do
   describe '#stub_all!' do
     let(:client) { Telegram::Bot::Client.new('token', 'bot_name') }
-    let(:clients) { ['token', token: 'token2'].map(&Telegram::Bot::Client.method(:wrap)) }
+    let(:clients) { ['token', {token: 'token2'}].map(&Telegram::Bot::Client.method(:wrap)) }
 
     shared_examples 'constructors' do |expected_class|
       it 'makes Client.new return ClientStub' do

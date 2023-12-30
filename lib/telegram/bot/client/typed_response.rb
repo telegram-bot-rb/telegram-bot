@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/client/api_helper'
 require 'active_support/core_ext/string/inflections'
 

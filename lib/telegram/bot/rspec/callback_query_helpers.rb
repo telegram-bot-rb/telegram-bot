@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec'
 require 'telegram/bot/rspec/message_helpers'
 

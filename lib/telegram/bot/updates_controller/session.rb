@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rack/session/abstract/id'
 require 'active_support/cache'
 
@@ -27,7 +29,8 @@ module Telegram
         protected
 
         def session
-          @_session ||= self.class.build_session(session_key)
+          @_session ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+            self.class.build_session(session_key)
         end
 
         def session_key
@@ -41,7 +44,7 @@ module Telegram
         class SessionHash < Rack::Session::Abstract::SessionHash
           attr_reader :id
 
-          def initialize(store, id)
+          def initialize(store, id) # rubocop:disable Lint/MissingSuper
             @store = store
             @id = id
           end
@@ -65,13 +68,13 @@ module Telegram
 
           def commit
             return unless loaded?
-            data = to_hash.delete_if { |_, v| v.nil? }
+            data = to_hash.compact
             @store.write(id, data)
           end
         end
 
         class NullSessionHash < Session::SessionHash
-          def initialize
+          def initialize # rubocop:disable Lint/MissingSuper
             @data = {}
             @loaded = true
             @exists = true

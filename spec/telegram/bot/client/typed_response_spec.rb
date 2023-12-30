@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::Client::TypedResponse do
   let(:bot) { Telegram::Bot::Client.new('token').tap { |x| x.extend described_class } }
 

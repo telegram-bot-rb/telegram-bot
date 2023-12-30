@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     # Stubbed client for tests. Saves all requests into #requests hash.
@@ -17,7 +19,7 @@ module Telegram
       class << self
         # Any call to Client.new will return ClientStub instance when `enabled` is true.
         # Can be used with a block.
-        def stub_all!(enabled = true)
+        def stub_all!(enabled = true) # rubocop:disable Style/OptionalBooleanParameter
           Client.extend(StubbedConstructor) unless Client < StubbedConstructor
           return @_stub_all = enabled unless block_given?
           begin
@@ -34,7 +36,7 @@ module Telegram
         end
       end
 
-      def initialize(token = nil, username = nil, **options)
+      def initialize(token = nil, username = nil, **options) # rubocop:disable Lint/MissingSuper
         @token = token || options[:token]
         @username = username || options[:username] || token
         reset

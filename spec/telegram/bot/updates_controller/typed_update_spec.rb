@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
   include_context 'telegram/bot/updates_controller'
   let(:controller_class) do

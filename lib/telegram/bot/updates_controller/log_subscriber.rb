@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/log_subscriber'
 
 module Telegram
@@ -8,7 +10,7 @@ module Telegram
           info do
             payload = event.payload
             "Processing by #{payload[:controller]}##{payload[:action]}\n" \
-            "  Update: #{payload[:update].to_json}"
+              "  Update: #{payload[:update].to_json}"
           end
         end
 

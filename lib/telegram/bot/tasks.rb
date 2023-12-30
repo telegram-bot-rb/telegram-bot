@@ -7,7 +7,7 @@ module Telegram
 
       def set_webhook
         routes = Rails.application.routes.url_helpers
-        cert_file = ENV['CERT']
+        cert_file = ENV.fetch('CERT', nil)
         cert = File.open(cert_file) if cert_file
         each_bot do |key, bot|
           route_name = RoutesHelper.route_name_for_bot(bot)
@@ -16,7 +16,7 @@ module Telegram
           bot.set_webhook(
             url: url,
             certificate: cert,
-            ip_address: ENV['IP_ADDRESS'],
+            ip_address: ENV.fetch('IP_ADDRESS', nil),
             drop_pending_updates: drop_pending_updates,
           )
         end
@@ -50,13 +50,13 @@ module Telegram
       end
 
       def each_bot(&block)
-        id = ENV['BOT'].try!(:to_sym)
+        id = ENV['BOT']&.to_sym
         bots = id ? {id => Client.by_id(id)} : Telegram.bots
         bots.each { |key, bot| bot.async(false) { block[key, bot] } }
       end
 
       def drop_pending_updates
-        ENV['DROP_PENDING_UPDATES'].try!(:downcase) == 'true'
+        ENV['DROP_PENDING_UPDATES']&.downcase == 'true'
       end
     end
   end

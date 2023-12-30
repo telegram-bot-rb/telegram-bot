@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'abstract_controller'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/callbacks'
@@ -47,7 +49,7 @@ module Telegram
     #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
     #       process(:help, *args)
     #
-    class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
+    class UpdatesController < AbstractController::Base # rubocop:disable Metrics/ClassLength
       abstract!
 
       %w[
@@ -69,12 +71,12 @@ module Telegram
       include AbstractController::Callbacks
       # Redefine callbacks with default terminator.
       if ActiveSupport::VERSION::MAJOR >= 5
-        define_callbacks  :process_action,
-                          skip_after_callbacks_if_terminated: true
+        define_callbacks :process_action,
+          skip_after_callbacks_if_terminated: true
       else
-        define_callbacks  :process_action,
-                          terminator: ->(_, result) { result == false },
-                          skip_after_callbacks_if_terminated: true
+        define_callbacks :process_action,
+          terminator: ->(_, result) { result == false },
+          skip_after_callbacks_if_terminated: true
       end
 
       include Commands
@@ -126,14 +128,14 @@ module Telegram
       # that update is nil.
       # ActionDispatch::Request object is passed in `webhook_request` when bot running
       # in webhook mode.
-      def initialize(bot = nil, update = nil, webhook_request = nil)
+      def initialize(bot = nil, update = nil, webhook_request = nil) # rubocop:disable Lint/MissingSuper
         if update.is_a?(Hash) && (update.key?(:from) || update.key?(:chat))
           options = update
           update = nil
         end
         @_bot = bot
         @_update = update
-        @_chat, @_from = options && options.values_at(:chat, :from)
+        @_chat, @_from = options&.values_at(:chat, :from)
         @_payload, @_payload_type = self.class.payload_from_update(update)
         @_webhook_request = webhook_request
       end
@@ -142,13 +144,13 @@ module Telegram
       # when there is no such field in payload.
       #
       # Can be overriden with `chat` option for #initialize.
-      def chat
-        @_chat ||=
+      def chat # rubocop:disable Metrics/PerceivedComplexity
+        @_chat ||= # rubocop:disable Naming/MemoizedInstanceVariableName
           if payload
             if payload.is_a?(Hash)
-              payload['chat'] || payload['message'] && payload['message']['chat']
+              payload['chat'] || (payload['message'] && payload['message']['chat'])
             else
-              payload.try(:chat) || payload.try(:message).try!(:chat)
+              payload.try(:chat) || payload.try(:message)&.chat
             end
           end
       end
@@ -156,7 +158,8 @@ module Telegram
       # Accessor to `'from'` field of payload. Can be overriden with `from` option
       # for #initialize.
       def from
-        @_from ||= payload.is_a?(Hash) ? payload['from'] : payload.try(:from)
+        @_from ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+          payload.is_a?(Hash) ? payload['from'] : payload.try(:from)
       end
 
       # Processes current update.
@@ -221,7 +224,7 @@ module Telegram
       # Silently ignore unsupported messages to not fail when user crafts
       # an update with usupported command, callback query context, etc.
       def action_missing(action, *_args)
-        logger.debug { "The action '#{action}' is not defined in #{self.class.name}" } if logger
+        logger&.debug { "The action '#{action}' is not defined in #{self.class.name}" }
         nil
       end
 

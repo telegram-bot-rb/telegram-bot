@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     # Telegram clients can perform requests in async way with
@@ -128,7 +130,7 @@ module Telegram
       #
       # If no block is given returns previously set value or the global one,
       # set by #async=.
-      def async(val = true)
+      def async(val = true) # rubocop:disable Style/OptionalBooleanParameter
         thread_key = object_id
         thread_store = Async.thread_store
         return thread_store.fetch(thread_key) { @async } unless block_given?
@@ -137,7 +139,7 @@ module Telegram
           thread_store[thread_key] = self.class.prepare_async_val(val)
           yield
         ensure
-          if MISSING_VALUE == old_val
+          if old_val == MISSING_VALUE
             thread_store.delete(thread_key)
           else
             thread_store[thread_key] = old_val

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController::Translation do
   def self.stub_translations(translations)
     around do |ex|
