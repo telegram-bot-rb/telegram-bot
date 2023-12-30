@@ -23,7 +23,7 @@ module Telegram
       end
 
       def inspect
-        "#<#{self.class.name}(#{controller.try!(:name)})>"
+        "#<#{self.class.name}(#{controller&.name})>"
       end
     end
   end

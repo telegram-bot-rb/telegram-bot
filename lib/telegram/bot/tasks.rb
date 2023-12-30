@@ -50,13 +50,13 @@ module Telegram
       end
 
       def each_bot(&block)
-        id = ENV['BOT'].try!(:to_sym)
+        id = ENV['BOT']&.to_sym
         bots = id ? {id => Client.by_id(id)} : Telegram.bots
         bots.each { |key, bot| bot.async(false) { block[key, bot] } }
       end
 
       def drop_pending_updates
-        ENV['DROP_PENDING_UPDATES'].try!(:downcase) == 'true'
+        ENV['DROP_PENDING_UPDATES']&.downcase == 'true'
       end
     end
   end

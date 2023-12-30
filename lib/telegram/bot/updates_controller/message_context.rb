@@ -52,7 +52,7 @@ module Telegram
           val = message_context_session.delete(:context)
           context = val&.to_s
           super || (context && begin
-            args = payload['text'].try!(:split) || []
+            args = payload['text']&.split || []
             action = action_for_message_context(context)
             [[action, {type: :message_context, context: context}], args]
           end)

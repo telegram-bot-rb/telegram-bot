@@ -1,4 +1,4 @@
-# require: rubocop-rails
+require: rubocop-rails
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -67,3 +67,7 @@ Metrics/AbcSize: {Max: 21}
 Metrics/BlockLength: {Enabled: false}
 Metrics/MethodLength: {Max: 30}
 Metrics/CyclomaticComplexity: {Max: 8}
+
+Rails/IndexWith: {Enabled: false}
+Rails/RakeEnvironment: {Enabled: false}
+Rails/ShortI18n: {Enabled: false}

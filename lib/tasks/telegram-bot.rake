@@ -15,7 +15,7 @@ namespace :telegram do
           Rails.logger.extend ActiveSupport::Logger.broadcast console
         end
       end
-      Telegram::Bot::UpdatesPoller.start(ENV['BOT'].try!(:to_sym) || :default)
+      Telegram::Bot::UpdatesPoller.start(ENV['BOT']&.to_sym || :default)
     end
 
     desc 'Set webhook urls for all bots'

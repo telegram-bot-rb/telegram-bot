@@ -144,13 +144,13 @@ module Telegram
       # when there is no such field in payload.
       #
       # Can be overriden with `chat` option for #initialize.
-      def chat
+      def chat # rubocop:disable Metrics/PerceivedComplexity
         @_chat ||= # rubocop:disable Naming/MemoizedInstanceVariableName
           if payload
             if payload.is_a?(Hash)
               payload['chat'] || (payload['message'] && payload['message']['chat'])
             else
-              payload.try(:chat) || payload.try(:message).try!(:chat)
+              payload.try(:chat) || payload.try(:message)&.chat
             end
           end
       end
