@@ -18,6 +18,12 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       my_chat_member
       chat_member
       chat_join_request
+
+      # TODO: remove when added to telegram-bot-types
+      message_reaction
+      message_reaction_count
+      chat_boost
+      removed_chat_boost
     ]).
       map { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.to_h.
       merge(

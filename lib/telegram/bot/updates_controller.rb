@@ -89,11 +89,13 @@ module Telegram
 
       extend Session::ConfigMethods
 
-      PAYLOAD_TYPES = %w[
+      PAYLOAD_TYPES = Set.new(%w[
         message
         edited_message
         channel_post
         edited_channel_post
+        message_reaction
+        message_reaction_count
         inline_query
         chosen_inline_result
         callback_query
@@ -104,7 +106,9 @@ module Telegram
         my_chat_member
         chat_member
         chat_join_request
-      ].freeze
+        chat_boost
+        removed_chat_boost
+      ].freeze)
 
       class << self
         # Initialize controller and process update.
@@ -113,9 +117,28 @@ module Telegram
         end
 
         def payload_from_update(update)
-          update && PAYLOAD_TYPES.find do |type|
-            item = update[type]
-            return [item, type] if item
+          case update
+          when nil then nil
+          when Hash
+            # faster lookup for the case when telegram-bot-types is not used
+            update.find do |type, item|
+              return [item, type] if PAYLOAD_TYPES.include?(type)
+            end
+          else
+            payload_from_typed_update(update)
+          end
+        end
+
+        private
+
+        def payload_from_typed_update(update)
+          PAYLOAD_TYPES.find do |type|
+            begin
+              item = update[type]
+              return [item, type] if item
+            rescue Exception # rubocop:disable Lint/RescueException
+              # dry-rb raises exception if field is not defined in schema
+            end
           end
         end
       end
