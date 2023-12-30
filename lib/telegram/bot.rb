@@ -23,6 +23,7 @@ module Telegram
     autoload :Tasks,              'telegram/bot/tasks'
     autoload :UpdatesController,  'telegram/bot/updates_controller'
     autoload :UpdatesPoller,      'telegram/bot/updates_poller'
+    autoload :VERSION,            'telegram/bot/version'
   end
 end
 
