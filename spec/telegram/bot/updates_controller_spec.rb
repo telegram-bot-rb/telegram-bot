@@ -7,7 +7,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
     subject { controller.action_for_payload }
 
     def stub_payload(*fields)
-      Hash[fields.map { |x| [x, double(x)] }]
+      fields.map { |x| [x, double(x)] }.to_h
     end
 
     context 'when payload is inline_query' do

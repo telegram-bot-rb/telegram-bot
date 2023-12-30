@@ -46,7 +46,7 @@ module Telegram
       # from `secrets.yml` merging `telegram['bot']` at `:default` key.
       #
       # Can be overwritten with .bots_config=
-      def bots_config
+      def bots_config # rubocop:disable Metrics/PerceivedComplexity
         @bots_config ||=
           if defined?(Rails.application)
             app = Rails.application

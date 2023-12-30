@@ -8,6 +8,7 @@ RSpec.describe Telegram::Bot::UpdatesController::CallbackQueryContext do
       include described_class
 
       attr_accessor :filter_done
+
       before_action only: :ctx_2_callback_query do
         self.filter_done = true
       end

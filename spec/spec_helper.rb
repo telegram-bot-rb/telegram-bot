@@ -20,7 +20,7 @@ require 'telegram/bot/updates_controller/rspec_helpers'
 require 'telegram/bot/types'
 require 'active_support/json'
 
-Dir[GEM_ROOT.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[GEM_ROOT.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

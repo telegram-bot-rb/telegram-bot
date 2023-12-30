@@ -18,7 +18,7 @@ module Telegram
         # everything will be rewriten with #initialize.
         #
         # With `full` set to `true` it'll clear all cached instance variables.
-        def recycle!(full = false)
+        def recycle!(full = false) # rubocop:disable Style/OptionalBooleanParameter
           return unless full
           (instance_variables - IVARS_TO_KEEP).each do |ivar|
             remove_instance_variable(ivar)
@@ -29,7 +29,8 @@ module Telegram
 
         # Stubs session.
         def session
-          @_session ||= Session::NullSessionHash.new
+          @_session ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+            Session::NullSessionHash.new
         end
       end
     end

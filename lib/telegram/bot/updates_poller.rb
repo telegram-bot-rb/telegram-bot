@@ -38,7 +38,7 @@ module Telegram
       end
 
       def log(&block)
-        logger.info(&block) if logger
+        logger&.info(&block)
       end
 
       def start
@@ -58,7 +58,7 @@ module Telegram
       def run
         while running
           updates = fetch_updates
-          process_updates(updates) if updates && updates.any?
+          process_updates(updates) if updates&.any?
         end
       end
 
@@ -84,8 +84,8 @@ module Telegram
             process_update(update)
           end
         end
-      rescue StandardError => e
-        logger.error { ([e.message] + e.backtrace).join("\n") } if logger
+      rescue StandardError => exception
+        logger&.error { ([exception.message] + exception.backtrace).join("\n") }
       end
 
       # Override this method to setup custom error collector.
@@ -104,10 +104,8 @@ module Telegram
       end
 
       if defined?(Rails.application) && Rails.application.respond_to?(:reloader)
-        def reloading_code
-          Rails.application.reloader.wrap do
-            yield
-          end
+        def reloading_code(&block)
+          Rails.application.reloader.wrap(&block)
         end
       else
         def reloading_code

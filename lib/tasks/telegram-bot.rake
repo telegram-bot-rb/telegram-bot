@@ -8,9 +8,9 @@ namespace :telegram do
       ENV['BOT_POLLER_MODE'] = 'true'
       Rake::Task['environment'].invoke
       if ENV.fetch('LOG_TO_STDOUT') { Rails.env.development? }.present?
-        console = ActiveSupport::Logger.new(STDERR)
-        if ::Rails.logger.respond_to?(:broadcast_to)
-          ::Rails.logger.broadcast_to(console)
+        console = ActiveSupport::Logger.new($stderr)
+        if Rails.logger.respond_to?(:broadcast_to)
+          Rails.logger.broadcast_to(console)
         else
           Rails.logger.extend ActiveSupport::Logger.broadcast console
         end

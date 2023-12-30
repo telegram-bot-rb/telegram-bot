@@ -63,7 +63,7 @@ module Telegram
 
           attr_reader :performed_requests, :description
 
-          def initialize(bot, action, description: nil)
+          def initialize(bot, action, description: nil) # rubocop:disable Lint/MissingSuper
             @bot = bot
             @action = action
             @description = description || "make #{action} telegram request"

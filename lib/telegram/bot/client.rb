@@ -6,8 +6,8 @@ require 'httpclient'
 module Telegram
   module Bot
     class Client
-      SERVER = 'https://api.telegram.org'.freeze
-      URL_TEMPLATE = '%<server>s/bot%<token>s/'.freeze
+      SERVER = 'https://api.telegram.org'
+      URL_TEMPLATE = '%<server>s/bot%<token>s/'
 
       autoload :RequestBodyFormatter, 'telegram/bot/client/request_body_formatter'
       autoload :TypedResponse, 'telegram/bot/client/typed_response'

@@ -1,4 +1,4 @@
-require: rubocop-rails
+# require: rubocop-rails
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -9,13 +9,8 @@ AllCops:
 
 Gemspec/DevelopmentDependencies: {Enabled: false}
 
-Layout/ParameterAlignment:
-  # Disable, till rubocop supports combination of styles.
-  # Use one of this styles where appropriate, keep it clean, compact and readable.
-  Enabled: false
-  # EnforcedStyle:
-  # - with_first_parameter
-  # - with_fixed_indentation
+Layout/ArgumentAlignment: {EnforcedStyle: with_fixed_indentation}
+Layout/ParameterAlignment: {EnforcedStyle: with_fixed_indentation}
 
 # Breaks
 #
@@ -27,8 +22,10 @@ Layout/ClosingParenthesisIndentation: {Enabled: false}
 Layout/DotPosition: {EnforcedStyle: trailing}
 Layout/EmptyLineAfterGuardClause: {Enabled: false}
 Layout/FirstParameterIndentation: {EnforcedStyle: consistent}
-# Same as Layout/ClosingParenthesisIndentation
+Layout/LineContinuationLeadingSpace: {Enabled: false}
+Layout/LineEndStringConcatenationIndentation: {EnforcedStyle: indented}
 Layout/LineLength: {Max: 100}
+# Same as Layout/ClosingParenthesisIndentation
 Layout/MultilineMethodCallBraceLayout: {Enabled: false}
 Layout/MultilineMethodCallIndentation: {EnforcedStyle: indented}
 Layout/MultilineOperationIndentation: {EnforcedStyle: indented}
@@ -40,7 +37,12 @@ Lint/EmptyBlock:
   Exclude:
     - spec/**/*
 
+Naming/FileName:
+  Exclude:
+    - lib/tasks/telegram-bot.rake
+Naming/MethodParameterName: {MinNameLength: 2}
 Naming/PredicateName: {Enabled: false}
+Naming/RescuedExceptionsVariableName: {PreferredName: exception}
 Naming/VariableNumber: {EnforcedStyle: snake_case}
 
 Style/Alias: {Enabled: false}

@@ -12,7 +12,7 @@ module Telegram
       end
 
       config.before_initialize do
-        ::ActionDispatch::Routing::Mapper.send(:include, RoutesHelper)
+        ::ActionDispatch::Routing::Mapper.include RoutesHelper
       end
 
       initializer 'telegram.bot.updates_controller.set_config' do |app|
