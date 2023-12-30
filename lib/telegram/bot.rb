@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/config_methods'
 
 module Telegram

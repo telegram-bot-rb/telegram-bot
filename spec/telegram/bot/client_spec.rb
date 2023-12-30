@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::Client do
   let(:instance) { described_class.new 'token' }
   let(:token) { 'token' }
@@ -73,8 +75,8 @@ RSpec.describe Telegram::Bot::Client do
 
   describe '.prepare_async_args' do
     subject { described_class.prepare_async_args(*input) }
-    let(:input) { [:action, a: 1, b: :sym, c: [:other], 'd' => 'str'] }
-    it { should eq ['action', a: 1, b: 'sym', c: '["other"]', 'd' => 'str'] }
+    let(:input) { [:action, {a: 1, b: :sym, c: [:other], 'd' => 'str'}] }
+    it { should eq ['action', {a: 1, b: 'sym', c: '["other"]', 'd' => 'str'}] }
   end
 
   describe '.new' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec/integration/shared'
 require 'rack/test'
 

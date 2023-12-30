@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/routes_helper'
 
 RSpec.describe Telegram::Bot::RoutesHelper do
@@ -46,7 +48,7 @@ RSpec.describe Telegram::Bot::RoutesHelper do
     let(:controller) { double(:controller, name: :controller) }
     before { allow(Telegram).to receive(:bots) { bots } }
 
-    def assert_route(bot, controller, path: nil, **expected_options) # rubocop:disable AbcSize
+    def assert_route(bot, controller, path: nil, **expected_options) # rubocop:disable Metrics/AbcSize
       path ||= "telegram/#{described_class.token_hash(bot.token)}"
       expect(mapper).to receive(:post) do |actual_path, actual_options|
         expect(actual_path).to eq(path)

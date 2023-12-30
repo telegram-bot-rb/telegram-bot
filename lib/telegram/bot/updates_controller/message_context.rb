@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     class UpdatesController
@@ -52,7 +54,7 @@ module Telegram
           super || context && begin
             args = payload['text'].try!(:split) || []
             action = action_for_message_context(context)
-            [[action, type: :message_context, context: context], args]
+            [[action, {type: :message_context, context: context}], args]
           end
         end
 

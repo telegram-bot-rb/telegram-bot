@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     # Supposed to be used in development environments only.
     class UpdatesPoller
       class << self
-        @@instances = {} # rubocop:disable ClassVars
+        @@instances = {} # rubocop:disable Style/ClassVars
 
         def instances
           @@instances

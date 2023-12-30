@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/updates_controller/testing'
 require 'telegram/bot/rspec/message_helpers'
 require 'telegram/bot/rspec/callback_query_helpers'

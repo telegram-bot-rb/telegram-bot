@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/string/inflections'
 
 module Telegram
   module Bot
     class Client
       module ApiHelper
-        METHODS_LIST_FILE = File.expand_path('../api_methods.txt', __FILE__)
+        METHODS_LIST_FILE = File.expand_path('api_methods.txt', __dir__)
 
         class << self
           def methods_list(file = METHODS_LIST_FILE)

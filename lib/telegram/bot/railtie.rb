@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/routes_helper'
 
 module Telegram

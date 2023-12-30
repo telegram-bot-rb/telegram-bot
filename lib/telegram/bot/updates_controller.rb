@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'abstract_controller'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/callbacks'
@@ -47,7 +49,7 @@ module Telegram
     #     ControllerClass.new(bot, from: telegram_user, chat: telegram_chat).
     #       process(:help, *args)
     #
-    class UpdatesController < AbstractController::Base # rubocop:disable ClassLength
+    class UpdatesController < AbstractController::Base # rubocop:disable Metrics/ClassLength
       abstract!
 
       %w[

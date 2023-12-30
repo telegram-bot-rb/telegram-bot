@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     # Stubbed client for tests. Saves all requests into #requests hash.

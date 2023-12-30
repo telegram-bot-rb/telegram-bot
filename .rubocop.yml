@@ -1,9 +1,15 @@
-# Rubocop does not support 2.0
-Gemspec/RequiredRubyVersion: {Enabled: false}
+require: rubocop-rails
 
-Rails: {Enabled: true}
+AllCops:
+  TargetRubyVersion: 2.4
+  NewCops: enable
+  Exclude:
+    - gemfiles/*
+    - tmp/*
 
-Layout/AlignParameters:
+Gemspec/DevelopmentDependencies: {Enabled: false}
+
+Layout/ParameterAlignment:
   # Disable, till rubocop supports combination of styles.
   # Use one of this styles where appropriate, keep it clean, compact and readable.
   Enabled: false
@@ -19,8 +25,10 @@ Layout/AlignParameters:
 #   )
 Layout/ClosingParenthesisIndentation: {Enabled: false}
 Layout/DotPosition: {EnforcedStyle: trailing}
+Layout/EmptyLineAfterGuardClause: {Enabled: false}
 Layout/FirstParameterIndentation: {EnforcedStyle: consistent}
 # Same as Layout/ClosingParenthesisIndentation
+Layout/LineLength: {Max: 100}
 Layout/MultilineMethodCallBraceLayout: {Enabled: false}
 Layout/MultilineMethodCallIndentation: {EnforcedStyle: indented}
 Layout/MultilineOperationIndentation: {EnforcedStyle: indented}
@@ -28,6 +36,9 @@ Layout/SpaceInsideHashLiteralBraces: {EnforcedStyle: no_space}
 
 # Offences named scopes and `expect {}.to change {}`.
 Lint/AmbiguousBlockAssociation: {Enabled: false}
+Lint/EmptyBlock:
+  Exclude:
+    - spec/**/*
 
 Naming/PredicateName: {Enabled: false}
 Naming/VariableNumber: {EnforcedStyle: snake_case}
@@ -45,12 +56,12 @@ Style/ModuleFunction: {Enabled: false}
 Style/NestedParenthesizedCalls: {Enabled: false}
 Style/SignalException: {EnforcedStyle: only_raise}
 Style/TrailingCommaInArguments: {Enabled: false}
-Style/TrailingCommaInLiteral: {EnforcedStyleForMultiline: comma}
+Style/TrailingCommaInArrayLiteral: {EnforcedStyleForMultiline: comma}
+Style/TrailingCommaInHashLiteral: {EnforcedStyleForMultiline: comma}
 
 Metrics/AbcSize: {Max: 21}
 # Other metrics are just enough.
 # This one offences all specs, routes and some initializers.
 Metrics/BlockLength: {Enabled: false}
-Metrics/LineLength: {Max: 100}
 Metrics/MethodLength: {Max: 30}
 Metrics/CyclomaticComplexity: {Max: 8}

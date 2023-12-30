@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/rescuable'
 
 module Telegram
@@ -11,7 +13,7 @@ module Telegram
 
         def process_action(*)
           super
-        rescue Exception => exception # rubocop:disable RescueException
+        rescue Exception => exception # rubocop:disable Lint/RescueException
           rescue_with_handler(exception) || raise
         end
       end

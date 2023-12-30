@@ -1,5 +1,7 @@
 # Unreleased
 
+- Add `# frozen_string_literal: true` to all source files.
+
 # 0.16.1
 
 - Fix logger in poller mode in rails 7.1

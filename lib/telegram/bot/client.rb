@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/hash/keys'
 require 'httpclient'
 
@@ -41,7 +43,7 @@ module Telegram
         end
 
         def error_for_response(response)
-          result = JSON.parse(response.body) rescue nil # rubocop:disable RescueModifier
+          result = JSON.parse(response.body) rescue nil # rubocop:disable Style/RescueModifier
           return Error.new(response.reason) unless result
           message = result['description'] || '-'
           # This errors are raised only for valid responses from Telegram

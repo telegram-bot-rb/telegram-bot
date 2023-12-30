@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     module RSpec
@@ -68,7 +70,7 @@ module Telegram
             exactly(1)
           end
 
-          def matches?(proc) # rubocop:disable AbcSize
+          def matches?(proc) # rubocop:disable Metrics/AbcSize
             raise ArgumentError, 'matcher only supports block expectations' unless proc.is_a?(Proc)
             original_requests_count = bot.requests[action].count
             proc.call

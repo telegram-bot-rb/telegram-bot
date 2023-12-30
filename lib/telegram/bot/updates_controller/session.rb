@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rack/session/abstract/id'
 require 'active_support/cache'
 

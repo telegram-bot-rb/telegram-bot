@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :telegram do
   namespace :bot do
     desc 'Run poller. It broadcasts Rails.logger to STDOUT in dev like `rails s` do. ' \

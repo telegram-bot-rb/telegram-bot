@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController do
   include_context 'telegram/bot/updates_controller'
 
@@ -90,7 +92,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
 
   describe '#process' do
     subject { -> { controller.process(:action, *args) } }
-    let(:args) { %i[arg1 arg2] }
+    let(:args) { %i[arg_1 arg_2] }
     let(:controller_class) do
       Class.new(described_class) do
         attr_reader :acted, :hooked
@@ -198,7 +200,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
     end
 
     context 'when options hash is given' do
-      let(:controller_args) { [bot, from: from, chat: chat] }
+      let(:controller_args) { [bot, {from: from, chat: chat}] }
       with_reinitialize do
         its(:bot) { should eq bot }
         its(:update) { should eq nil }

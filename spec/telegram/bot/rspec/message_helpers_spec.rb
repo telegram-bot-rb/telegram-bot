@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec/integration/poller'
 
 RSpec.describe 'Integration: message helpers', telegram_bot: :poller do
@@ -108,7 +110,7 @@ RSpec.describe 'Integration: message helpers', telegram_bot: :poller do
     end
 
     context 'with options' do
-      let(:args) { ['asd', 'qwe', option: 1] }
+      let(:args) { ['asd', 'qwe', {option: 1}] }
       it { should respond_with_message "Start: #{args[0...-1].inspect}, option: 1" }
     end
   end

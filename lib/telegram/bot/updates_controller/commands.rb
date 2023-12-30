@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     class UpdatesController
@@ -34,7 +36,7 @@ module Telegram
         def action_for_message
           cmd, args = Commands.command_from_text(payload['text'], bot_username)
           return unless cmd
-          [[action_for_command(cmd), type: :command, command: cmd], args]
+          [[action_for_command(cmd), {type: :command, command: cmd}], args]
         end
 
         alias_method :action_for_channel_post, :action_for_message
