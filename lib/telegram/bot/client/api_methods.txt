@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 6.8
+# Bot API 7.0
 
 getUpdates
 setWebhook
@@ -11,7 +11,9 @@ logOut
 close
 sendMessage
 forwardMessage
+forwardMessages
 copyMessage
+copyMessages
 sendPhoto
 sendAudio
 sendDocument
@@ -26,6 +28,7 @@ sendContact
 sendPoll
 sendDice
 sendChatAction
+setMessageReaction
 getUserProfilePhotos
 getFile
 banChatMember
@@ -70,6 +73,7 @@ hideGeneralForumTopic
 unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
+getUserChatBoosts
 setMyCommands
 deleteMyCommands
 getMyCommands
@@ -92,6 +96,7 @@ stopMessageLiveLocation
 editMessageReplyMarkup
 stopPoll
 deleteMessage
+deleteMessages
 
 sendSticker
 getStickerSet
