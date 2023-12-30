@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.16.2
+
+- Update to Bot API 7.0
+
 # 0.16.1
 
 - Fix logger in poller mode in rails 7.1
