@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'action_dispatch'
 
 RSpec.describe Telegram::Bot::UpdatesController::Testing do
@@ -43,7 +45,7 @@ RSpec.describe Telegram::Bot::UpdatesController::Testing do
 
     context 'when webhook_request is given' do
       it 'passes it to controller' do
-        webhook_request = ::ActionDispatch::Request.new({})
+        webhook_request = ActionDispatch::Request.new({})
         dispatch(update, bot, webhook_request)
         expect(controller.webhook_request).to eq webhook_request
       end

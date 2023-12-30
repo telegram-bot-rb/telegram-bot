@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     module DebugClient
-      def debug!(dev = STDOUT)
+      def debug!(dev = $stdout)
         if block_given?
           begin
             old_dev = client.debug_dev

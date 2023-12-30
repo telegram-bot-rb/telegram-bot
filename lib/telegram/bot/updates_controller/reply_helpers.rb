@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     class UpdatesController
@@ -59,9 +61,9 @@ module Telegram
         # Edit message from callback query.
         def edit_message(type, params = {})
           params =
-            if message_id = payload['inline_message_id'] # rubocop:disable AssignmentInCondition
+            if message_id = payload['inline_message_id'] # rubocop:disable Lint/AssignmentInCondition
               params.merge(inline_message_id: message_id)
-            elsif message = payload['message'] # rubocop:disable AssignmentInCondition
+            elsif message = payload['message'] # rubocop:disable Lint/AssignmentInCondition
               params.merge(chat_id: message['chat']['id'], message_id: message['message_id'])
             else
               raise 'Can not edit message without `inline_message_id` or `message`'

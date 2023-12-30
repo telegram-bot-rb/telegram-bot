@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::Async::Job do
   let(:job_class) do
     described_class = self.described_class

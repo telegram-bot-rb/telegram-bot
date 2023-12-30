@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rack/mock'
 
 RSpec.describe Telegram::Bot::Middleware do
@@ -11,7 +13,7 @@ RSpec.describe Telegram::Bot::Middleware do
     let(:env) do
       Rack::MockRequest.env_for('/',
         method: :post,
-        input:  JSON.dump(update),
+        input: JSON.dump(update),
         'CONTENT_TYPE' => 'application/json',
       )
     end

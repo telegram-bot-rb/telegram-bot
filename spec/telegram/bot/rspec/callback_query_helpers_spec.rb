@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec/integration/poller'
 
 RSpec.describe 'Integration spec helpers', telegram_bot: :poller do

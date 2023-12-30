@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec/integration/rails'
 require 'action_controller'
 require 'action_dispatch'

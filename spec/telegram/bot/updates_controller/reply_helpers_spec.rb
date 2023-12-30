@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController do
   include_context 'telegram/bot/updates_controller'
   let(:params) { {arg: 1, 'other_arg' => 2} }
@@ -38,7 +40,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
     end
 
     context 'when update is not set' do
-      let(:controller_args) { [bot, chat: deep_stringify(chat)] }
+      let(:controller_args) { [bot, {chat: deep_stringify(chat)}] }
       it 'sets chat_id' do
         expect(bot).to receive("send_#{respond_type}").
           with(params.merge(chat_id: chat[:id])) { result }

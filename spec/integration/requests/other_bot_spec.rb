@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'integration_helper'
 
 RSpec.describe OtherBotController, telegram_bot: :rails do

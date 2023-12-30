@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Shared helpers for testing message updates.
 RSpec.shared_context 'telegram/bot/message_helpers' do
   let(:default_message_options) { {from: from, chat: chat} }

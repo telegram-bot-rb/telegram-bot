@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController::Commands do
   describe '#action_for_command' do
     subject { ->(*args) { object.action_for_command(*args) } }
@@ -88,11 +90,11 @@ RSpec.describe Telegram::Bot::UpdatesController::Commands do
         context 'with command' do
           let(:text) { "/test#{"@#{mention}" if mention} arg 1 2" }
           let(:mention) {}
-          it { should eq [['test!', type: :command, command: 'test'], %w[arg 1 2]] }
+          it { should eq [['test!', {type: :command, command: 'test'}], %w[arg 1 2]] }
 
           context 'with mention' do
             let(:mention) { bot.username }
-            it { should eq [['test!', type: :command, command: 'test'], %w[arg 1 2]] }
+            it { should eq [['test!', {type: :command, command: 'test'}], %w[arg 1 2]] }
           end
 
           context 'with mention for other bot' do

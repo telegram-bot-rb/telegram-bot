@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'telegram/bot/rspec/integration/rack'
 
 RSpec.describe 'Rack integration spec', telegram_bot: :rack do

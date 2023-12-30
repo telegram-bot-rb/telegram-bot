@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::Client::RequestBodyFormatter do
   describe '.format' do
     subject { described_class.format(input, action) }

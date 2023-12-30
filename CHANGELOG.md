@@ -3,6 +3,7 @@
 # 0.16.2
 
 - Update to Bot API 7.0
+- Add `# frozen_string_literal: true` to all source files.
 
 # 0.16.1
 

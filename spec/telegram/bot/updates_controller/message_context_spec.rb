@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
   include_context 'telegram/bot/updates_controller'
   let(:controller_class) do
@@ -6,11 +8,13 @@ RSpec.describe Telegram::Bot::UpdatesController::MessageContext do
       include described_class
 
       attr_accessor :filter_done
+
       before_action only: :context_with_filter do
         self.filter_done = true
       end
 
       attr_reader :callbacks_runs
+
       before_action { @callbacks_runs = (@callbacks_runs || 0) + 1 }
 
       def message(*args)

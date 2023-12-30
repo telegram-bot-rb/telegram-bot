@@ -1,4 +1,6 @@
-lib = File.expand_path('../lib', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'telegram/bot/version'
 
@@ -11,6 +13,10 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Library for building Telegram Bots with Rails integration'
   spec.homepage      = 'https://github.com/telegram-bot-rb/telegram-bot'
   spec.license       = 'MIT'
+
+  spec.metadata      = {
+    'rubygems_mfa_required' => 'true',
+  }
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^spec/}) }
   spec.bindir        = 'exe'

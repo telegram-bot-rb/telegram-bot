@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     module RSpec
@@ -61,14 +63,14 @@ module Telegram
 
           attr_reader :performed_requests, :description
 
-          def initialize(bot, action, description: nil)
+          def initialize(bot, action, description: nil) # rubocop:disable Lint/MissingSuper
             @bot = bot
             @action = action
             @description = description || "make #{action} telegram request"
             exactly(1)
           end
 
-          def matches?(proc) # rubocop:disable AbcSize
+          def matches?(proc) # rubocop:disable Metrics/AbcSize
             raise ArgumentError, 'matcher only supports block expectations' unless proc.is_a?(Proc)
             original_requests_count = bot.requests[action].count
             proc.call

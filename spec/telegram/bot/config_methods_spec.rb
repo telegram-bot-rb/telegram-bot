@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::ConfigMethods do
   let(:registry) do
     Object.new.tap do |x|

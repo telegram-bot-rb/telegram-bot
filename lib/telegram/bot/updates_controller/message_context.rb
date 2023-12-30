@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Telegram
   module Bot
     class UpdatesController
@@ -48,12 +50,12 @@ module Telegram
         # it has higher priority than contextual action.
         def action_for_message
           val = message_context_session.delete(:context)
-          context = val && val.to_s
-          super || context && begin
-            args = payload['text'].try!(:split) || []
+          context = val&.to_s
+          super || (context && begin
+            args = payload['text']&.split || []
             action = action_for_message_context(context)
-            [[action, type: :message_context, context: context], args]
-          end
+            [[action, {type: :message_context, context: context}], args]
+          end)
         end
 
         # Save context for the next request.

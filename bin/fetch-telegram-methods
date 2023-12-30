@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 #
 # Fetch list of methods from Telegram docs.
 # Use it to update client.rb.
@@ -6,7 +8,7 @@
 require 'net/http'
 require 'nokogiri'
 
-DOCS_URL = 'https://core.telegram.org/bots/api'.freeze
+DOCS_URL = 'https://core.telegram.org/bots/api'
 
 page_html = Net::HTTP.get(URI(DOCS_URL))
 doc = Nokogiri::HTML(page_html)
@@ -18,11 +20,11 @@ headers = doc.css('h3, h4').
   map { |g| g.map(&:text) }
 
 # Method starts with lowercase and does not have spaces.
-NOT_METHOD_REGEXP = /(\A[^a-z])|\s/
+NOT_METHOD_REGEXP = /(\A[^a-z])|\s/.freeze
 
 # Filter method names.
 method_list = headers.
-  map { |g| g.reject { |x| x.match?(NOT_METHOD_REGEXP) } }.
+  map { |g| g.grep_v(NOT_METHOD_REGEXP) }.
   reject(&:empty?)
 
 api_version = doc.text.match(/^(?:Introducing )?(Bot API ([\d\.]+))\.?$/)

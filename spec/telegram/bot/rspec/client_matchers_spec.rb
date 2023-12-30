@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::RSpec::ClientMatchers do
   let(:bot) { Telegram::Bot::ClientStub.new('TestBot') }
   let(:other_bot) { Telegram::Bot::ClientStub.new('OtherTestBot') }

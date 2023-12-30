@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/hash/keys'
 require 'httpclient'
 
 module Telegram
   module Bot
     class Client
-      SERVER = 'https://api.telegram.org'.freeze
-      URL_TEMPLATE = '%<server>s/bot%<token>s/'.freeze
+      SERVER = 'https://api.telegram.org'
+      URL_TEMPLATE = '%<server>s/bot%<token>s/'
 
       autoload :RequestBodyFormatter, 'telegram/bot/client/request_body_formatter'
       autoload :TypedResponse, 'telegram/bot/client/typed_response'
@@ -41,7 +43,7 @@ module Telegram
         end
 
         def error_for_response(response)
-          result = JSON.parse(response.body) rescue nil # rubocop:disable RescueModifier
+          result = JSON.parse(response.body) rescue nil # rubocop:disable Style/RescueModifier
           return Error.new(response.reason) unless result
           message = result['description'] || '-'
           # This errors are raised only for valid responses from Telegram

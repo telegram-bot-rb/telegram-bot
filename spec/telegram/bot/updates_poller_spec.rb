@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Telegram::Bot::UpdatesPoller do
   let(:instance) { described_class.new(bot, controller) }
   let(:bot) { Telegram::Bot::Client.new('token') }
