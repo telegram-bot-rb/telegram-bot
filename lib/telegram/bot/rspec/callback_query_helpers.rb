@@ -9,7 +9,7 @@ RSpec.shared_context 'telegram/bot/callback_query' do
 
   subject { -> { dispatch callback_query: payload } }
   let(:payload) { {id: callback_query_id, from: from, message: message, data: data} }
-  let(:callback_query_id) { 11 }
+  let(:callback_query_id) { '11' }
   let(:message_id) { 22 }
   let(:message) { {message_id: message_id, chat: chat, text: 'message text'} }
   let(:data) { raise '`let(:data) { "callback query data here" }` is required' }
