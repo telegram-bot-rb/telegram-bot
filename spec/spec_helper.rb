@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'pathname'
-require 'pry'
+require 'debug'
 require 'rspec/its'
 
 if ENV['CI']
