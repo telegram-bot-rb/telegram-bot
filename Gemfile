@@ -6,8 +6,7 @@ gemspec
 group :development do
   gem 'appraisal', '~> 2.2'
 
-  gem 'pry', '~> 0.14.1'
-  gem 'pry-byebug', '~> 3.10.1'
+  gem 'debug', '~> 1.9.2'
   gem 'sdoc', '~> 2.0.3'
 
   gem 'telegram-bot-types', '~> 0.6.3'
