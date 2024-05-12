@@ -94,6 +94,10 @@ module Telegram
         edited_message
         channel_post
         edited_channel_post
+        business_connection
+        business_message
+        edited_business_message
+        deleted_business_messages
         message_reaction
         message_reaction_count
         inline_query

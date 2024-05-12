@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 7.0
+# Bot API 7.3
 
 getUpdates
 setWebhook
@@ -74,6 +74,7 @@ unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
 getUserChatBoosts
+getBusinessConnection
 setMyCommands
 deleteMyCommands
 getMyCommands
@@ -106,6 +107,7 @@ createNewStickerSet
 addStickerToSet
 setStickerPositionInSet
 deleteStickerFromSet
+replaceStickerInSet
 setStickerEmojiList
 setStickerKeywords
 setStickerMaskPosition

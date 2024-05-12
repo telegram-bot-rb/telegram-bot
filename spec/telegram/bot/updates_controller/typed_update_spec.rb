@@ -20,6 +20,10 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       chat_join_request
 
       # TODO: remove when added to telegram-bot-types
+      business_connection
+      business_message
+      edited_business_message
+      deleted_business_messages
       message_reaction
       message_reaction_count
       chat_boost
