@@ -33,6 +33,9 @@ RSpec.describe Telegram::Bot::RSpec::ClientMatchers do
         args = {text: 'test', parseMode: :Markdown}
         block = ->(*) { bot.send_message(args) }
         expect(&block).to make_telegram_request(bot, :sendMessage).with(args)
+        expect do
+          expect(&block).to make_telegram_request(bot, :sendMessage).with(args.merge(extra: 1))
+        end.to raise_error RSpec::Expectations::ExpectationNotMetError
         expect(&block).to_not make_telegram_request(bot, :sendMessage).with(args.except(:text))
         expect { 3.times(&block) }.to make_telegram_request(bot, :sendMessage).
           with(args).exactly(3).times

@@ -117,15 +117,15 @@ module Telegram
             :arg_list_matcher, :matching_requests_count
 
           def base_message
-            "make #{expectation_type.to_s.tr('_', ' ')} #{expected_number} " \
-              "#{bot.inspect}.#{action} requests,".tap do |msg|
-              msg << " with #{arg_list_matcher}," if arg_list_matcher
-              msg << " but made #{matching_requests_count}"
-              if performed_requests
-                actual_args = performed_requests.map(&:inspect).join(', ')
-                msg << ", and #{performed_requests.count} with #{actual_args}"
-              end
+            msg = "make #{expectation_type.to_s.tr('_', ' ')} #{expected_number} " \
+              "#{bot.inspect}.#{action} requests,"
+            msg += " with #{arg_list_matcher}," if arg_list_matcher
+            msg += " but made #{matching_requests_count}"
+            if performed_requests
+              actual_args = performed_requests.map(&:inspect).join(', ')
+              msg += ", and #{performed_requests.count} with #{actual_args}"
             end
+            msg
           end
         end
 
