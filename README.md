@@ -140,6 +140,21 @@ I suggest not using Rails 5.2 credentials because it can lead to leakage of sens
 and it's more difficult to use in multiple environments. See
 [secure_credentials](https://github.com/printercu/secure_credentials) gem for better option.
 
+Here is a working example for Rails 6.0 credentials:
+
+```
+$ bundle exec rails credentials:show
+# Used as the base secret for all MessageVerifiers in Rails, including the one protecting cookies.
+secret_key_base:...
+
+telegram:
+  bot: ...
+  
+$ bundle exec rails credentials:show --environment development
+telegram:
+  bot: ...
+```
+
 From now clients will be accessible with `Telegram.bots[:chat]` or `Telegram.bots[:auction]`.
 Single bot can be accessed with `Telegram.bot` or `Telegram.bots[:default]`.
 
