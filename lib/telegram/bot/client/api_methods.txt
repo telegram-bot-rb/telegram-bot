@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 7.3
+# Bot API 7.5
 
 getUpdates
 setWebhook
@@ -123,6 +123,8 @@ sendInvoice
 createInvoiceLink
 answerShippingQuery
 answerPreCheckoutQuery
+getStarTransactions
+refundStarPayment
 
 setPassportDataErrors
 
