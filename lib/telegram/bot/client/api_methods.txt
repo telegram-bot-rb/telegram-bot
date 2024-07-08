@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 7.5
+# Bot API 7.7
 
 getUpdates
 setWebhook
@@ -21,6 +21,7 @@ sendVideo
 sendAnimation
 sendVoice
 sendVideoNote
+sendPaidMedia
 sendMediaGroup
 sendLocation
 sendVenue
