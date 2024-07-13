@@ -1,5 +1,8 @@
 # Unreleased
 
+- Update to Bot API 7.7
+- Added `pre_checkout_query` to PAYLOAD_TYPES
+
 # 0.16.2
 
 - Update to Bot API 7.3

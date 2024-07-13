@@ -49,6 +49,7 @@ RSpec.describe Telegram::Bot::UpdatesController do
       callback_query
       poll_answer
       chat_join_request
+      pre_checkout_query
     ]
     (described_class::PAYLOAD_TYPES - custom_payload_types).each do |type|
       context "when payload is #{type}" do
