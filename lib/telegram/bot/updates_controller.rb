@@ -112,6 +112,7 @@ module Telegram
         chat_join_request
         chat_boost
         removed_chat_boost
+        pre_checkout_query
       ].freeze)
 
       class << self
