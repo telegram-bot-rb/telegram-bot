@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 7.7
+# Bot API 7.9
 
 getUpdates
 setWebhook
@@ -43,6 +43,8 @@ setChatPermissions
 exportChatInviteLink
 createChatInviteLink
 editChatInviteLink
+createChatSubscriptionInviteLink
+editChatSubscriptionInviteLink
 revokeChatInviteLink
 approveChatJoinRequest
 declineChatJoinRequest
