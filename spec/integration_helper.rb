@@ -15,7 +15,11 @@ ENV['RAILS_ENV'] = 'test'
 class TestApplication < Rails::Application
   config.eager_load = false
   config.log_level = :debug
-  config.action_dispatch.show_exceptions = false
+  if ActionPack::VERSION::MAJOR >= 7 && ActionPack::VERSION::MINOR >= 2
+    config.action_dispatch.show_exceptions = :none
+  else
+    config.action_dispatch.show_exceptions = false
+  end
   routes.default_url_options = {host: 'test.rpsec'}
 
   telegram_config = {
