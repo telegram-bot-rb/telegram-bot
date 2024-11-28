@@ -1,5 +1,7 @@
 # Unreleased
 
+- Rails 8.0 support
+
 # 0.16.4
 
 - Rails 7.2 support

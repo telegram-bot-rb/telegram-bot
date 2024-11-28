@@ -15,7 +15,8 @@ ENV['RAILS_ENV'] = 'test'
 class TestApplication < Rails::Application
   config.eager_load = false
   config.log_level = :debug
-  if ActionPack::VERSION::MAJOR >= 7 && ActionPack::VERSION::MINOR >= 2
+  if (ActionPack::VERSION::MAJOR >= 8) ||
+      (ActionPack::VERSION::MAJOR == 7 && ActionPack::VERSION::MINOR >= 2)
     config.action_dispatch.show_exceptions = :none
   else
     config.action_dispatch.show_exceptions = false
