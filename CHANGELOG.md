@@ -1,6 +1,7 @@
 # Unreleased
 
 - Rails 8.0 support
+- Update to Bot API 8.0
 
 # 0.16.4
 

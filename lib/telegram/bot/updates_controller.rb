@@ -105,6 +105,7 @@ module Telegram
         callback_query
         shipping_query
         pre_checkout_query
+        purchased_paid_media
         poll
         poll_answer
         my_chat_member
@@ -112,7 +113,6 @@ module Telegram
         chat_join_request
         chat_boost
         removed_chat_boost
-        pre_checkout_query
       ].freeze)
 
       class << self

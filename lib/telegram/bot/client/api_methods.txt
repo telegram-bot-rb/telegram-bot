@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 7.9
+# Bot API 8.0
 
 getUpdates
 setWebhook
@@ -31,6 +31,7 @@ sendDice
 sendChatAction
 setMessageReaction
 getUserProfilePhotos
+setUserEmojiStatus
 getFile
 banChatMember
 unbanChatMember
@@ -118,9 +119,12 @@ setStickerSetTitle
 setStickerSetThumbnail
 setCustomEmojiStickerSetThumbnail
 deleteStickerSet
+getAvailableGifts
+sendGift
 
 answerInlineQuery
 answerWebAppQuery
+savePreparedInlineMessage
 
 sendInvoice
 createInvoiceLink
@@ -128,6 +132,7 @@ answerShippingQuery
 answerPreCheckoutQuery
 getStarTransactions
 refundStarPayment
+editUserStarSubscription
 
 setPassportDataErrors
 

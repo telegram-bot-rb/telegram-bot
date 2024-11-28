@@ -28,6 +28,7 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       message_reaction_count
       chat_boost
       removed_chat_boost
+      purchased_paid_media
       pre_checkout_query
     ]).
       map { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.to_h.
