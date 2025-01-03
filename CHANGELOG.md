@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.16.6
+
+- Fix poller rake task for Rails 8.0
+
 # 0.16.5
 
 - Rails 8.0 support

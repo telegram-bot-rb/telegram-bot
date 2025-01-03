@@ -15,6 +15,9 @@ namespace :telegram do
           Rails.logger.extend ActiveSupport::Logger.broadcast console
         end
       end
+      # Routes are not loaded by default in Rails >= 8.0.
+      # Load them explicitly to identify a controller for a bot.
+      Rails.application.try(:reload_routes_unless_loaded)
       Telegram::Bot::UpdatesPoller.start(ENV['BOT']&.to_sym || :default)
     end
 
