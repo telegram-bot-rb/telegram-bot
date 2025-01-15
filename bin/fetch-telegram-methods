@@ -42,7 +42,6 @@ API_METHODS_FILE = File.expand_path('../lib/telegram/bot/client/api_methods.txt'
 File.write(API_METHODS_FILE, result_txt)
 puts '', "Updated #{API_METHODS_FILE}"
 
-
 puts '', 'Payload types:'
 update_tbody = doc.css('tbody').
   find { |tbody| tbody.css('td').any? { |td| td.text == 'update_id' } }
