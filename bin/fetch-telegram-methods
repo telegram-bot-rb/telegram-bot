@@ -41,3 +41,24 @@ puts result_txt
 API_METHODS_FILE = File.expand_path('../lib/telegram/bot/client/api_methods.txt', __dir__).freeze
 File.write(API_METHODS_FILE, result_txt)
 puts '', "Updated #{API_METHODS_FILE}"
+
+
+puts '', 'Payload types:'
+update_tbody = doc.css('tbody').
+  find { |tbody| tbody.css('td').any? { |td| td.text == 'update_id' } }
+payload_types = update_tbody.css('td:first-child').map(&:text).reject { |x| x == 'update_id' }
+
+result = ['# Generated with bin/fetch-telegram-methods']
+result << "# #{api_version[1]}" if api_version
+result << payload_types.join("\n")
+result << ''
+result_txt = result.join("\n")
+
+puts result_txt
+
+PAYLOAD_TYPES_FILE = File.expand_path(
+  '../lib/telegram/bot/updates_controller/payload_types.txt',
+  __dir__,
+).freeze
+File.write(PAYLOAD_TYPES_FILE, result_txt)
+puts '', "Updated #{PAYLOAD_TYPES_FILE}"

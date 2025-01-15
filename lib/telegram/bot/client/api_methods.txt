@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 8.0
+# Bot API 8.2
 
 getUpdates
 setWebhook
@@ -121,6 +121,10 @@ setCustomEmojiStickerSetThumbnail
 deleteStickerSet
 getAvailableGifts
 sendGift
+verifyUser
+verifyChat
+removeUserVerification
+removeChatVerification
 
 answerInlineQuery
 answerWebAppQuery

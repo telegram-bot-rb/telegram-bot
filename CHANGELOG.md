@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.16.7
+
+- Update to Bot API 8.2
+
 # 0.16.6
 
 - Fix poller rake task for Rails 8.0
