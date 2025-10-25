@@ -18,6 +18,7 @@ module Telegram
             certificate: cert,
             ip_address: ENV.fetch('IP_ADDRESS', nil),
             drop_pending_updates: drop_pending_updates,
+            secret_token: bot.webhook_token,
           )
         end
       end

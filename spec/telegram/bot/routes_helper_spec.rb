@@ -56,6 +56,7 @@ RSpec.describe Telegram::Bot::RoutesHelper do
         expect(middleware.controller).to eq(controller)
         expect(middleware.bot.token).to eq(bot.token)
         expect(middleware.bot.username).to eq(bot.username)
+        expect(middleware.bot.webhook_token).to eq(bot.webhook_token)
         expect(actual_options).to include(expected_options)
       end
       yield

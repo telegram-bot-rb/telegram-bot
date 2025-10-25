@@ -95,6 +95,7 @@ Telegram.bots_config = {
     token: CHAT_BOT_TOKEN,
     username: 'ChatBot', # to support commands with mentions (/help@ChatBot)
     server: 'http://local.bot.api.server', # for Local Bot API Server
+    webhook_token: 'webhook_secret', # optional, to authorize incoming requests
   },
 }
 
@@ -118,6 +119,7 @@ development:
       token: TOKEN
       username: SomeBot
       server: http://local.bot.api.server
+      webhook_token: 'webhook_secret'
 
     # For multiple bots in single app use hash of `internal_bot_id => settings`
     bots:
