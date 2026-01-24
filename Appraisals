@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+appraise 'rails-81' do
+  gem 'actionpack', '~> 8.1.0'
+  gem 'railties', '~> 8.1.0'
+end
+
 appraise 'rails-80' do
   gem 'actionpack', '~> 8.0.0'
   gem 'railties', '~> 8.0.0'

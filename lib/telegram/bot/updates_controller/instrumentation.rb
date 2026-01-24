@@ -9,7 +9,11 @@ module Telegram
         extend ActiveSupport::Concern
 
         included do
-          config_accessor :logger
+          if respond_to?(:config_accessor, true)
+            config_accessor :logger
+          else
+            include AbstractController::Logger
+          end
         end
 
         class << self

@@ -47,7 +47,7 @@ module Telegram
           as: RoutesHelper.route_name_for_bot(bot),
           format: false,
         }.merge!(options)
-        post(path || "telegram/#{bot.token && RoutesHelper.token_hash(bot.token)}", params)
+        post(path || "telegram/#{bot.token && RoutesHelper.token_hash(bot.token)}", **params)
         UpdatesPoller.add(bot, controller) if Telegram.bot_poller_mode?
       end
     end
