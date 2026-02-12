@@ -5,6 +5,11 @@ appraise 'rails-80' do
   gem 'railties', '~> 8.0.0'
 end
 
+appraise 'rails-81' do
+  gem 'actionpack', '~> 8.1.0'
+  gem 'railties', '~> 8.1.0'
+end
+
 appraise 'rails-72' do
   gem 'actionpack', '~> 7.2.0'
   gem 'railties', '~> 7.2.0'
