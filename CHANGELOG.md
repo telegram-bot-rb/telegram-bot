@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.16.9
+
+- Update to Bot API 9.5
+
 # 0.16.8
 
 - Update to Bot API 9.0

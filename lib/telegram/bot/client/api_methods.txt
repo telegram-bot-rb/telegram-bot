@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 9.0
+# Bot API 9.5
 
 getUpdates
 setWebhook
@@ -27,10 +27,13 @@ sendLocation
 sendVenue
 sendContact
 sendPoll
+sendChecklist
 sendDice
+sendMessageDraft
 sendChatAction
 setMessageReaction
 getUserProfilePhotos
+getUserProfileAudios
 setUserEmojiStatus
 getFile
 banChatMember
@@ -38,6 +41,7 @@ unbanChatMember
 restrictChatMember
 promoteChatMember
 setChatAdministratorCustomTitle
+setChatMemberTag
 banChatSenderChat
 unbanChatSenderChat
 setChatPermissions
@@ -88,20 +92,12 @@ setMyDescription
 getMyDescription
 setMyShortDescription
 getMyShortDescription
+setMyProfilePhoto
+removeMyProfilePhoto
 setChatMenuButton
 getChatMenuButton
 setMyDefaultAdministratorRights
 getMyDefaultAdministratorRights
-
-editMessageText
-editMessageCaption
-editMessageMedia
-editMessageLiveLocation
-stopMessageLiveLocation
-editMessageReplyMarkup
-stopPoll
-deleteMessage
-deleteMessages
 getAvailableGifts
 sendGift
 giftPremiumSubscription
@@ -120,12 +116,28 @@ setBusinessAccountGiftSettings
 getBusinessAccountStarBalance
 transferBusinessAccountStars
 getBusinessAccountGifts
+getUserGifts
+getChatGifts
 convertGiftToStars
 upgradeGift
 transferGift
 postStory
+repostStory
 editStory
 deleteStory
+
+editMessageText
+editMessageCaption
+editMessageMedia
+editMessageLiveLocation
+stopMessageLiveLocation
+editMessageChecklist
+editMessageReplyMarkup
+stopPoll
+approveSuggestedPost
+declineSuggestedPost
+deleteMessage
+deleteMessages
 
 sendSticker
 getStickerSet
@@ -152,6 +164,7 @@ sendInvoice
 createInvoiceLink
 answerShippingQuery
 answerPreCheckoutQuery
+getMyStarBalance
 getStarTransactions
 refundStarPayment
 editUserStarSubscription
