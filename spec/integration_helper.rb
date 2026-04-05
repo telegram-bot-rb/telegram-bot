@@ -66,14 +66,12 @@ RSpec.configure do |config|
   config.include RSpec::Rails::RequestExampleGroup, type: :request
 
   config.around type: :request do |ex|
-    begin
-      Telegram.reset_bots
-      Telegram::Bot::ClientStub.stub_all!
-      ex.run
-    ensure
-      Telegram.reset_bots
-      Telegram::Bot::ClientStub.stub_all!(false)
-    end
+    Telegram.reset_bots
+    Telegram::Bot::ClientStub.stub_all!
+    ex.run
+  ensure
+    Telegram.reset_bots
+    Telegram::Bot::ClientStub.stub_all!(false)
   end
 
   config.before type: :request do

@@ -8,13 +8,7 @@ module Telegram
       module Instrumentation
         extend ActiveSupport::Concern
 
-        included do
-          if respond_to?(:config_accessor, true)
-            config_accessor :logger
-          else
-            include AbstractController::Logger
-          end
-        end
+        include AbstractController::Logger
 
         class << self
           def instrument(action, *args, &block)
@@ -34,11 +28,9 @@ module Telegram
           }
           Instrumentation.instrument(:start_processing, raw_payload.dup)
           Instrumentation.instrument(:process_action, raw_payload) do |payload|
-            begin
-              super
-            ensure
-              append_info_to_payload(payload)
-            end
+            super
+          ensure
+            append_info_to_payload(payload)
           end
         end
 

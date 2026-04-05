@@ -23,10 +23,10 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.4'
+  spec.required_ruby_version = '>= 2.7'
 
-  spec.add_dependency 'actionpack', '>= 4.0', '< 8.2'
-  spec.add_dependency 'activesupport', '>= 4.0', '< 8.2'
+  spec.add_dependency 'actionpack', '>= 7.0', '< 8.2'
+  spec.add_dependency 'activesupport', '>= 7.0', '< 8.2'
   spec.add_dependency 'httpclient', '~> 2.7'
 
   spec.add_development_dependency 'bundler', '> 1.16'
