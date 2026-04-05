@@ -30,6 +30,7 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       removed_chat_boost
       purchased_paid_media
       pre_checkout_query
+      managed_bot
     ]).
       to_h { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.
       merge(
