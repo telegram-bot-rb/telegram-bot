@@ -17,9 +17,9 @@ module Telegram
           when 'sendMediaGroup'
             extract_files_from_array!(body, :media)
           when 'editMessageMedia'
-            extract_and_merge!(body, :media)
+            extract_files_from_field!(body, :media)
           when 'postStory'
-            extract_and_merge!(body, :content)
+            extract_files_from_field!(body, :content)
           end
           body.each do |key, val|
             body[key] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
@@ -28,8 +28,9 @@ module Telegram
 
         private
 
-        def extract_and_merge!(body, field)
-          replace_field(body, field) do |value|
+        # Extracts files from the given field and merges them into the body.
+        def extract_files_from_field!(body, field_name)
+          replace_field(body, field_name) do |value|
             files = {}
             extract_files_from_hash(value, files).tap { body.merge!(files) }
           end
