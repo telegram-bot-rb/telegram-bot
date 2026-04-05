@@ -90,5 +90,35 @@ RSpec.describe Telegram::Bot::Client::RequestBodyFormatter do
         it { should eq input }
       end
     end
+
+    context 'with postStory action' do
+      let(:action) { :postStory }
+      let(:input) { {content: {a: file, b: 123}, x: 789} }
+      let(:file) { File.new(__FILE__) }
+
+      it 'extracts files to the top-level' do
+        should eq(
+          content: {a: 'attach://_file0', b: 123}.to_json,
+          x: 789,
+          '_file0' => file,
+        )
+      end
+
+      context 'and input has string keys' do
+        let(:input) { super().stringify_keys }
+        it 'extracts files to the top-level' do
+          should eq(
+            'content' => {a: 'attach://_file0', b: 123}.to_json,
+            'x' => 789,
+            '_file0' => file,
+          )
+        end
+      end
+
+      context 'without content' do
+        let(:input) { {a: 1, b: '2', c: nil} }
+        it { should eq input }
+      end
+    end
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'abstract_controller'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/callbacks'

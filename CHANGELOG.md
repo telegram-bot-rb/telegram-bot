@@ -2,6 +2,7 @@
 
 - Rails 8.1 support
 - Drop support for rails < 7.0 and ruby < 2.7
+- Update to Bot API 9.5
 
 # 0.16.7
 

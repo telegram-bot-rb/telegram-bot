@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 8.2
+# Bot API 9.5
 message
 edited_message
 channel_post
