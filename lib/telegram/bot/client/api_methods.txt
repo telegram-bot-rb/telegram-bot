@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 9.5
+# Bot API 9.6
 
 getUpdates
 setWebhook
@@ -83,6 +83,8 @@ unpinAllGeneralForumTopicMessages
 answerCallbackQuery
 getUserChatBoosts
 getBusinessConnection
+getManagedBotToken
+replaceManagedBotToken
 setMyCommands
 deleteMyCommands
 getMyCommands
@@ -125,6 +127,9 @@ postStory
 repostStory
 editStory
 deleteStory
+answerWebAppQuery
+savePreparedInlineMessage
+savePreparedKeyboardButton
 
 editMessageText
 editMessageCaption
@@ -157,8 +162,6 @@ setCustomEmojiStickerSetThumbnail
 deleteStickerSet
 
 answerInlineQuery
-answerWebAppQuery
-savePreparedInlineMessage
 
 sendInvoice
 createInvoiceLink
