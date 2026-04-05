@@ -82,8 +82,8 @@ module Telegram
             expected_number.public_send(expectation_method, matching_requests_count)
           end
 
-          def with(*args, &block)
-            @arg_list_matcher = ArgListMatcher.new(*args, &block)
+          def with(...)
+            @arg_list_matcher = ArgListMatcher.new(...)
             self
           end
 

@@ -33,7 +33,7 @@ RSpec.shared_context 'telegram/bot/updates_controller' do
   def deep_stringify(input)
     case input
     when Array then input.map(&method(__callee__))
-    when Hash then input.map { |k, v| [k.to_s, deep_stringify(v)] }.to_h
+    when Hash then input.to_h { |k, v| [k.to_s, deep_stringify(v)] }
     else input
     end
   end

@@ -121,12 +121,10 @@ module Telegram
 
         def payload_from_typed_update(update)
           PAYLOAD_TYPES.find do |type|
-            begin
-              item = update[type]
-              return [item, type] if item
-            rescue Exception # rubocop:disable Lint/RescueException
-              # dry-rb raises exception if field is not defined in schema
-            end
+            item = update[type]
+            return [item, type] if item
+          rescue Exception # rubocop:disable Lint/RescueException
+            # dry-rb raises exception if field is not defined in schema
           end
         end
       end
