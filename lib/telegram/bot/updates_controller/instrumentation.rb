@@ -28,11 +28,9 @@ module Telegram
           }
           Instrumentation.instrument(:start_processing, raw_payload.dup)
           Instrumentation.instrument(:process_action, raw_payload) do |payload|
-            begin
-              super
-            ensure
-              append_info_to_payload(payload)
-            end
+            super
+          ensure
+            append_info_to_payload(payload)
           end
         end
 
