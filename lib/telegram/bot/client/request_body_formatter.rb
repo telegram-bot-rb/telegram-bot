@@ -13,14 +13,17 @@ module Telegram
 
         def format(body, action)
           body = body.dup
-          handlers = {
-            'sendMediaGroup' => -> { extract_files_from_array!(body, :media) },
-            'editMessageMedia' => -> { extract_and_merge!(body, :media) },
-            'postStory' => -> { extract_and_merge!(body, :content) },
-          }
-          handlers[action.to_s]&.call
-
-          body.transform_values! { |v| v.is_a?(Hash) || v.is_a?(Array) ? v.to_json : v }
+          case action.to_s
+          when 'sendMediaGroup'
+            extract_files_from_array!(body, :media)
+          when 'editMessageMedia'
+            extract_and_merge!(body, :media)
+          when 'postStory'
+            extract_and_merge!(body, :content)
+          end
+          body.each do |key, val|
+            body[key] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
+          end
         end
 
         private
