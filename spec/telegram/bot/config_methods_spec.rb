@@ -13,6 +13,7 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       chat: {
         token: 'chat_token',
         username: 'Chat',
+        webhook_token: 'webhook_secret_token',
       },
       other_chat: {
         'token' => 'other_chat_token',
@@ -43,6 +44,7 @@ RSpec.describe Telegram::Bot::ConfigMethods do
       its(:id) { should eq :chat }
       its(:token) { should eq config[:chat][:token] }
       its(:username) { should eq config[:chat][:username] }
+      its(:webhook_token) { should eq config[:chat][:webhook_token] }
     end
 
     context 'configured by hash with stringified keys' do

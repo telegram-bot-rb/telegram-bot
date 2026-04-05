@@ -55,12 +55,13 @@ module Telegram
         end
       end
 
-      attr_reader :client, :token, :username, :base_uri
+      attr_reader :client, :token, :username, :webhook_token, :base_uri
 
       def initialize(token = nil, username = nil, server: SERVER, **options)
         @client = HTTPClient.new
         @token = token || options[:token]
         @username = username || options[:username]
+        @webhook_token = options[:webhook_token]
         @base_uri = format(URL_TEMPLATE, server: server, token: self.token)
       end
 

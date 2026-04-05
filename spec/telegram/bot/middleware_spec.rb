@@ -4,7 +4,7 @@ require 'rack/mock'
 
 RSpec.describe Telegram::Bot::Middleware do
   let(:instance) { described_class.new bot, controller }
-  let(:bot) { double(:bot) }
+  let(:bot) { double(:bot, webhook_token: nil) }
   let(:controller) { double(:controller, dispatch: :dispatch_result) }
 
   describe '#call' do
