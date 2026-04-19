@@ -456,6 +456,20 @@ To run poller in other cases use:
 Telegram::Bot::UpdatesPoller.start(bot, controller_class)
 ```
 
+#### Telegram Test Environment
+
+Telegram provides a dedicated [environment for **bot testing**](https://core.telegram.org/bots/webapps#testing-mini-apps). It allows safe, isolated testing of bot functionality without affecting production data or users.
+
+To send requests to the test environment, insert `/test` **between the bot token and method name** in your API call. This acts as a shorthand "hack" to avoid changing your code structure.
+
+```ruby
+# Normal token:
+'123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'
+
+# Modified for test environment:
+'123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/test'
+```
+
 ### Testing
 
 There is a `Telegram::Bot::ClientStub` class to stub client for tests.
