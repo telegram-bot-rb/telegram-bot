@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 9.6
+# Bot API 10.1
 
 getUpdates
 setWebhook
@@ -15,6 +15,7 @@ forwardMessages
 copyMessage
 copyMessages
 sendPhoto
+sendLivePhoto
 sendAudio
 sendDocument
 sendVideo
@@ -53,6 +54,8 @@ editChatSubscriptionInviteLink
 revokeChatInviteLink
 approveChatJoinRequest
 declineChatJoinRequest
+answerChatJoinRequestQuery
+sendChatJoinRequestWebApp
 setChatPhoto
 deleteChatPhoto
 setChatTitle
@@ -65,6 +68,7 @@ getChat
 getChatAdministrators
 getChatMemberCount
 getChatMember
+getUserPersonalChatMessages
 setChatStickerSet
 deleteChatStickerSet
 getForumTopicIconStickers
@@ -81,10 +85,13 @@ hideGeneralForumTopic
 unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
+answerGuestQuery
 getUserChatBoosts
 getBusinessConnection
 getManagedBotToken
 replaceManagedBotToken
+getManagedBotAccessSettings
+setManagedBotAccessSettings
 setMyCommands
 deleteMyCommands
 getMyCommands
@@ -143,6 +150,8 @@ approveSuggestedPost
 declineSuggestedPost
 deleteMessage
 deleteMessages
+deleteMessageReaction
+deleteAllMessageReactions
 
 sendSticker
 getStickerSet
@@ -160,6 +169,9 @@ setStickerSetTitle
 setStickerSetThumbnail
 setCustomEmojiStickerSetThumbnail
 deleteStickerSet
+
+sendRichMessage
+sendRichMessageDraft
 
 answerInlineQuery
 

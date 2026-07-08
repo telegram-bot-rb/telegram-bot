@@ -1,5 +1,9 @@
 # Unreleased
 
+# 0.17.1
+
+- Update to Bot API 10.1
+
 # 0.17.0
 
 - Rails 8.1 support
