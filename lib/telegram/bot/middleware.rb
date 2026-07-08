@@ -19,7 +19,12 @@ module Telegram
         request = ActionDispatch::Request.new(env)
         update = request.request_parameters
         controller.dispatch(bot, update, request)
-        [200, {}, ['']]
+        response = request.get_header(UpdatesController::WEBHOOK_RESPONSE_ENV_KEY)
+        if response
+          [200, {'Content-Type' => 'application/json'}, [response]]
+        else
+          [200, {}, ['']]
+        end
       end
 
       def inspect

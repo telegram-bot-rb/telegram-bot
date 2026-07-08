@@ -55,5 +55,19 @@ RSpec.describe Telegram::Bot::UpdatesPoller do
       let(:bot) { Telegram::Bot::Client.new('token', async: Class.new) }
       it { should eq updates.as_json }
     end
+
+    context 'when request times out' do
+      before { allow(bot).to receive(:get_updates).and_raise(error) }
+
+      context 'with Timeout::Error' do
+        let(:error) { Timeout::Error }
+        it { should eq nil }
+      end
+
+      context 'with HTTPClient::TimeoutError' do
+        let(:error) { HTTPClient::ReceiveTimeoutError }
+        it { should eq nil }
+      end
+    end
   end
 end

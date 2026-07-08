@@ -130,6 +130,7 @@ module Telegram
       end
 
       attr_internal_reader :bot, :payload, :payload_type, :update, :webhook_request
+      attr_internal_reader :webhook_response
       delegate :username, to: :bot, prefix: true, allow_nil: true
 
       # `update` can be either update object with hash access & string
@@ -175,6 +176,30 @@ module Telegram
       def dispatch
         action, args = action_for_payload
         process(action, *args)
+      end
+
+      # Rack env key `Middleware` reads the rendered webhook response from. It's
+      # stored on `webhook_request` itself (rather than returned from `#dispatch`)
+      # so it survives passing through `.dispatch`, which still returns whatever
+      # the action returns, as before.
+      WEBHOOK_RESPONSE_ENV_KEY = 'telegram_bot.webhook_response'
+
+      # Answers current update directly in the webhook response instead of making
+      # a separate API call, as described in
+      # https://core.telegram.org/bots/faq#how-can-i-make-requests-in-response-to-updates
+      #
+      # Only takes effect once per update, and only when running in webhook mode
+      # (i.e. `#webhook_request` is present). Returns `true` when it took effect,
+      # `false` otherwise, so callers can fall back to a regular API call:
+      #
+      #   render_webhook_response(:send_message, chat_id: chat['id'], text: 'Hi!') ||
+      #     bot.send_message(chat_id: chat['id'], text: 'Hi!')
+      def render_webhook_response(bot_method, params)
+        return false unless webhook_request
+        return false if webhook_response
+        @_webhook_response = params.merge(method: bot_method.to_s.camelize(:lower)).to_json
+        webhook_request.set_header(WEBHOOK_RESPONSE_ENV_KEY, webhook_response)
+        true
       end
 
       attr_internal_reader :action_options

@@ -165,6 +165,8 @@ Please open PR or issue if it misses methods from new API versions.
 
 Any API request error will raise `Telegram::Bot::Error` with description in its message.
 Special `Telegram::Bot::Forbidden` is raised when bot can't post messages to the chat anymore.
+`Telegram::Bot::TooManyRequests` is raised on flood control (429) responses, with
+`retry_after` giving the number of seconds Telegram asks you to wait before retrying.
 
 #### Typed responses
 
@@ -268,6 +270,19 @@ def answer_callback_query(text, params = {}); end
 def edit_message(type, params = {}); end
 def answer_pre_checkout_query(ok, params = {}); end
 def answer_shipping_query(ok, params = {}); end
+```
+
+Pass `via_webhook: true` in `params` to answer the current update directly in
+the webhook HTTP response, instead of making a separate API call
+([as described in the Telegram FAQ](https://core.telegram.org/bots/faq#how-can-i-make-requests-in-response-to-updates)).
+This saves an API call (helpful to stay under rate limits), but only the first
+call in a single update can be answered this way; any following calls (and any
+call at all when not running in webhook mode) fall back to a regular API call.
+
+```ruby
+def start!(*)
+  respond_with :message, text: 'Hello!', via_webhook: true
+end
 ```
 
 #### Optional typecasting
@@ -454,6 +469,14 @@ To run poller in other cases use:
 
 ```ruby
 Telegram::Bot::UpdatesPoller.start(bot, controller_class)
+```
+
+Processed updates are logged by `UpdatesController::LogSubscriber`, which filters
+`text` out of the logged update by default to avoid leaking users' message text
+into your logs. Adjust the filtered keys (or disable filtering) with:
+
+```ruby
+Telegram::Bot::UpdatesController::LogSubscriber.filtered_parameters = %i[text foo]
 ```
 
 ### Testing

@@ -1,5 +1,17 @@
 # Unreleased
 
+- Raise `Telegram::Bot::TooManyRequests` (with `retry_after`) for 429 responses,
+  instead of a generic `Error`.
+- Fix `UpdatesPoller` crashing on `HTTPClient::TimeoutError` (it only rescued
+  `Timeout::Error`, which that error doesn't inherit from).
+- Filter `text` out of `UpdatesController::LogSubscriber` logs by default.
+  Configurable with `UpdatesController::LogSubscriber.filtered_parameters=`.
+- Add `via_webhook: true` option to reply helpers (`respond_with`, `reply_with`,
+  `answer_inline_query`, `answer_callback_query`, `answer_pre_checkout_query`,
+  `answer_shipping_query`, `edit_message`) to answer directly in the webhook
+  response instead of making a separate API call, see
+  https://core.telegram.org/bots/faq#how-can-i-make-requests-in-response-to-updates
+
 # 0.17.0
 
 - Rails 8.1 support

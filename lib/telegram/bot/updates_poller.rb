@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'httpclient'
+
 module Telegram
   module Bot
     # Supposed to be used in development environments only.
@@ -72,7 +74,9 @@ module Telegram
       def fetch_updates(offset = self.offset)
         response = bot.async(false) { bot.get_updates(offset: offset, timeout: timeout) }
         response.is_a?(Array) ? response : response['result']
-      rescue Timeout::Error
+      # get_updates is a long poll, safe to retry on any of these: it doesn't change
+      # any state, so a dropped connection can't cause duplicate processing.
+      rescue Timeout::Error, HTTPClient::TimeoutError
         log { 'Fetch timeout' }
         nil
       end

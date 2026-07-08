@@ -159,6 +159,19 @@ RSpec.describe Telegram::Bot::Client do
       include_examples 'invalid body'
     end
 
+    context 'when status is 429' do
+      let(:status) { 429 }
+      let(:body_json) do
+        {'description' => 'some description', 'parameters' => {'retry_after' => 5}}
+      end
+      it do
+        should raise_error(Telegram::Bot::TooManyRequests, body_json['description']) { |e|
+          expect(e.retry_after).to eq 5
+        }
+      end
+      include_examples 'invalid body'
+    end
+
     context 'when status is other' do
       let(:status) { 500 }
       it { should raise_error Telegram::Bot::Error, /#{body_json['description']}/ }

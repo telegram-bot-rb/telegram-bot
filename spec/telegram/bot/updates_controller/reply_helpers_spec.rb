@@ -25,6 +25,30 @@ RSpec.describe Telegram::Bot::UpdatesController do
         with(params.merge(chat_id: chat[:id])) { result }
       should eq result
     end
+
+    context 'when via_webhook: true is passed' do
+      let(:params) { super().merge(via_webhook: true) }
+
+      context 'and running in webhook mode' do
+        let(:webhook_request) { double(:webhook_request, set_header: nil) }
+        let(:chat) { {id: 123} }
+
+        it 'answers via the webhook response instead of calling the API' do
+          expect(bot).not_to receive("send_#{respond_type}")
+          expect(JSON.parse(subject)).to eq(
+            'arg' => 1, 'other_arg' => 2, 'chat_id' => 123, 'method' => 'sendPhoto',
+          )
+        end
+      end
+
+      context 'and not running in webhook mode' do
+        it 'falls back to a regular API call' do
+          expect(bot).to receive("send_#{respond_type}").
+            with(params.except(:via_webhook).merge(chat_id: chat[:id])) { result }
+          should eq result
+        end
+      end
+    end
   end
 
   describe '#reply_with' do
@@ -45,6 +69,34 @@ RSpec.describe Telegram::Bot::UpdatesController do
         expect(bot).to receive("send_#{respond_type}").
           with(params.merge(chat_id: chat[:id])) { result }
         should eq result
+      end
+    end
+  end
+
+  describe '#answer_callback_query' do
+    subject { controller.answer_callback_query('some text', params) }
+    let(:payload) { {id: double(:query_id)} }
+
+    it 'sets callback_query_id & text' do
+      expect(bot).to receive(:answer_callback_query).
+        with(params.merge(callback_query_id: payload[:id], text: 'some text')) { result }
+      should eq result
+    end
+
+    context 'when via_webhook: true is passed and running in webhook mode' do
+      let(:params) { super().merge(via_webhook: true) }
+      let(:webhook_request) { double(:webhook_request, set_header: nil) }
+      let(:payload) { {id: 'some-id'} }
+
+      it 'answers via the webhook response instead of calling the API' do
+        expect(bot).not_to receive(:answer_callback_query)
+        expect(JSON.parse(subject)).to eq(
+          'arg' => 1,
+          'other_arg' => 2,
+          'callback_query_id' => 'some-id',
+          'text' => 'some text',
+          'method' => 'answerCallbackQuery',
+        )
       end
     end
   end

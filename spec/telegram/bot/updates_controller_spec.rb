@@ -257,4 +257,43 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq nil }
     end
   end
+
+  describe '#render_webhook_response' do
+    subject { controller.render_webhook_response(:send_message, text: 'hi') }
+
+    context 'when not running in webhook mode' do
+      it { should eq false }
+      it 'does not claim webhook_response' do
+        subject
+        expect(controller.webhook_response).to eq nil
+      end
+    end
+
+    context 'when running in webhook mode' do
+      let(:webhook_request) { double(:webhook_request, set_header: nil) }
+      it { should eq true }
+
+      it 'sets webhook_response to the JSON-encoded method call' do
+        subject
+        parsed = JSON.parse(controller.webhook_response)
+        expect(parsed).to eq('method' => 'sendMessage', 'text' => 'hi')
+      end
+
+      it 'stores it on webhook_request, for Middleware to pick up' do
+        expect(webhook_request).to receive(:set_header) do |key, value|
+          expect(key).to eq described_class::WEBHOOK_RESPONSE_ENV_KEY
+          expect(JSON.parse(value)).to eq('method' => 'sendMessage', 'text' => 'hi')
+        end
+        subject
+      end
+
+      context 'when the response was already claimed' do
+        before { subject }
+        it 'does not overwrite it' do
+          expect(controller.render_webhook_response(:send_photo, photo: 'x')).to eq false
+          expect(JSON.parse(controller.webhook_response)['method']).to eq 'sendMessage'
+        end
+      end
+    end
+  end
 end

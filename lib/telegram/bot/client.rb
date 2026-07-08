@@ -50,6 +50,7 @@ module Telegram
           case response.status
           when 403 then Forbidden.new(message)
           when 404 then NotFound.new(message)
+          when 429 then TooManyRequests.new(message, result.dig('parameters', 'retry_after'))
           else Error.new("#{response.reason}: #{message}")
           end
         end

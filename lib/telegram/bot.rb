@@ -14,6 +14,18 @@ module Telegram
     # Raised for valid telegram response with 404 status code.
     class NotFound < Error; end
 
+    # Raised for valid telegram response with 429 status code (flood control).
+    # `retry_after` holds the number of seconds to wait before the next request,
+    # as reported by Telegram.
+    class TooManyRequests < Error
+      attr_reader :retry_after
+
+      def initialize(message, retry_after)
+        super(message)
+        @retry_after = retry_after
+      end
+    end
+
     autoload :Async,              'telegram/bot/async'
     autoload :Client,             'telegram/bot/client'
     autoload :ClientStub,         'telegram/bot/client_stub'
