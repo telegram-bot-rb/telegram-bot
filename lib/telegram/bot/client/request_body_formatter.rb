@@ -20,6 +20,8 @@ module Telegram
             extract_files_from_field!(body, :media)
           when 'postStory'
             extract_files_from_field!(body, :content)
+          when 'sendRichMessage'
+            extract_files_from_field!(body, :rich_message)
           end
           body.each do |key, val|
             body[key] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
@@ -51,17 +53,21 @@ module Telegram
           end
         end
 
-        # Replace File objects with `attach` URIs. File objects are added into `files` hash.
-        def extract_files_from_hash(hash, files)
-          return hash unless hash.is_a?(Hash)
-          hash.transform_values do |value|
-            if value.is_a?(File)
-              arg_name = "_file#{files.size}"
-              files[arg_name] = value
-              "attach://#{arg_name}"
-            else
-              value
-            end
+        # Replace File objects with `attach` URIs, descending into nested hashes and
+        # arrays (e.g. media inside rich message blocks). File objects are added into
+        # `files` hash.
+        def extract_files_from_hash(value, files)
+          case value
+          when File
+            arg_name = "_file#{files.size}"
+            files[arg_name] = value
+            "attach://#{arg_name}"
+          when Hash
+            value.transform_values { |x| extract_files_from_hash(x, files) }
+          when Array
+            value.map { |x| extract_files_from_hash(x, files) }
+          else
+            value
           end
         end
       end

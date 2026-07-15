@@ -1,5 +1,8 @@
 # Unreleased
 
+- Update to Bot API 10.2
+- Support file uploads nested in rich message blocks (`sendRichMessage`)
+
 # 0.17.0
 
 - Rails 8.1 support

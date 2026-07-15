@@ -120,5 +120,60 @@ RSpec.describe Telegram::Bot::Client::RequestBodyFormatter do
         it { should eq input }
       end
     end
+
+    context 'with sendRichMessage action' do
+      let(:action) { :sendRichMessage }
+      let(:file_1) { File.new(__FILE__) }
+      let(:file_2) { File.new(__FILE__) }
+      let(:input) do
+        {
+          chat_id: 1,
+          rich_message: {
+            blocks: [
+              {type: 'photo', photo: {type: 'photo', media: file_1}},
+              {type: 'details', summary: 'More', blocks: [
+                {type: 'video', video: {type: 'video', media: file_2}},
+                {type: 'paragraph', text: 'Hi'},
+              ]},
+            ],
+          },
+        }
+      end
+
+      it 'extracts deeply nested files to the top-level' do
+        should eq(
+          chat_id: 1,
+          rich_message: {
+            blocks: [
+              {type: 'photo', photo: {type: 'photo', media: 'attach://_file0'}},
+              {type: 'details', summary: 'More', blocks: [
+                {type: 'video', video: {type: 'video', media: 'attach://_file1'}},
+                {type: 'paragraph', text: 'Hi'},
+              ]},
+            ],
+          }.to_json,
+          '_file0' => file_1,
+          '_file1' => file_2,
+        )
+      end
+
+      context 'without files' do
+        let(:input) do
+          {chat_id: 1, rich_message: {blocks: [{type: 'paragraph', text: 'Hi'}]}}
+        end
+
+        it 'json-encodes the rich message unchanged' do
+          should eq(
+            chat_id: 1,
+            rich_message: {blocks: [{type: 'paragraph', text: 'Hi'}]}.to_json,
+          )
+        end
+      end
+
+      context 'without rich_message' do
+        let(:input) { {a: 1, b: '2', c: nil} }
+        it { should eq input }
+      end
+    end
   end
 end
