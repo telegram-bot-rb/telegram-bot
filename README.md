@@ -43,6 +43,7 @@ See examples and cookbook in [the wiki](https://github.com/telegram-bot-rb/teleg
     * [Session](#session)
     * [Message context](#message-context)
     * [Callback queries](#callback-queries)
+    * [Widgets](#widgets)
   * [Routes in Rails app](#routes-in-rails-app)
     * [Processing updates](#processing-updates)
   * [Development & Debugging](#development--debugging)
@@ -215,6 +216,8 @@ class Telegram::WebhookController < Telegram::Bot::UpdatesController
   #   inline_query(query, offset)
   #   chosen_inline_result(result_id, query)
   #   callback_query(data)
+  #   widget_query(data)
+  #   shared_widget_query(data)
 
   # Define public methods ending with `!` to handle commands.
   # Command arguments will be parsed and passed to the method.
@@ -265,6 +268,7 @@ def respond_with(type, params); end
 def reply_with(type, params); end
 def answer_inline_query(results, params = {}); end
 def answer_callback_query(text, params = {}); end
+def answer_widget_query(data = nil, params = {}); end
 def edit_message(type, params = {}); end
 def answer_pre_checkout_query(ok, params = {}); end
 def answer_shipping_query(ok, params = {}); end
@@ -397,6 +401,46 @@ def make_cool_callback_query(thing = nil, *)
   answer_callback_query("#{thing} is cool now! Like a callback query context.")
 end
 ```
+
+#### Widgets
+
+[Widgets](https://core.telegram.org/bots/widgets) are sent like any other message.
+The code of a widget is fixed once it is sent, so the bot only changes its state
+(`chat_data`, `public_data`) and answers queries that the widget sends with
+`TelegramWidget.request(data)`. Nested hashes and arrays in params are encoded to JSON
+by the bot client, as usual:
+
+```ruby
+def poll!(*)
+  respond_with :widget,
+    html: File.read('app/widgets/poll.html'),
+    caption: 'Poll', # text for chat list and notifications
+    chat_data: {votes: [0, 0]},
+    allow_queries: true
+end
+
+# Handles `TelegramWidget.request('1')`.
+def widget_query(option = nil, *)
+  # Query does not contain the state of the widget: keep it on your side.
+  poll = Poll.find_by!(chat_id: chat['id'], message_id: payload['message_id'])
+  poll.vote!(from['id'], option)
+  # Sets chat_id and message_id (or inline_message_id) from the query:
+  edit_message :widget_data, chat_data: {votes: poll.votes}
+  # Every query must be answered within 15 seconds, data is optional:
+  answer_widget_query 'Thanks!'
+end
+```
+
+Queries from widgets are similar to callback queries: data is limited to 64 bytes
+and is controlled by the user's app. So there is `WidgetQueryContext` module that works
+the same way as `CallbackQueryContext`. When it is included, `TelegramWidget.request('vote:2')`
+invokes `vote_widget_query('2')` if such action method is defined,
+and `widget_query('vote:2')` otherwise.
+
+Queries from forwarded messages with shared widgets come as `shared_widget_query` updates
+and go to `vote_shared_widget_query('2')` or `shared_widget_query('vote:2')` respectively.
+Use `answer_widget_query` for them as well. Queries from TON wallet (`sign_data`,
+`sent_transaction`) get to the same actions: check `payload['type']`.
 
 ### Routes in Rails app
 
@@ -537,6 +581,13 @@ RSpec.describe TelegramWebhooksController, telegram_bot: :rails do
     let(:name) { 'Joe' }
     it { should answer_callback_query('Hey Joe') }
     it { should edit_current_message :text, text: 'Done' }
+  end
+
+  # And the same for widget queries with :widget_query tag.
+  describe '#vote_widget_query', :widget_query do
+    let(:data) { 'vote:2' }
+    it { should answer_widget_query('Thanks!') }
+    it { should edit_current_message :widget_data, chat_data: {votes: [0, 1]} }
   end
 end
 ```

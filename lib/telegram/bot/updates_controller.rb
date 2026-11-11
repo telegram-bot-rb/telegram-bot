@@ -67,6 +67,7 @@ module Telegram
         CallbackQueryContext
         MessageContext
         TypedUpdate
+        WidgetQueryContext
       ].each { |mod| autoload mod, "telegram/bot/updates_controller/#{mod.underscore}" }
 
       include AbstractController::Callbacks
@@ -228,6 +229,14 @@ module Telegram
 
       def action_for_poll_answer
         [payload_type, [payload['poll_id'], payload['option_ids']]]
+      end
+
+      def action_for_widget_query
+        [payload_type, [payload['data']]]
+      end
+
+      def action_for_shared_widget_query
+        [payload_type, [payload['data']]]
       end
 
       # Silently ignore unsupported messages to not fail when user crafts

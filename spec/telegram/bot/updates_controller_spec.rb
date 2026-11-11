@@ -34,6 +34,14 @@ RSpec.describe Telegram::Bot::UpdatesController do
       it { should eq [payload_type, payload.values_at(:poll_id, :option_ids)] }
     end
 
+    %w[widget_query shared_widget_query].each do |type|
+      context "when payload is #{type}" do
+        let(:payload_type) { type }
+        let(:payload) { {id: 11, data: double(:data)} }
+        it { should eq [payload_type, payload.values_at(:data)] }
+      end
+    end
+
     context 'when payload is not supported' do
       let(:payload_type) { '_unsupported_' }
       it { should eq [:unsupported_payload_type, []] }
@@ -50,6 +58,8 @@ RSpec.describe Telegram::Bot::UpdatesController do
       poll_answer
       chat_join_request
       pre_checkout_query
+      widget_query
+      shared_widget_query
     ]
     (described_class::PAYLOAD_TYPES - custom_payload_types).each do |type|
       context "when payload is #{type}" do
