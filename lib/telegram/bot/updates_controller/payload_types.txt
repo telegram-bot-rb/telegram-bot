@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 9.6
+# Bot API 10.4
 message
 edited_message
 channel_post
@@ -8,11 +8,14 @@ business_connection
 business_message
 edited_business_message
 deleted_business_messages
+guest_message
 message_reaction
 message_reaction_count
 inline_query
 chosen_inline_result
 callback_query
+widget_query
+shared_widget_query
 shipping_query
 pre_checkout_query
 purchased_paid_media
@@ -24,3 +27,5 @@ chat_join_request
 chat_boost
 removed_chat_boost
 managed_bot
+subscription
+stopped_message_generation

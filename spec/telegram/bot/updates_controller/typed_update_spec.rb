@@ -31,6 +31,11 @@ RSpec.describe Telegram::Bot::UpdatesController::TypedUpdate do
       purchased_paid_media
       pre_checkout_query
       managed_bot
+      guest_message
+      subscription
+      widget_query
+      shared_widget_query
+      stopped_message_generation
     ]).
       to_h { |x| [x, Telegram::Bot::Types.const_get(x.camelize)] }.
       merge(

@@ -1,5 +1,5 @@
 # Generated with bin/fetch-telegram-methods
-# Bot API 9.6
+# Bot API 10.4
 
 getUpdates
 setWebhook
@@ -15,12 +15,15 @@ forwardMessages
 copyMessage
 copyMessages
 sendPhoto
+sendLivePhoto
 sendAudio
 sendDocument
 sendVideo
 sendAnimation
 sendVoice
 sendVideoNote
+sendWidget
+sendSharedWidget
 sendPaidMedia
 sendMediaGroup
 sendLocation
@@ -53,6 +56,8 @@ editChatSubscriptionInviteLink
 revokeChatInviteLink
 approveChatJoinRequest
 declineChatJoinRequest
+answerChatJoinRequestQuery
+sendChatJoinRequestWebApp
 setChatPhoto
 deleteChatPhoto
 setChatTitle
@@ -65,6 +70,8 @@ getChat
 getChatAdministrators
 getChatMemberCount
 getChatMember
+getChatShareThemeBackdrops
+getUserPersonalChatMessages
 setChatStickerSet
 deleteChatStickerSet
 getForumTopicIconStickers
@@ -81,10 +88,14 @@ hideGeneralForumTopic
 unhideGeneralForumTopic
 unpinAllGeneralForumTopicMessages
 answerCallbackQuery
+answerWidgetQuery
+answerGuestQuery
 getUserChatBoosts
 getBusinessConnection
 getManagedBotToken
 replaceManagedBotToken
+getManagedBotAccessSettings
+setManagedBotAccessSettings
 setMyCommands
 deleteMyCommands
 getMyCommands
@@ -120,9 +131,11 @@ transferBusinessAccountStars
 getBusinessAccountGifts
 getUserGifts
 getChatGifts
+getUniqueGift
 convertGiftToStars
 upgradeGift
 transferGift
+deleteBusinessAccountGift
 postStory
 repostStory
 editStory
@@ -137,12 +150,21 @@ editMessageMedia
 editMessageLiveLocation
 stopMessageLiveLocation
 editMessageChecklist
+editMessageWidgetData
+editSharedWidgetData
 editMessageReplyMarkup
 stopPoll
+editEphemeralMessageText
+editEphemeralMessageMedia
+editEphemeralMessageCaption
+editEphemeralMessageReplyMarkup
 approveSuggestedPost
 declineSuggestedPost
 deleteMessage
 deleteMessages
+deleteEphemeralMessage
+deleteMessageReaction
+deleteAllMessageReactions
 
 sendSticker
 getStickerSet
@@ -160,6 +182,9 @@ setStickerSetTitle
 setStickerSetThumbnail
 setCustomEmojiStickerSetThumbnail
 deleteStickerSet
+
+sendRichMessage
+sendRichMessageDraft
 
 answerInlineQuery
 
