@@ -46,6 +46,7 @@ See examples and cookbook in [the wiki](https://github.com/telegram-bot-rb/teleg
   * [Routes in Rails app](#routes-in-rails-app)
     * [Processing updates](#processing-updates)
   * [Development & Debugging](#development--debugging)
+    * [Test environment](#test-environment)
   * [Testing](#testing)
   * [Deployment](#deployment)
   * [Async mode](#async-mode)
@@ -455,6 +456,27 @@ To run poller in other cases use:
 ```ruby
 Telegram::Bot::UpdatesPoller.start(bot, controller_class)
 ```
+
+#### Test environment
+
+Telegram has a dedicated [test environment](https://core.telegram.org/bots/features#dedicated-test-environment):
+separate servers with their own accounts and bots. Some features get there before production,
+and links without TLS are allowed there for Mini Apps and login URLs.
+
+Requests to the test environment have `/test` between the token and the method name:
+`https://api.telegram.org/bot<token>/test/METHOD_NAME`. The client builds URLs as
+`bot<token>/METHOD_NAME`, so it is enough to add `/test` to the token of a bot
+created in the test environment:
+
+```ruby
+Telegram.bots_config = {
+  default: {token: "#{test_bot_token}/test", username: 'my_test_bot'},
+}
+# or
+bot = Telegram::Bot::Client.new("#{test_bot_token}/test")
+```
+
+Everything else, including webhook routes and poller, works as usual.
 
 ### Testing
 
