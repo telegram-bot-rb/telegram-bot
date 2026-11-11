@@ -1,6 +1,11 @@
 # Unreleased
 
 - Update to Bot API 10.4
+- Support for widgets:
+  `widget_query` and `shared_widget_query` actions receive `data` as argument,
+  `answer_widget_query` reply helper, `edit_message` sets identifiers from widget query,
+  `WidgetQueryContext` to split queries into separate actions,
+  `:widget_query` RSpec context with `answer_widget_query` matcher.
 - Extract files nested in params of any API method, not only of `sendMediaGroup`, `editMessageMedia`
   and `postStory`. This adds file uploads to `sendRichMessage`, `sendPaidMedia`, `sendPoll`, `editStory`,
   `editEphemeralMessageMedia`, `setMyProfilePhoto`, `createNewStickerSet`, `addStickerToSet` and others,

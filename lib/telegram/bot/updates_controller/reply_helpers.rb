@@ -41,6 +41,15 @@ module Telegram
           bot.answer_callback_query(params)
         end
 
+        # Same as respond_with, but for queries from widgets
+        # (both `widget_query` and `shared_widget_query`).
+        # `data` is returned to the widget that sent the query, it can be omitted.
+        def answer_widget_query(data = nil, params = {})
+          params = params.merge(widget_query_id: payload['id'])
+          params = params.merge(data: data) unless data.nil?
+          bot.answer_widget_query(params)
+        end
+
         # Same as respond_with, but for pre checkout queries.
         def answer_pre_checkout_query(ok, params = {})
           params = params.merge(
@@ -58,11 +67,18 @@ module Telegram
           bot.answer_shipping_query(params)
         end
 
-        # Edit message from callback query.
+        # Edit message from callback query or widget query:
+        #
+        #     edit_message :text, text: 'Done'
+        #     edit_message :widget_data, chat_data: 'new state'
         def edit_message(type, params = {})
+          payload = self.payload
           params =
             if message_id = payload['inline_message_id'] # rubocop:disable Lint/AssignmentInCondition
               params.merge(inline_message_id: message_id)
+            elsif payload_type == 'widget_query'
+              # Widget query has `chat` and `message_id` in the payload itself.
+              params.merge(chat_id: payload['chat']['id'], message_id: payload['message_id'])
             elsif message = payload['message'] # rubocop:disable Lint/AssignmentInCondition
               params.merge(chat_id: message['chat']['id'], message_id: message['message_id'])
             else
