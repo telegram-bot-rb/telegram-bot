@@ -1,6 +1,10 @@
 # Unreleased
 
 - Update to Bot API 10.4
+- Extract files nested in params of any API method, not only of `sendMediaGroup`, `editMessageMedia`
+  and `postStory`. This adds file uploads to `sendRichMessage`, `sendPaidMedia`, `sendPoll`, `editStory`,
+  `editEphemeralMessageMedia`, `setMyProfilePhoto`, `createNewStickerSet`, `addStickerToSet` and others,
+  including methods of future API versions.
 
 # 0.17.0
 

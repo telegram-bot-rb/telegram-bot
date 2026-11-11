@@ -5,63 +5,47 @@ require 'json'
 module Telegram
   module Bot
     class Client
-      # Encodes nested hashes and arrays as json and extract File objects from them
+      # Encodes nested hashes and arrays as json and extracts File objects from them
       # to the top level. Top-level File objects are handled by httpclient.
       # More details: https://core.telegram.org/bots/api#sending-files
+      #
+      # Files are extracted from nested params of any method: the list of methods
+      # that accept them (`media` in sendMediaGroup, `stickers` in createNewStickerSet,
+      # `photo` in setMyProfilePhoto, blocks of `rich_message`, etc.)
+      # grows with almost every Bot API update.
       module RequestBodyFormatter
         extend self
 
-        def format(body, action)
+        def format(body, _action)
           body = body.dup
-          case action.to_s
-          when 'sendMediaGroup'
-            extract_files_from_array!(body, :media)
-          when 'editMessageMedia'
-            extract_files_from_field!(body, :media)
-          when 'postStory'
-            extract_files_from_field!(body, :content)
-          end
+          files = {}
           body.each do |key, val|
-            body[key] = val.to_json if val.is_a?(Hash) || val.is_a?(Array)
+            next unless val.is_a?(Hash) || val.is_a?(Array)
+            files_count = files.size
+            extracted = extract_files(val, files)
+            # Original object is encoded when there are no files in it,
+            # because it can have custom #to_json.
+            body[key] = (files.size == files_count ? val : extracted).to_json
           end
+          files.empty? ? body : body.merge!(files)
         end
 
         private
 
-        # Extracts files from the given field and merges them into the body.
-        def extract_files_from_field!(body, field_name)
-          replace_field(body, field_name) do |value|
-            files = {}
-            extract_files_from_hash(value, files).tap { body.merge!(files) }
-          end
-        end
-
-        # Detects field by symbol or string name and replaces it with mapped value.
-        def replace_field(hash, field_name)
-          field_name = [field_name.to_sym, field_name.to_s].find { |x| hash.key?(x) }
-          hash[field_name] = yield hash[field_name] if field_name
-        end
-
-        def extract_files_from_array!(hash, field_name)
-          replace_field(hash, field_name) do |value|
-            break value unless value.is_a?(Array)
-            files = {}
-            value.map { |x| extract_files_from_hash(x, files) }.
-              tap { hash.merge!(files) }
-          end
-        end
-
-        # Replace File objects with `attach` URIs. File objects are added into `files` hash.
-        def extract_files_from_hash(hash, files)
-          return hash unless hash.is_a?(Hash)
-          hash.transform_values do |value|
-            if value.is_a?(File)
-              arg_name = "_file#{files.size}"
-              files[arg_name] = value
-              "attach://#{arg_name}"
-            else
-              value
-            end
+        # Replaces File objects with `attach` URIs, descending into nested hashes
+        # and arrays. File objects are added into `files` hash.
+        def extract_files(value, files)
+          case value
+          when File
+            arg_name = "_file#{files.size}"
+            files[arg_name] = value
+            "attach://#{arg_name}"
+          when Hash
+            value.transform_values { |x| extract_files(x, files) }
+          when Array
+            value.map { |x| extract_files(x, files) }
+          else
+            value
           end
         end
       end
